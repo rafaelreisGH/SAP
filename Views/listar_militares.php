@@ -18,16 +18,32 @@ if (!isset($_GET['pesquisar'])) {
     }
 } else {
     $pesquisar = filter_input(INPUT_GET, 'pesquisar', FILTER_SANITIZE_STRING);
-    //VERIFICAR A QUANTIDADE DE RESULTADOS QUE CORRESPONDEM AO CAMPO PESQUISAR
-    $stmtPesquisar = $conn->prepare("SELECT COUNT(*) FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' AND posto_grad_mil != 'CEL BM'");
-    $stmtPesquisar->execute();
-    $total_resultados = $stmtPesquisar->fetchColumn();
-    //VARIÁVEIS DA PAGINAÇÃO
-    $itens_por_pagina = 10;
-    $numero_da_pagina = ceil($total_resultados / $itens_por_pagina);
-    $inicio = ($itens_por_pagina * $pagina) - $itens_por_pagina;
-    $stmt = $conn->prepare("SELECT * FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' AND posto_grad_mil != 'CEL BM'  ORDER BY antiguidade LIMIT " . $inicio . "," . $itens_por_pagina . "");
-    $result = $stmt->execute();
+    switch ($pesquisar) {
+        case "":
+            //VERIFICAR A QUANTIDADE DE RESULTADOS QUE CORRESPONDEM AO CAMPO PESQUISAR
+            $stmtPesquisar = $conn->prepare("SELECT COUNT(*) FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO'/* AND posto_grad_mil != 'CEL BM'*/");
+            $stmtPesquisar->execute();
+            $total_resultados = $stmtPesquisar->fetchColumn();
+            //VARIÁVEIS DA PAGINAÇÃO
+            $itens_por_pagina = 10;
+            $numero_da_pagina = ceil($total_resultados / $itens_por_pagina);
+            $inicio = ($itens_por_pagina * $pagina) - $itens_por_pagina;
+            $stmt = $conn->prepare("SELECT * FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' /*AND posto_grad_mil != 'CEL BM'*/  ORDER BY antiguidade LIMIT " . $inicio . "," . $itens_por_pagina . "");
+            $result = $stmt->execute();
+            break;
+        default:
+            //VERIFICAR A QUANTIDADE DE RESULTADOS QUE CORRESPONDEM AO CAMPO PESQUISAR
+            $stmtPesquisar = $conn->prepare("SELECT COUNT(*) FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' AND posto_grad_mil != 'CEL BM'");
+            $stmtPesquisar->execute();
+            $total_resultados = $stmtPesquisar->fetchColumn();
+            //VARIÁVEIS DA PAGINAÇÃO
+            $itens_por_pagina = 10;
+            $numero_da_pagina = ceil($total_resultados / $itens_por_pagina);
+            $inicio = ($itens_por_pagina * $pagina) - $itens_por_pagina;
+            $stmt = $conn->prepare("SELECT * FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' AND posto_grad_mil != 'CEL BM'  ORDER BY antiguidade LIMIT " . $inicio . "," . $itens_por_pagina . "");
+            $result = $stmt->execute();
+            break;
+    }
 }
 
 ?>
@@ -38,7 +54,7 @@ if (!isset($_GET['pesquisar'])) {
         </ul>
         <hr>
     </div>
-    <div class="col-md-12">    
+    <div class="col-md-12">
 
         <div class="panel panel-default panel-table">
             <div class="panel-heading">
@@ -53,16 +69,30 @@ if (!isset($_GET['pesquisar'])) {
                 <table class="table table-striped table-bordered table-list">
                     <thead>
                         <tr>
-                            <th><p align="center">FAD</p></th>
-                            <th><p align="center">Pasta<br>Promocional</p></th>
-                            <th><p align="center">Editar dados</p></th>
-                            <th><p align="center">Posto/Graduação</p></th>
-                            <th><p align="center">Nome</p></th>
-                            <th><p align="center">Quadro</p></th>
-                            <th><p align="center">Média</p></th>
-                        </tr> 
+                            <th>
+                                <p align="center">FAD</p>
+                            </th>
+                            <th>
+                                <p align="center">Pasta<br>Promocional</p>
+                            </th>
+                            <th>
+                                <p align="center">Editar dados</p>
+                            </th>
+                            <th>
+                                <p align="center">Posto/Graduação</p>
+                            </th>
+                            <th>
+                                <p align="center">Nome</p>
+                            </th>
+                            <th>
+                                <p align="center">Quadro</p>
+                            </th>
+                            <th>
+                                <p align="center">Média</p>
+                            </th>
+                        </tr>
                     </thead>
-                    
+
                     <tbody>
                         <?php
                         while ($resultados = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -71,18 +101,18 @@ if (!isset($_GET['pesquisar'])) {
                             $aux_posto_grad = $resultados['posto_grad_mil'];
                             $aux_quadro = $resultados['quadro'];
                             $aux_media = $resultados['media'];
-                            if ($aux_media == 0){
+                            if ($aux_media == 0) {
                                 $aux_media = 'N/D';
                             }
 
                             echo '<tr>'
-                            . '<td align="center"><form action="../Views/teste_fad.php" method="POST"><button class="btn btn-info" type="submit" name="militar_id" value="'.$aux_id.'"><em class="glyphicon glyphicon-copy" title="Cadastrar FAD."></em></button></form></td>'
-                            . '<td align="center"><form action="../Views/pasta_promocional_home.php" method="POST"><button class="btn btn-danger" type="submit" name="militar_id" value="'.$aux_id.'"><em class="glyphicon glyphicon-folder-open" title="Cadastrar Documentos."></em></button></form></td>'
-                            . '<td align="center"><form action="../Views/visualizar_dados.php" method="POST"><button class="btn btn-success" type="submit" name="militar_id" value="'.$aux_id.'"><em class="glyphicon glyphicon-pencil" title="Editar dados"></em></button></form></td>'
-                            . '<td align="center">' . $aux_posto_grad . '</td>'
-                            . '<td align="center">' . $aux_nome . '</td>'
-                            . '<td align="center">' . $aux_quadro . '</td>'
-                            . '<td align="center">' . $aux_media . '</td>';
+                                . '<td align="center"><form action="../Views/teste_fad.php" method="POST"><button class="btn btn-info" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-copy" title="Cadastrar FAD."></em></button></form></td>'
+                                . '<td align="center"><form action="../Views/pasta_promocional_home.php" method="POST"><button class="btn btn-danger" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-folder-open" title="Cadastrar Documentos."></em></button></form></td>'
+                                . '<td align="center"><form action="../Views/visualizar_dados.php" method="POST"><button class="btn btn-success" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-pencil" title="Editar dados"></em></button></form></td>'
+                                . '<td align="center">' . $aux_posto_grad . '</td>'
+                                . '<td align="center">' . $aux_nome . '</td>'
+                                . '<td align="center">' . $aux_quadro . '</td>'
+                                . '<td align="center">' . $aux_media . '</td>';
                         }
                         ?>
                     </tbody>
@@ -118,7 +148,7 @@ if (!isset($_GET['pesquisar'])) {
                                 <?php } else { ?>
                                     <span aria-hidden="true">&laquo;</span>
                                 <?php } ?>
-                            </li>    
+                            </li>
                         </ul>
 
                     </div>
@@ -126,6 +156,6 @@ if (!isset($_GET['pesquisar'])) {
             </div>
         </div>
     </div>
-<?php
-include_once './footer.php';
-?>
+    <?php
+    include_once './footer.php';
+    ?>

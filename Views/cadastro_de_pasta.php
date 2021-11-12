@@ -73,8 +73,8 @@ if (isset($_POST['militar_id'])) {
             <div class="form-group">
                 <label for="exampleFormControlSelect2">Semestre</label>
                 <select class="form-control" id="exampleFormControlSelect2" name="semestre">
-                    <option value="1">1º Semestre</option>
-                    <option value="2">2º Semestre</option>
+                    <option value="1" <?php if(date("m")<=6)echo'selected';?>>1º Semestre</option>
+                    <option value="2" <?php if(date("m")>=7)echo'selected';?>>2º Semestre</option>
                 </select>
                 <small id="anoHelp" class="form-text text-muted">Insira o <strong>semestre</strong> correspondente ao processo promocional.</small>
             </div>
@@ -92,7 +92,8 @@ if (isset($_POST['militar_id'])) {
                 echo '<br><font style="color:#ff0000"><i>*Já havia pasta promocional criada no período informado.<br>'
                 . 'Portanto o registro foi <strong>atualizado</strong>.</i></font>';
             } else if ($erro == 1) {
-                echo '<br><font style="color:#ff0000"><i>*Pasta promocional criada com sucesso!</i></font>';
+                echo '<br><font style="color:#ff0000"><i>*Pasta promocional criada com sucesso!</i></font><br>';
+                echo '<br><a href="../Views/pasta_promocional_home.php?militar_id='.$militar_id.'">Clique aqui para acessar a pasta.</a>';
             }
         }
         ?>

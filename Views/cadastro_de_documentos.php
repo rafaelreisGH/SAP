@@ -121,7 +121,8 @@ if ($resultado == NULL) {
                             echo '<option value="1">1º Semestre</option><option value="2" selected>2º Semestre</option>';
                         }
                         ?>
-                        <!--<option value="1">1º Semestre</option>
+                        <!--código anterior
+                            <option value="1">1º Semestre</option>
                         <option value="2">2º Semestre</option>-->
                     </select>
                     <small id="semestreHelp" class="form-text text-muted">Insira o <strong>semestre</strong> correspondente ao processo promocional.</small>
@@ -228,7 +229,9 @@ if ($resultado == NULL) {
                 <button id="rodape" class="btn btn-primary">Atualiza pasta promocional</button>
             </form>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            
+        </div>
     </div>
     <div class="clearfix"></div>
     <div class="col-md-12"><br></div>

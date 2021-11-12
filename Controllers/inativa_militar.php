@@ -1,7 +1,25 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
 
-$antiguidade = (int)$_POST['antiguidade'];
+$antiguidade;
+
+//caso os dados sejam encaminhados pela URL via inserir_registro_de_promocao.php
+if (isset($_GET['id'])) {
+    $militar_id = $_GET['id'];
+    $stmt = $conn->prepare("SELECT antiguidade FROM militar WHERE id = :id");
+    $stmt->execute([
+        ':id' => $militar_id
+    ]);
+    while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $antiguidade = $resultado['antiguidade'];
+    }
+}
+
+//caso dados venham do arquivo visualizar_dados.php
+if (isset($_POST['antiguidade'])) {
+    $antiguidade = (int)$_POST['antiguidade'];
+}
+
 $numero_liberado = $antiguidade;
 
 $vetor = array();

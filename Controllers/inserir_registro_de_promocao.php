@@ -6,17 +6,14 @@ require_once '../ConexaoDB/conexao.php';
 if (isset($_POST['data_promocao'])) {
     $data_promocao = $_POST['data_promocao'];
 }
-echo    $data_promocao . '</br>';
 
 if (isset($_POST['modalidade'])) {
     $modalidade = $_POST['modalidade'];
 }
-echo    $modalidade . '</br>';
 
 if (isset($_POST['promocao_posto_grad'])) {
     $promocao_posto_grad = $_POST['promocao_posto_grad'];
 }
-echo    $promocao_posto_grad . '</br>';
 //---------------------------//
 
 //array para gravar os militares que tiveram os registros alterados
@@ -27,10 +24,9 @@ $location = "Location:../Views/listar_militares_data_em_lote.php?";
 
 if (isset($_POST['militar_id'])) {
     $militar_id = $_POST['militar_id'];
-    
-    foreach ($militar_id as $item) {
-        echo $item . '</br>';
+    $aux = (int)$militar_id[0];//incluído por causa do if PROMOÇÃO POR REQUERIMENTO
 
+    foreach ($militar_id as $item) {
         //SELECT para buscar no BD resultado igual ao informado
         $stmt = $conn->prepare("SELECT * FROM registro_de_promocoes WHERE militar_id = " . $item . " AND  grau_hierarquico = '" . $promocao_posto_grad . "'");
         $resultado = $stmt->execute();
@@ -49,7 +45,6 @@ if (isset($_POST['militar_id'])) {
             $alteracoes[] = $item;
         } else {
             //se não encontrar nada, faz o insert na tabela registro_de_promocoes
-            //echo 'Nenhum resultado no BD.</br>';
             //FAZER INSERT NO BD
 
             $stmt = $conn->prepare("INSERT INTO registro_de_promocoes (a_contar_de, grau_hierarquico, modalidade, militar_id) VALUES (:data_promocao, :promocao_posto_grad, :modalidade, :id)");
@@ -65,48 +60,17 @@ if (isset($_POST['militar_id'])) {
         }
     }
 
-    //concatenar as alteraçoes no $location
-
-    //$location = "Location:../Views/listar_militares_data_em_lote.php?";
-    $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
-    header("$location");
+    //se a promocão for POR REQUERIMENTO automaticamente é liberada a antiguidade e inativado o militar.
+    if ($modalidade == 'POR REQUERIMENTO') {
+        header('Location:../Controllers/inativa_militar.php?id=' . $aux . '');
+    } else {
+        //concatenar as alteraçoes no $location
+        //$location = "Location:../Views/listar_militares_data_em_lote.php?";
+        $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
+        header("$location");
+    }
 
     //tem de ter um header aqui
 } else {
     header('Location:../Views/listar_militares_data_em_lote.php?nada_alterado=1');
 }
-
-
-/*
-if (isset($_POST['militar_id'])) {
-    $militar_id = $_POST['militar_id'];
-
-    foreach ($militar_id as $item) {
-        echo $item . '</br>';
-
-        //SELECT para buscar no BD resultado igual ao informado
-        $stmt = $conn->prepare("SELECT * FROM registro_de_promocoes WHERE militar_id = " . $item . " AND a_contar_de = '" . $data_promocao . "' AND modalidade = '" . $modalidade . "' AND grau_hierarquico = '" . $promocao_posto_grad . "'");
-        $resultado = $stmt->execute();
-
-        //se encontra resultado igual não atualiza nada no BD
-        if ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            continue;
-        } else {
-            //se não encontrar nada, faz o insert na tabela registro_de_promocoes
-            echo 'Nenhum resultado no BD.</br>';
-            //FAZER INSERT NO BD
-
-            $stmt = $conn->prepare("INSERT INTO registro_de_promocoes (a_contar_de, grau_hierarquico, modalidade, militar_id) VALUES (:data_promocao, :promocao_posto_grad, :modalidade, :id)");
-
-            $stmt->execute(array(
-                ':id' => $item,
-                ':data_promocao' => $data_promocao,
-                ':modalidade' => $modalidade,
-                ':promocao_posto_grad' => $promocao_posto_grad,
-            ));
-        }
-    }
-} else {
-    header('Location:../Views/listar_militares_data_em_lote.php?nada_alterado=1');
-}
-*/

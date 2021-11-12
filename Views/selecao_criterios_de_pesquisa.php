@@ -3,6 +3,7 @@ include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
 
 $alteracao_antiguidade = isset($_GET['alteracao_antiguidade']) ? $_GET['alteracao_antiguidade'] : null;
+$promover = isset($_GET['promover']) ? $_GET['promover'] : null;
 
 ?>
 
@@ -18,6 +19,8 @@ $alteracao_antiguidade = isset($_GET['alteracao_antiguidade']) ? $_GET['alteraca
     <form action="<?php
                     if (!is_null($alteracao_antiguidade)) {
                         echo 'listar_militares_atualizar_antiguidade.php';
+                    } else if(!is_null($promover)){
+                        echo 'listar_militares_promocao_em_lote.php';
                     } else {
                         echo 'listar_militares_data_em_lote.php';
                     }
