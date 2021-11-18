@@ -3,22 +3,22 @@ require_once '../ConexaoDB/conexao.php';
 
 $criterio_posto_grad = $_POST['criterio_posto_grad'];
 $criterio_quadro = $_POST['criterio_quadro'];
-$posicao_maior = $_POST['antiguidade_atual'];
-$posicao_menor = $_POST['antiguidade_informada'];
+$antiguidade_atual = $_POST['antiguidade_atual'];
+$nova_antiguidade = $_POST['antiguidade_informada'];
 
 $vetor = array();
 
-if ($posicao_maior > $posicao_menor) {
+if ($antiguidade_atual > $nova_antiguidade) {
     $stmt = $conn->prepare("SELECT antiguidade, id FROM militar WHERE antiguidade >= :posicao_menor AND antiguidade <= :posicao_maior");
     $stmt->execute([
-        ':posicao_menor' => $posicao_menor,
-        ':posicao_maior' => $posicao_maior
+        ':posicao_menor' => $nova_antiguidade,
+        ':posicao_maior' => $antiguidade_atual
     ]);
 } else {
     $stmt = $conn->prepare("SELECT antiguidade, id FROM militar WHERE antiguidade >= :posicao_maior AND antiguidade <= :posicao_menor");
     $stmt->execute([
-        ':posicao_menor' => $posicao_menor,
-        ':posicao_maior' => $posicao_maior
+        ':posicao_menor' => $nova_antiguidade,
+        ':posicao_maior' => $antiguidade_atual
     ]);
 }
 
@@ -29,7 +29,7 @@ while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 require_once '../Controllers/ordenar_pela_antiguidade.php';
-$vetor = ordenar($vetor, $posicao_maior, $posicao_menor);
+$vetor = ordenar($vetor, $antiguidade_atual, $nova_antiguidade);
 
 foreach ($vetor as $id => $antiguidade) {
     $antiguidade = (int)$antiguidade;
@@ -39,6 +39,9 @@ foreach ($vetor as $id => $antiguidade) {
         ':antiguidade' => $antiguidade
     ));
 }
+
+unset($vetor);
+
 if ($stmt) {
     header('Location:../Views/listar_militares_atualizar_antiguidade.php?sucesso=1&criterio_posto_grad='.$criterio_posto_grad.'&criterio_quadro='.$criterio_quadro.'');
 }
