@@ -10,8 +10,14 @@ if (isset($_POST['modalidade'])) {
 if (isset($_POST['promocao_posto_grad'])) {
     $promocao_posto_grad = $_POST['promocao_posto_grad'];
 }
+
+$criterio_posto_grad = $_POST['criterio_posto_grad'];
+$criterio_quadro = $_POST['criterio_quadro'];
+
 if (isset($_POST['militar_id'])) {
     $militar_id = $_POST['militar_id'];
+} else { // se não for selecionado nenhum militar
+    header('Location:../Views/listar_militares_promocao_em_lote.php?nada_alterado=1&criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '');
 }
 //---------------------------//
 
@@ -24,21 +30,6 @@ while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $vetor_antiguidade_mais_moderno_anteriormente[] = $resultado['antiguidade'];
 }
 $mais_moderno_anteriormente = (int)max($vetor_antiguidade_mais_moderno_anteriormente);
-//---------------------------//
-
-//ALTERAR O POSTO/GRADUAÇÃO
-/* 
-    foreach ($militar_id as $item) {
-        $stmt = $conn->prepare("UPDATE militar SET posto_grad_mil = :promocao_posto_grad  WHERE id = :id");
-        $stmt->execute(array(
-            ':id' => $item,
-            ':promocao_posto_grad' => $promocao_posto_grad,
-        ));
-    }
-} */
-//---------------------------//
-
-//CONSULTAR A ANTIGUIDADE DOS MILITARES NO NOVO POSTO/GRADUAÇÃO
 //---------------------------//
 
 // vetor para armazenar os militares e sua antiguidade
@@ -55,11 +46,6 @@ foreach ($militar_id as $item) {
 }
 $max = (int)max($vetor_antiguidade_anterior); //pega a antiguidade do militar de maior antiguidade nominal -- militar mais moderno promovido
 
-//
-/* print_r($vetor_antiguidade_anterior);
-echo "<br>"; */
-//
-
 $vetor_antiguidade = array();
 //LISTAR OS MILITARES QUE JÁ ESTAVAM NO POSTO/GRADUAÇÃO, E OS QUE ACABARAM DE ENTRAR, E TAMBÉM AQUELES QUE NÃO FORAM PROMOVIDOS ORDENANDO-OS PELA ANTIGUIDADE 
 $stmt = $conn->prepare("SELECT id, nome, posto_grad_mil, antiguidade FROM militar WHERE antiguidade >= '$mais_moderno_anteriormente' AND antiguidade <= '$max' ORDER BY antiguidade");
@@ -70,12 +56,6 @@ while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $vetor_antiguidade += ["{$key}" => $valor];
 }
 
-/* echo '<br>';
-echo 'vetor anterior';
-print_r($vetor_antiguidade);
-echo '<br>';
-echo '<br>'; */
-
 //-------------------------------------------------------------------//
 //Aqui o $vetor_antiguidade perde o primeiro elemento
 $chaves = $vetor_antiguidade;
@@ -83,30 +63,108 @@ $chaves = array_flip($chaves);
 array_shift($chaves);
 array_shift($vetor_antiguidade);
 $vetor_antiguidade = array_combine($chaves, $vetor_antiguidade);
-/* echo '<br>';
-echo 'vetor depois da modificação';
-print_r($vetor_antiguidade);
-echo '<br>';
-echo '<br>'; */
 //-------------------------------------------------------------------//
 
-require_once '../Controllers/ordenar_pela_antiguidade.php';
 foreach ($vetor_antiguidade_anterior as $item => $value) {
     $antiguidade = $value;
-    if (($antiguidade - $mais_moderno_anteriormente) > 0) {
-        $vetor_antiguidade[$item] = $mais_moderno_anteriormente + 1;
-        $chave = array_search($mais_moderno_anteriormente + 1, $vetor_antiguidade);
-        $vetor_antiguidade[$chave] = $antiguidade;
-        $mais_moderno_anteriormente++;
+    if (($antiguidade - $mais_moderno_anteriormente) > 1) {
+        unset($vetor_antiguidade[$item]);
     } else {
         break;
     }
 }
-asort($vetor_antiguidade);
-print_r($vetor_antiguidade);
+
+//-------------------------------------------------------------------//
+//COMBINAR O VETOR DOS PROMOVIDOS COM OS NÃO PROMOVIDOS, QUE FICAM NO FINAL DA FILA
+$aux = array();
+foreach ($vetor_antiguidade_anterior as $key => $valor) {
+    $aux += ["{$key}" => $valor];
+}
+foreach ($vetor_antiguidade as $key => $valor) {
+    $aux += ["{$key}" => $valor];
+}
+//-------------------------------------------------------------------//
+
+//-------------------------------------------------------------------//
+//REORDENAÇÃO DA ANTIGUIDADE
+$mais_moderno_anteriormente += 1;
+foreach ($aux as $key => &$valor) {
+    $valor = $mais_moderno_anteriormente;
+    $mais_moderno_anteriormente++;
+}
+//-------------------------------------------------------------------//
+
+//-------------------------------------------------------------------//
+//ALTERAR O POSTO/GRADUAÇÃO NO BANCO DE DADOS
+foreach ($militar_id as $item) {
+    $stmt = $conn->prepare("UPDATE militar SET posto_grad_mil = :promocao_posto_grad WHERE id = :id");
+    $stmt->execute(array(
+        ':id' => $item,
+        ':promocao_posto_grad' => $promocao_posto_grad
+    ));
+}
+//-------------------------------------------------------------------//
+
+//-------------------------------------------------------------------//
+//ALTERAR A ANTIGUIDADE NO BANCO DE DADOS
+foreach ($aux as $item => $value) {
+    $stmt = $conn->prepare("UPDATE militar SET antiguidade = :antiguidade  WHERE id = :id");
+    $stmt->execute(array(
+        ':id' => $item,
+        ':antiguidade' => $value
+    ));
+}
+//-------------------------------------------------------------------//
+
+//-------------------------------------------------------------------//
+//INSERIR O REGISTRO DE PROMOÇÃO NO BANCO DE DADOS
 
 //array para gravar os militares que tiveram os registros alterados
 $alteracoes = array();
 
+foreach ($aux as $item => $value) {
+    //SELECT para buscar no BD resultado igual ao informado
+    $stmt = $conn->prepare("SELECT * FROM registro_de_promocoes WHERE militar_id = " . $item . " AND  grau_hierarquico = '" . $promocao_posto_grad . "'");
+    $resultado = $stmt->execute();
+
+    //se encontra registro com o mesmo grau_hierarquico, atualiza o registo no BD
+    //isso porque não pode haver duas promoções para o mesmo grau_hierarquico
+    if ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $stmt = $conn->prepare("UPDATE registro_de_promocoes SET a_contar_de = :data_promocao, modalidade = :modalidade, grau_hierarquico = :promocao_posto_grad  WHERE militar_id = :id AND grau_hierarquico = :promocao_posto_grad");
+        $stmt->execute(array(
+            ':id' => $item,
+            ':data_promocao' => $data_promocao,
+            ':modalidade' => $modalidade,
+            ':promocao_posto_grad' => $promocao_posto_grad,
+        ));
+
+        $alteracoes[] = $item;
+    } else {
+        //se não encontrar nada, faz o insert na tabela registro_de_promocoes
+        //FAZER INSERT NO BD
+
+        $stmt = $conn->prepare("INSERT INTO registro_de_promocoes (a_contar_de, grau_hierarquico, modalidade, militar_id) VALUES (:data_promocao, :promocao_posto_grad, :modalidade, :id)");
+
+        $stmt->execute(array(
+            ':id' => $item,
+            ':data_promocao' => $data_promocao,
+            ':modalidade' => $modalidade,
+            ':promocao_posto_grad' => $promocao_posto_grad,
+        ));
+
+        $alteracoes[] = $item;
+    }
+}
+//-------------------------------------------------------------------//
+
+
+
+//array para gravar os militares que tiveram os registros alterados
+//$alteracoes = array_keys($aux);
+
 //variável para montar a string do header Location
-$location = "Location:../Views/listar_militares_promocao_em_lote.php?";
+$location = 'Location:../Views/listar_militares_promocao_em_lote.php?criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '&';
+if (sizeof($alteracoes)) {
+    $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
+}
+header($location);

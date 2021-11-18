@@ -27,9 +27,15 @@ $where[] = " status = 'ATIVO'";
 if (isset($_POST['criterio_posto_grad'])) {
     $criterios_posto_grad = $_POST['criterio_posto_grad'];
     $where[] = " posto_grad_mil = '{$criterios_posto_grad}'";
+} else if (isset($_GET['criterio_posto_grad'])) {
+    $criterios_posto_grad = $_GET['criterio_posto_grad'];
+    $where[] = " posto_grad_mil = '{$criterios_posto_grad}'";
 }
 if (isset($_POST['criterio_quadro'])) {
     $criterios_quadro = $_POST['criterio_quadro'];
+    $where[] = " quadro = '{$criterios_quadro}'";
+} else if (isset($_GET['criterio_quadro'])) {
+    $criterios_quadro = $_GET['criterio_quadro'];
     $where[] = " quadro = '{$criterios_quadro}'";
 }
 // --------------------------- //
@@ -98,6 +104,8 @@ $stmt->execute();
                                 <option value="SD BM">Soldado</option>
                             </select>
                         </div>
+                        <input type="hidden" name="criterio_posto_grad" value="<?= $criterios_posto_grad ?>">
+                        <input type="hidden" name="criterio_quadro" value="<?= $criterios_quadro ?>">
                     </div>
 
 
@@ -106,23 +114,21 @@ $stmt->execute();
                 <div class="col-md-4">
                     <?php
                     if ($nada_alterado == 1) {
-                        echo '<br><font style="color:#ff0000"><i>*Nenhum registro foi inserido.</i><br>';
+                        echo '<br><font style="color:#ff0000"><i>*Nenhum registro foi inserido, pois não foi selecionado nenhum militar.</i><br>';
                     }
                     if (!empty($alteracoes_realizadas)) {
+                        echo '<font style="color:#ff0000">Alterações realizadas no cadastro dos seguintes militares:<br>';
                         foreach ($alteracoes_realizadas as $item) {
                             //$stmt2 = $conn->prepare("SELECT nome, posto_grad_mil FROM militar WHERE id = " . $item . "");
-                            $stmt2 = $conn->prepare("SELECT militar.nome, militar.posto_grad_mil, registro_de_promocoes.a_contar_de FROM militar CROSS JOIN registro_de_promocoes WHERE militar.id = registro_de_promocoes.militar_id AND militar.id = '" . $item . "'");
+                            $stmt2 = $conn->prepare("SELECT nome, posto_grad_mil, antiguidade FROM militar WHERE id = '" . $item . "' ORDER BY antiguidade");
                             $resultado = $stmt2->execute();
-
                             while ($resultado = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                                 $_nome = $resultado['nome'];
                                 $_posto_grad = $resultado['posto_grad_mil'];
-                                $_a_contar_de = $resultado['a_contar_de'];
-                                require_once '../Controllers/alias_ultima_promocao.php';
-                                $_a_contar_de = alias_ultima_promocao($_a_contar_de);
                             }
-                            echo '<br><font style="color:#ff0000"><i>*Registro alterado para ' . $_posto_grad . ' ' . $_nome . '. Data: ' . $_a_contar_de . '.</i>';
+                            echo '<br><font style="color:#ff0000"><i>*' . $_posto_grad . ' ' . $_nome . '.</i>';
                         }
+                        echo '<br><br><font style="color:#ff0000"><i class="bi bi-exclamation-circle" fill="currentColor"></i>&nbspOs militares não promovidos acima listados são exibidos pelo fato de a antiguidade ter sido alterada.';
                     }
                     ?>
                 </div>
