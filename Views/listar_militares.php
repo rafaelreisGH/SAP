@@ -29,7 +29,7 @@ if (!isset($_GET['pesquisar'])) {
             $numero_da_pagina = ceil($total_resultados / $itens_por_pagina);
             $inicio = ($itens_por_pagina * $pagina) - $itens_por_pagina;
             $stmt = $conn->prepare("SELECT * FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' /*AND posto_grad_mil != 'CEL BM'*/  ORDER BY antiguidade LIMIT " . $inicio . "," . $itens_por_pagina . "");
-            $result = $stmt->execute();
+            $stmt->execute();
             break;
         default:
             //VERIFICAR A QUANTIDADE DE RESULTADOS QUE CORRESPONDEM AO CAMPO PESQUISAR
@@ -41,7 +41,7 @@ if (!isset($_GET['pesquisar'])) {
             $numero_da_pagina = ceil($total_resultados / $itens_por_pagina);
             $inicio = ($itens_por_pagina * $pagina) - $itens_por_pagina;
             $stmt = $conn->prepare("SELECT * FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' AND posto_grad_mil != 'CEL BM'  ORDER BY antiguidade LIMIT " . $inicio . "," . $itens_por_pagina . "");
-            $result = $stmt->execute();
+            $stmt->execute();
             break;
     }
 }
@@ -117,7 +117,6 @@ if (!isset($_GET['pesquisar'])) {
                         ?>
                     </tbody>
                 </table>
-                <span class="glyphicon glyphicon-folder-open" title="Cadastrar Documentos."></span>
             </div>
             <?php
             //Verificar a pagina anterior e posterior

@@ -1,62 +1,43 @@
 <?php
-include_once './header.php';
+include_once './header2.php';
 
-$update_xml_no_bd = isset($_GET['update']) ? $_GET['update'] : 0;
 ?>
 
 <div class="container">
 
-    <div class="col-md-12">
-        <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="pagina_gestor.php">Home</a></li>
-        </ul>
-        <hr>
-    </div>
     <div class="clearfix"></div>
 
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <H3>
-                    Relatórios disponíveis
-                </H3>
-            </div>
-        </div>
+        <H3>
+            Relatórios disponíveis
+        </H3>
         <div class="clearfix"><br></div>
     </div>
 
     <div class="col-md-12">
-        <div class="col-md-4">
-            <div class="card">
-                <h4 class="card-header">Limite de Quantitativo</h4>
-                <div class="card-body">
-                    <!--<h5 class="card-title">Special title treatment</h5>-->
-                    <p class="card-text">Documento destinado a exibir os militares que possuem ou possuirão interstício mínimo para a próxima promoção.</p>
-                    <a href="../Controllers/gera_limite_quantitativo.php" class="btn btn-primary">Gerar Relatório</a>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <h4 class="card-header">Registros de promoções</h4>
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <p class="card-text">Selecione o militar e confira os <strong>registros passados</strong> de promoção</strong>.</p>
+                        <a href="listar_militares_relatorio_de_promocoes.php" class="btn btn-primary">Selecionar</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <h4 class="card-header">Limite de Quantitativo</h4>
-                <div class="card-body">
-                    <!--<h5 class="card-title">Special title treatment</h5>-->
-                    <p class="card-text">Documento destinado a exibir os militares que possuem ou possuirão interstício mínimo para a próxima promoção.</p>
-                    <a href="#" class="btn btn-primary">Gerar Relatório</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <h4 class="card-header">Limite de Quantitativo</h4>
-                <div class="card-body">
-                    <!--<h5 class="card-title">Special title treatment</h5>-->
-                    <p class="card-text">Documento destinado a exibir os militares que possuem ou possuirão interstício mínimo para a próxima promoção.</p>
-                    <a href="#" class="btn btn-primary">Gerar Relatório</a>
-                </div>
-            </div>
-        </div>
 
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+            </div>
+
+        </div>
+        
+        <div class="clearfix"></br></div>
+
+        <div class="row">
+        </div>
     </div>
 </div>
 
