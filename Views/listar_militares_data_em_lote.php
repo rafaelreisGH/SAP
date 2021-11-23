@@ -123,6 +123,15 @@ $stmt->execute();
                     }
                     ?>
                 </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary" type="button" onmouseout="escondeDica()" onmouseover="mostraDica()">
+                        <i class="bi bi-question-square-fill"></i>&nbsp Observação
+                    </button>
+                    <div>
+                        </br>
+                        <p id="paragrafoDica" align="justify"></p>
+                    </div>
+                </div>
             </div>
             </br>
         </div>
@@ -130,17 +139,12 @@ $stmt->execute();
         <div class="col-md-12">
             <div class="panel panel-default panel-table">
 
-
-
-
-
                 <div class="panel-body">
                     <table class="table table-striped table-bordered table-list">
                         <thead>
                             <tr>
                                 <th>
                                     <p align="center"></br>
-
                                         <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" onclick="checkUncheck(this)">
                                         <label class="btn btn-light" for="btn-check"><strong>Selecionar todos</strong></label>
                                     </p>
@@ -188,6 +192,12 @@ $stmt->execute();
         for (var a = 0; a < all.length; a++) {
             all[a].checked = main.checked;
         }
+    }
+    function mostraDica(){
+        document.getElementById('paragrafoDica').innerHTML = 'Caso já exista registrada promoção para o mesmo posto/graduação, as informações serão atualizadas no banco de dados sobrescrevendo o registro anterior.'
+    }
+    function escondeDica(){
+        document.getElementById('paragrafoDica').innerHTML = ''
     }
 </script>
 
