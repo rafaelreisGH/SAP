@@ -98,7 +98,7 @@ while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             require_once '../Controllers/alias_ultima_promocao.php';
 
                             //só mostra a tabela se houver resultados na pesquisa
-                            if (isset($stmt)) {
+                            if (isset($stmt) && !empty($consulta)) {
                                 foreach ($consulta as $key => $valor) {
                                     $aux_a_contar_de = $valor['a_contar_de'];
                                     $aux_posto_grad = $valor['grau_hierarquico'];
@@ -111,6 +111,8 @@ while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         . '<td align="center">' . alias_posto_grad($aux_posto_grad) . '</td>'
                                         . '<td align="center">' . ucfirst($aux_modalidade) . '</td>';
                                 }
+                            } else {
+                                echo "Nenhum resultado encontrado!</br></br>";
                             }
                             ?>
                         </tbody>
