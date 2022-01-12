@@ -158,13 +158,16 @@ foreach ($aux as $item => $value) {
 //-------------------------------------------------------------------//
 
 
+//se a promocão for POR REQUERIMENTO automaticamente é liberada a antiguidade e inativado o militar.
+if ($modalidade == 'POR REQUERIMENTO') {
+    $aux_id = $militar_id[0];
+    header('Location:../Controllers/inativa_militar.php?id=' . $aux_id . '');
+} else {
 
-//array para gravar os militares que tiveram os registros alterados
-//$alteracoes = array_keys($aux);
-
-//variável para montar a string do header Location
-$location = 'Location:../Views/listar_militares_promocao_em_lote.php?criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '&';
-if (sizeof($alteracoes)) {
-    $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
+    //variável para montar a string do header Location
+    $location = 'Location:../Views/listar_militares_promocao_em_lote.php?criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '&';
+    if (sizeof($alteracoes)) {
+        $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
+    }
+    header($location);
 }
-header($location);

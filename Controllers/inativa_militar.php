@@ -13,7 +13,7 @@ if (isset($_GET['id'])) {
     while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $antiguidade = $resultado['antiguidade'];
     }
-}
+} 
 
 //caso dados venham do arquivo visualizar_dados.php
 if (isset($_POST['antiguidade'])) {

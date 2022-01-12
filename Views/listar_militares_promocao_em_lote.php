@@ -46,6 +46,8 @@ $sql = "SELECT nome, posto_grad_mil, id, quadro, antiguidade FROM militar";
 if (sizeof($where)) {
     $sql .= " WHERE " . implode(" AND ", $where);
 }
+//INSERI UM ORDER BY ANTIGUIDADE
+$sql .= " ORDER BY antiguidade";
 $stmt = $conn->query($sql);
 $stmt->execute();
 // --------------------------- //

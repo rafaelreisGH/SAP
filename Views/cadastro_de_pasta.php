@@ -89,8 +89,7 @@ if (isset($_POST['militar_id'])) {
         if (isset($_GET['erro'])) {
             $erro = $_GET['erro'];
             if ($erro == 0) {
-                echo '<br><font style="color:#ff0000"><i>*Já havia pasta promocional criada no período informado.<br>'
-                . 'Portanto o registro foi <strong>atualizado</strong>.</i></font>';
+                echo '<br><font style="color:#ff0000"><i>*Já havia pasta promocional criada no período informado.</i></font>';
             } else if ($erro == 1) {
                 echo '<br><font style="color:#ff0000"><i>*Pasta promocional criada com sucesso!</i></font><br>';
                 echo '<br><a href="../Views/pasta_promocional_home.php?militar_id='.$militar_id.'">Clique aqui para acessar a pasta.</a>';

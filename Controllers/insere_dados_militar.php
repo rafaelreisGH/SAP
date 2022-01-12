@@ -30,12 +30,14 @@ try {
         $antiguidade = $antiguidade['max(antiguidade)'];
         //
         //inserir registro, inclusive com a antiguidade
-        $stmt = $conn->prepare('INSERT INTO militar (nome, posto_grad_mil, quadro, antiguidade) VALUES (:nome, :posto_grad, :quadro, :antiguidade)');
+        $stmt = $conn->prepare('INSERT INTO militar (nome, posto_grad_mil, quadro, antiguidade, militar.status) VALUES (:nome, :posto_grad, :quadro, :antiguidade, :ativo)');
         $stmt->execute(array(
             ':nome' => $nome,
             ':posto_grad' => $posto_grad,
             ':quadro' => $quadro,
-            ':antiguidade' => $antiguidade+1
+            ':antiguidade' => $antiguidade+1,
+            //INSERI O MILITAR RECÉM CADASTRADO COMO ATIVO
+            ':ativo' => 'ATIVO'
         ));
         if ($stmt) {
             $location .= 'sucesso[]=' . $nome . '&sucesso[]=' . $posto_grad . '&sucesso[]=' . $quadro . '';

@@ -24,7 +24,7 @@ $location = "Location:../Views/listar_militares_data_em_lote.php?";
 
 if (isset($_POST['militar_id'])) {
     $militar_id = $_POST['militar_id'];
-    $aux = (int)$militar_id[0];//incluído por causa do if PROMOÇÃO POR REQUERIMENTO
+    $aux = (int)$militar_id[0]; //incluído por causa do if PROMOÇÃO POR REQUERIMENTO
 
     foreach ($militar_id as $item) {
         //SELECT para buscar no BD resultado igual ao informado
@@ -60,15 +60,10 @@ if (isset($_POST['militar_id'])) {
         }
     }
 
-    //se a promocão for POR REQUERIMENTO automaticamente é liberada a antiguidade e inativado o militar.
-    if ($modalidade == 'POR REQUERIMENTO') {
-        header('Location:../Controllers/inativa_militar.php?id=' . $aux . '');
-    } else {
-        //concatenar as alteraçoes no $location
-        //$location = "Location:../Views/listar_militares_data_em_lote.php?";
-        $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
-        header("$location");
-    }
+    //concatenar as alteraçoes no $location
+    //$location = "Location:../Views/listar_militares_data_em_lote.php?";
+    $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
+    header("$location");
 
     //tem de ter um header aqui
 } else {
