@@ -93,7 +93,7 @@ if ($resultado == NULL) {
             </div>
         </div>
         <div class="col-md-4">
-            <form action="../Controllers/atualiza_tb_documentos.php" method="POST" accept-charset="UTF-8">
+            <form action="#" method="POST" accept-charset="UTF-8">
                 <h3>Atualização de Documentos</h3>
                 <div class="form-group">
                     <label for="exampleFormControlSelect1" id="labelAno">Ano</label>
