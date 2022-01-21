@@ -22,12 +22,7 @@ if (isset($_POST['militar_id'])) {
         $posto_grad = $resultado['posto_grad_mil'];
     }
 }
-/*
-  $nota_url = isset($_GET['nota']) ? $_GET['nota'] : 0;
-  $id_url = isset($_GET['militar_id']) ? $_GET['militar_id'] : 0;
-  $semestre_url = isset($_GET['semestre']) ? $_GET['semestre'] : 0;
-  $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
- */
+
 ?>
 
 <div class="container">
@@ -35,8 +30,6 @@ if (isset($_POST['militar_id'])) {
         <ul class="nav nav-pills">
             <li role="presentation" class="active"><a href="../Views/pagina_gestor.php">Voltar</a></li>
             <li role="presentation" class="active"><a href="../Views/cadastro_de_pasta.php?militar_id=<?= $militar_id ?>">Criar Pasta Promocional</a></li>
-            <li role="presentation" class="active"><a href="../Views/cadastro_de_documentos.php?militar_id=<?= $militar_id ?>">Atualizar documentos</a></li>
-            <li role="presentation" class="active"><a href="../Views/exclusão_de_documentos.php?militar_id=<?= $militar_id ?>">Exclusão de documentos</a></li>
             <li role="presentation" class="active"><a href="../Views/exclusão_de_pasta.php?militar_id=<?= $militar_id ?>">Excluir pasta</a></li>
         </ul>
         <hr>
@@ -99,17 +92,16 @@ if (isset($_POST['militar_id'])) {
                     //PROCURA REGISTRO DE DOCUMENTOS CONFORME ID DO MILITAR
                     $consulta = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional FROM pasta_promocional WHERE militar_id = '$militar_id'");
                     //percorrer os resultados
-                    while ($resultado = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                        $id_da_pasta = $resultado['id'];
-                        $aux_semestre_promocional = $resultado['semestre_processo_promocional'];
-                        $aux_ano_promocional = $resultado['ano_processo_promocional'];
+                    while ($res = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                        $id_da_pasta = $res['id'];
+                        $aux_semestre_promocional = $res['semestre_processo_promocional'];
+                        $aux_ano_promocional = $res['ano_processo_promocional'];
 
                         echo '<li class="list-group-item">'
                             . '<p><strong>Processo promocional</br></strong>' . $aux_semestre_promocional . 'º semestre/' . $aux_ano_promocional . '</p>'
                             . '<ul class="nav nav-pills">'
-                            .'<li role="presentation" ><a class="btn btn-success" href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta . '" role="button"><em class="glyphicon glyphicon-pencil" title="Cadastrar Documentos."></em></a></li>'
-                            . '<li role="presentation" ><a class="btn btn-info" href="#" role="button"><em class="glyphicon glyphicon-eye-open" title="Visualizar Documentos."></em></a></li>'
-                            . '<li role="presentation" ><a class="btn btn-danger" href="#" role="button"><em class="glyphicon glyphicon-remove" title="Remover Documentos."></em></a></li>'
+                            .'<li role="presentation" ><a class="btn btn-success" href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta . '" role="button"><em class="glyphicon glyphicon-pencil" title="Cadastrar Documentos."></em>&nbspEditar</a></li>'
+                            . '<li role="presentation" ><a class="btn btn-info" href="pasta_promocional_resumo.php?id_da_pasta=' . $id_da_pasta . '" role="button" target="_blank"><em class="glyphicon glyphicon-eye-open" title="Visualizar Documentos."></em>&nbspResumo</a></li>'
                             . '</ul></li><br>';
                     }
                 } catch (PDOException $ex) {

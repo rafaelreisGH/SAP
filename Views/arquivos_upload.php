@@ -62,15 +62,15 @@ else {
         echo '<font style="color:#ff0000"><i class="bi bi-exclamation-circle" fill="currentColor"></i>&nbspInformação</font></br>';
         echo "Upload efetuado com sucesso!";
         //echo '<br /><a href="' . $_UP['pasta'] . $novoNome . '" target="_blank">Clique aqui para acessar o arquivo</a>';
-        //echo '</br><a href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $_POST['dados_pasta'][0] . '">Voltar</a>';
+        //echo '</br><a href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $_POST['dados_pasta'] . '">Voltar</a>';
 
         //SALVAR O CAMINHO DO ARQUIVO NO BANCO DE DADOS
         $caminho = $_UP['pasta'] . $novoNome; //salva o caminho completo do arquivo
-        if (salvaNoBanco($_POST['tipo_do_documento'], $caminho, $_POST['dados_pasta'][0], $_POST['dados_pasta'][1], $_POST['dados_pasta'][2]) == 1) echo "<br>Documento salvo no Banco de Dados.";
+        if (salvaNoBanco($_POST['tipo_do_documento'], $caminho, $_POST['dados_pasta']) == 1) echo "<br>Documento salvo no Banco de Dados.";
         else echo "Documento não salvo no Banco de dados.";
 
         echo '<hr><a href="' . $_UP['pasta'] . $novoNome . '" target="_blank"><button class="btn btn-outline-info active" type="button">Clique aqui para acessar o arquivo</button></a>';
-        echo '&nbsp<a href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $_POST['dados_pasta'][0] . '"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
+        echo '&nbsp<a href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $_POST['dados_pasta'] . '"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
     } else {
         // Não foi possível fazer o upload, provavelmente a pasta está incorreta
         echo "Não foi possível enviar o arquivo, tente novamente";
@@ -81,7 +81,7 @@ else {
 //http://www.linhadecodigo.com.br/artigo/3578/php-upload-de-arquivos.aspx
 // --------------------------- //
 echo '</div></div>';
-function salvaNoBanco($documento, $caminho, $id, $semestre, $ano)
+function salvaNoBanco($documento, $caminho, $id)
 {
     require_once '../ConexaoDB/conexao.php';
     $stmt = $conn->prepare('UPDATE pasta_promocional SET ' . $documento . ' = :certidao_tj_1_inst WHERE id = :id');
