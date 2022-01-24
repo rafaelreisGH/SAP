@@ -91,8 +91,12 @@ if (isset($_POST['militar_id'])) {
                 try {
                     //PROCURA REGISTRO DE DOCUMENTOS CONFORME ID DO MILITAR
                     $consulta = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional FROM pasta_promocional WHERE militar_id = '$militar_id'");
+                    $consulta2 = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional FROM pasta_promocional WHERE militar_id = '$militar_id'");
                     //percorrer os resultados
-                    while ($res = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    if(($consulta->fetch(PDO::FETCH_ASSOC)) == false){
+                        echo "Nenhum registro encontrado.";
+                    }
+                    while ($res = $consulta2->fetch(PDO::FETCH_ASSOC)) {
                         $id_da_pasta = $res['id'];
                         $aux_semestre_promocional = $res['semestre_processo_promocional'];
                         $aux_ano_promocional = $res['ano_processo_promocional'];

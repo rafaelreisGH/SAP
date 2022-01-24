@@ -56,7 +56,7 @@ if (isset($resultado['militar_id'])) {
         <h5><label class="form-label">Certidões da Justiça</label></h5>
         <hr>
 
-        <div class="row">
+        <div id="certidaoTj1Inst" class="row">
 
             <div class="form-group col-md-6">
 
@@ -65,9 +65,9 @@ if (isset($resultado['militar_id'])) {
                     <label class="form-label">Certidão TJ-MT - 1ª instância</label>
                     <div class="input-group">
                         <input type="file" name="arquivo" class="form-control" aria-label="Upload">
-                        <input type="submit" class="btn btn-outline-success" value="Salvar">
                         <input type="hidden" name="tipo_do_documento" value="certidao_tj_1_inst">
                         <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
+                        <input type="submit" class="btn btn-outline-success" value="Salvar">
                     </div>
 
                 </form>
@@ -76,11 +76,11 @@ if (isset($resultado['militar_id'])) {
             <div class="form-group col-md-6">
                 <?php
                 if (isset($resultado['certidao_tj_1_inst'])) {
-                    $cert_tj_1 = $resultado['certidao_tj_1_inst'];
+                    $cert_trf_sj_mt = $resultado['certidao_tj_1_inst'];
                     echo '<label class="form-label">Ações disponíveis:</label>'
                         . '<form action="arquivos_excluir.php" method="post">'
                         . '<div class="form-group">'
-                        . '<a target="_blank" href="' . $cert_tj_1 . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                        . '<a target="_blank" href="' . $cert_trf_sj_mt . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
                         . '<input type="hidden" name="tipo_do_documento" value="certidao_tj_1_inst">'
                         . '<input type="hidden" name="id_pasta" value="' . $id_da_pasta . '">'
                         . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
@@ -91,24 +91,223 @@ if (isset($resultado['militar_id'])) {
             </div>
         </div>
         </br>
-        <div class="row">
+        <div id="certidaoTj2Inst" class="row">
+
             <div class="form-group col-md-6">
-                <label for="inputGroupFile04" class="form-label">Certidão TJ-MT - 1ª instância</label>
-                <div class="input-group">
-                    <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                    <button class="btn btn-outline-success" type="button" id="inputGroupFileAddon04">Salvar</button>
-                </div>
+
+                <form enctype="multipart/form-data" action="arquivos_upload.php" method="post">
+
+                    <label class="form-label">Certidão TJ-MT - 2ª instância</label>
+                    <div class="input-group">
+                        <input type="file" name="arquivo" class="form-control" aria-label="Upload">
+                        <input type="hidden" name="tipo_do_documento" value="certidao_tj_2_inst">
+                        <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
+                        <input type="submit" class="btn btn-outline-success" value="Salvar">
+                    </div>
+
+                </form>
             </div>
+
             <div class="form-group col-md-6">
-                <label for="inputGroupFile04" class="form-label">Certidão TJ-MT - 2ª instância</label>
-                <div class="input-group">
-                    <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                    <button class="btn btn-outline-success" type="button" id="inputGroupFileAddon04">Salvar</button>
-                </div>
+                <?php
+                if (isset($resultado['certidao_tj_2_inst'])) {
+                    $cert_tj_2 = $resultado['certidao_tj_2_inst'];
+                    echo '<label class="form-label">Ações disponíveis:</label>'
+                        . '<form action="arquivos_excluir.php" method="post">'
+                        . '<div class="form-group">'
+                        . '<a target="_blank" href="' . $cert_tj_2 . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                        . '<input type="hidden" name="tipo_do_documento" value="certidao_tj_2_inst">'
+                        . '<input type="hidden" name="id_pasta" value="' . $id_da_pasta . '">'
+                        . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
+                        . '</div>'
+                        . '</form>';
+                }
+                ?>
             </div>
         </div>
         </br>
+        <div id="certidaoTRF1" class="row">
+
+            <div class="form-group col-md-6">
+
+                <form enctype="multipart/form-data" action="arquivos_upload.php" method="post">
+
+                    <label class="form-label">Certidão TRF-1</label>
+                    <div class="input-group">
+                        <input type="file" name="arquivo" class="form-control" aria-label="Upload">
+                        <input type="hidden" name="tipo_do_documento" value="certidao_trf_1">
+                        <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
+                        <input type="submit" class="btn btn-outline-success" value="Salvar">
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="form-group col-md-6">
+                <?php
+                if (isset($resultado['certidao_trf_1'])) {
+                    $cert_trf_1 = $resultado['certidao_trf_1'];
+                    echo '<label class="form-label">Ações disponíveis:</label>'
+                        . '<form action="arquivos_excluir.php" method="post">'
+                        . '<div class="form-group">'
+                        . '<a target="_blank" href="' . $cert_trf_1 . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                        . '<input type="hidden" name="tipo_do_documento" value="certidao_trf_1">'
+                        . '<input type="hidden" name="id_pasta" value="' . $id_da_pasta . '">'
+                        . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
+                        . '</div>'
+                        . '</form>';
+                }
+                ?>
+            </div>
+        </div>
+        </br>
+        <div id="certidaoTRFSjMT" class="row">
+
+            <div class="form-group col-md-6">
+
+                <form enctype="multipart/form-data" action="arquivos_upload.php" method="post">
+
+                    <label class="form-label">Certidão TRF Seção Judiciária - MT</label>
+                    <div class="input-group">
+                        <input type="file" name="arquivo" class="form-control" aria-label="Upload">
+                        <input type="hidden" name="tipo_do_documento" value="certidao_trf_sj_mt">
+                        <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
+                        <input type="submit" class="btn btn-outline-success" value="Salvar">
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="form-group col-md-6">
+                <?php
+                if (isset($resultado['certidao_trf_sj_mt'])) {
+                    $cert_trf_sj_mt = $resultado['certidao_trf_sj_mt'];
+                    echo '<label class="form-label">Ações disponíveis:</label>'
+                        . '<form action="arquivos_excluir.php" method="post">'
+                        . '<div class="form-group">'
+                        . '<a target="_blank" href="' . $cert_trf_sj_mt . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                        . '<input type="hidden" name="tipo_do_documento" value="certidao_trf_sj_mt">'
+                        . '<input type="hidden" name="id_pasta" value="' . $id_da_pasta . '">'
+                        . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
+                        . '</div>'
+                        . '</form>';
+                }
+                ?>
+            </div>
+        </div>
+        </br>
+    </div>
+    <div class="col-md-12">
+        </br>
+        <h5><label class="form-label">Documentação <i>interna corporis</i></label></h5>
         <hr>
+
+        <div id="nadaConstaCorregedoria" class="row">
+
+            <div class="form-group col-md-6">
+
+                <form enctype="multipart/form-data" action="arquivos_upload.php" method="post">
+
+                    <label class="form-label">Nada Consta da Corregedoria Geral</label>
+                    <div class="input-group">
+                        <input type="file" name="arquivo" class="form-control" aria-label="Upload">
+                        <input type="hidden" name="tipo_do_documento" value="nada_consta_correg">
+                        <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
+                        <input type="submit" class="btn btn-outline-success" value="Salvar">
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="form-group col-md-6">
+                <?php
+                if (isset($resultado['nada_consta_correg'])) {
+                    $nada_consta_correg = $resultado['nada_consta_correg'];
+                    echo '<label class="form-label">Ações disponíveis:</label>'
+                        . '<form action="arquivos_excluir.php" method="post">'
+                        . '<div class="form-group">'
+                        . '<a target="_blank" href="' . $nada_consta_correg . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                        . '<input type="hidden" name="tipo_do_documento" value="nada_consta_correg">'
+                        . '<input type="hidden" name="id_pasta" value="' . $id_da_pasta . '">'
+                        . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
+                        . '</div>'
+                        . '</form>';
+                }
+                ?>
+            </div>
+        </div>
+        </br>
+        <div id="conceitoMoral" class="row">
+
+            <div class="form-group col-md-6">
+
+                <form enctype="multipart/form-data" action="arquivos_upload.php" method="post">
+
+                    <label class="form-label">Conceito Moral</label>
+                    <div class="input-group">
+                        <input type="file" name="arquivo" class="form-control" aria-label="Upload">
+                        <input type="hidden" name="tipo_do_documento" value="conceito_moral">
+                        <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
+                        <input type="submit" class="btn btn-outline-success" value="Salvar">
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="form-group col-md-6">
+                <?php
+                if (isset($resultado['conceito_moral'])) {
+                    $conceito_moral = $resultado['conceito_moral'];
+                    echo '<label class="form-label">Ações disponíveis:</label>'
+                        . '<form action="arquivos_excluir.php" method="post">'
+                        . '<div class="form-group">'
+                        . '<a target="_blank" href="' . $conceito_moral . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                        . '<input type="hidden" name="tipo_do_documento" value="conceito_moral">'
+                        . '<input type="hidden" name="id_pasta" value="' . $id_da_pasta . '">'
+                        . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
+                        . '</div>'
+                        . '</form>';
+                }
+                ?>
+            </div>
+        </div>
+        </br>
+        <div id="cursos_e_estagios" class="row">
+
+            <div class="form-group col-md-6">
+
+                <form enctype="multipart/form-data" action="arquivos_upload.php" method="post">
+
+                    <label class="form-label">Cursos e Estágios</label>
+                    <div class="input-group">
+                        <input type="file" name="arquivo" class="form-control" aria-label="Upload">
+                        <input type="hidden" name="tipo_do_documento" value="cursos_e_estagios">
+                        <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
+                        <input type="submit" class="btn btn-outline-success" value="Salvar">
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="form-group col-md-6">
+                <?php
+                if (isset($resultado['cursos_e_estagios'])) {
+                    $cursos_e_estagios = $resultado['cursos_e_estagios'];
+                    echo '<label class="form-label">Ações disponíveis:</label>'
+                        . '<form action="arquivos_excluir.php" method="post">'
+                        . '<div class="form-group">'
+                        . '<a target="_blank" href="' . $cursos_e_estagios . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                        . '<input type="hidden" name="tipo_do_documento" value="cursos_e_estagios">'
+                        . '<input type="hidden" name="id_pasta" value="' . $id_da_pasta . '">'
+                        . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
+                        . '</div>'
+                        . '</form>';
+                }
+                ?>
+            </div>
+        </div>
+        </br>
+
     </div>
 
 </div>
