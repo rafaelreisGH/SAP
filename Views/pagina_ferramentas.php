@@ -19,9 +19,9 @@ include_once './header2.php';
             <div class="col-md-4">
 
                 <div class="card">
-                    <h4 class="card-header">Registro de promoções passadas</h4>
+                    <h5 class="card-header">Registro de promoções passadas</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Atualização em lote</h5>
+                        <h6 class="card-title">Atualização em lote</h6>
                         <p class="card-text">Selecione os militares e atualize em lote os <strong>registros passados</strong> de promoção. Esta opção <strong> não interfere na antiguidade, nem altera posto/graduação</strong>.</p>
                         <a href="selecao_criterios_de_pesquisa.php" class="btn btn-primary">Selecionar</a>
                     </div>
@@ -30,9 +30,9 @@ include_once './header2.php';
 
             <div class="col-md-4">
                 <div class="card">
-                    <h4 class="card-header">Limite Quantitativo</h4>
+                    <h5 class="card-header">Limite Quantitativo</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Militares em geral</h5>
+                        <h6 class="card-title">Militares em geral</h6>
                         <p class="card-text">Documento destinado a exibir os militares que possuem ou possuirão interstício mínimo para a próxima promoção.</p>
                         <a href="selecao_criterios_de_pesquisa_LQ.php" class="btn btn-primary">Selecionar</a>
                     </div>
@@ -40,9 +40,9 @@ include_once './header2.php';
             </div>
             <div class="col-md-4">
                 <div class="card">
-                    <h4 class="card-header">Interstício para último posto</h4>
+                    <h5 class="card-header">Interstício para último posto</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Específico para Tenentes Coronéis</h5>
+                        <h6 class="card-title">Específico para Tenentes Coronéis</h6>
                         <p class="card-text">Documento destinado a exibir os Tenentes Coronéis que possuem ou possuirão interstício mínimo para promoção (por merecimento).</p>
                         <a href="selecao_criterios_de_pesquisa_LQ_TC.php" class="btn btn-primary">Selecionar</a>
                     </div>
@@ -50,15 +50,15 @@ include_once './header2.php';
             </div>
 
         </div>
-        
+
         <div class="clearfix"></br></div>
 
         <div class="row">
             <div class="col-md-4">
                 <div class="card">
-                    <h4 class="card-header">Cadastro de militar</h4>
+                    <h5 class="card-header">Cadastro de militar</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Registro de informações básicas</h5>
+                        <h6 class="card-title">Registro de informações básicas</h6>
                         <p class="card-text">Informe os dados necessários e cadastre os militares no banco de dados.</p>
                         <a href="cadastrar_militar.php" class="btn btn-primary">Selecionar</a>
                     </div>
@@ -66,9 +66,9 @@ include_once './header2.php';
             </div>
             <div class="col-md-4">
                 <div class="card">
-                    <h4 class="card-header">Atualização de antiguidade</h4>
+                    <h5 class="card-header">Atualização de antiguidade</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Atualização individual</h5>
+                        <h6 class="card-title">Atualização individual</h6>
                         <p class="card-text">Informe a posição que o militar deve ocupar na escala hieráquica. <strong>Não altera posto/graduação.</strong><br></p>
                         <a href="selecao_criterios_de_pesquisa.php?alteracao_antiguidade=1" class="btn btn-primary">Selecionar</a>
                     </div>
@@ -76,15 +76,33 @@ include_once './header2.php';
             </div>
             <div class="col-md-4">
                 <div class="card">
-                    <h4 class="card-header">Processar Promoção</h4>
+                    <h5 class="card-header">Processar Promoção</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Registre a promoção de militares</h5>
+                        <h6 class="card-title">Registre a promoção de militares</h6>
                         <p class="card-text">Esta função atualiza em lote o posto/graduação bem como as respectivas antiguidades.</p>
                         <a href="selecao_criterios_de_pesquisa.php?promover=1" class="btn btn-primary">Selecionar</a>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="clearfix"></br></div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Cadastro de TAF</h5>
+                    <div class="card-body">
+                        <h6 class="card-title">Informações gerais sobre o teste</h6>
+                        <p class="card-text">Registre os dados relacionados à realização e publicação do TAF.</p>
+                        <a href="cadastrar_taf.php" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="clearfix"></br></div>
+
     </div>
 </div>
 
