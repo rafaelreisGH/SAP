@@ -2,6 +2,8 @@
 include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
 
+$retorno = (isset($_GET['retorno'])) ? $_GET['retorno'] : null;
+$sucesso_cadastro = (isset($_GET['dados'])) ? $_GET['dados'] : null;
 
 ?>
 
@@ -17,72 +19,56 @@ require_once '../ConexaoDB/conexao.php';
     <div class="row justify-content-center">
         <div class="col-md-6">
 
-            <form action="" method="POST" name="formCadastro" onsubmit="return validateForm()">
+            <form action="../Controllers/inserir_evento_taf.php" method="POST" name="formCadastro">
                 <label class="form-label">Dados do Teste de Aptidão Física</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Data de realização</span>
-                    <input type="date" class="form-control" name="data_realizacao">
+                    <input type="date" class="form-control" name="data_realizacao" required>
                 </div>
-                <p id="alertaDataVazia1" style="color:#FF0000"></p>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">Número do Boletim</span>
-                    <input type="number" class="form-control" name="numero_bge" placeholder="Informe o número">
+                    <input type="number" class="form-control" name="numero_bge" placeholder="Informe o número" required>
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">Data do Boletim</span>
-                    <input type="date" class="form-control" name="data_publicacao">
+                    <input type="date" class="form-control" name="data_publicacao" required>
                 </div>
-                <p id="alertaDataVazia2" style="color:#FF0000"></p>
 
                 <hr>
                 <button class="btn btn-outline-success active" type="submit">Salvar</button>
             </form>
         </div>
-        <?php
-        if (!is_null($erro)) {
-            echo '<p><font style="color:#ff0000"><i class="bi bi-exclamation-circle" fill="currentColor"></i> Alerta!</font></p>';
-            foreach ($erro as $item) {
-                echo '<p><font style="color:#ff0000">' . $item . '</font></p>';
+
+        <div class="col-md-3">
+            <?php
+            if (!is_null($retorno)) {
+                switch ($retorno) {
+                    case 1:
+                        echo 'O TAF já foi cadastrado anteriormente.';
+                        break;
+                    case 2:
+                        echo '<p><font style="color:#0000ff"><i class="bi bi-person-check" fill="currentColor"></i><strong>&nbspO TAF foi cadastrado com sucesso!</strong></font></p>';
+                        $array = ['Data de realização:', 'Data de publicação:', 'BGE nº:'];
+                        $aux = 0;
+                        foreach ($sucesso_cadastro as $item) {
+                            echo '<p><font style="color:#0000ff">' . $array[$aux] . '&nbsp';
+                            echo $item . '</font></p>';
+                            $aux++;
+                        }
+                        break;
+                    case 3:
+                        echo 'Erro na tentativa de cadastro.';
+                        break;
+                }
             }
-        }
-        if (!is_null($sucesso_cadastro)) {
-            echo '<p><font style="color:#0000ff"><i class="bi bi-person-check" fill="currentColor"></i><strong>&nbspMilitar cadastrado com sucesso!</strong></font></p>';
-            $array = ['Nome:', 'Posto/Grad.:', 'Quadro:'];
-            $aux = 0;
-            foreach ($sucesso_cadastro as $item) {
-                echo '<p><font style="color:#0000ff">' . $array[$aux] . '&nbsp';
-                echo $item . '</font></p>';
-                $aux++;
-            }
-        }
-        ?>
+
+            ?>
+        </div>
+
     </div>
 </div>
-
-<script>
-    function validateForm() {
-        // abaixo serve para Limite de Quantitativo
-        let aux1 = document.forms["formCadastro"]["data_realizacao"].value;
-        if (aux1 == "" || is_null(aux1)) {
-            //alert("O nome deve ser preenchido.");
-            document.getElementById('alertaDataVazia1').innerHTML = '* A data do TAF deve ser preenchida.'
-            return false;
-        } else {
-            document.getElementById('alertaDataVazia1').innerHTML = ''
-        }
-        
-        let aux2 = document.forms["formCadastro"]["data_publicacao"].value;
-        if (aux2 == "" || is_null(aux2)) {
-            //alert("O QUADRO deve ser selecionado.");
-            document.getElementById('alertaDataVazia2').innerHTML = '* A data da publicação deve ser preenchida.'
-            return false;
-        } else {
-            document.getElementById('alertaDataVazia2').innerHTML = ''
-        }
-    }
-</script>
 
 
 
