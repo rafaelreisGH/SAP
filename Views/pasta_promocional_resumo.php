@@ -56,9 +56,9 @@ if (isset($_GET['id_da_pasta'])) {
                 $documentos[] = $resultado['nada_consta_correg'];
                 $documentos[] = $resultado['conceito_moral'];
                 $documentos[] = $resultado['cursos_e_estagios'];
-                $documentos[] = $resultado['media_das_avaliacoes'];
-                $documentos[] = $resultado['taf_id'];
+                $documentos[] = $resultado['militar_tem_taf_id'];
                 $documentos[] = $resultado['ais_id'];
+                $documentos[] = $resultado['media_das_avaliacoes'];
             }
         } catch (PDOException $ex) {
             return $ex->getMessage();

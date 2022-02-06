@@ -98,6 +98,16 @@ include_once './header2.php';
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Cadastro de AIS</h5>
+                    <div class="card-body">
+                        <h6 class="card-title">Ata de inspeção de saúde</h6>
+                        <p class="card-text">Registre os dados relacionados à realização de inspeção de saúde.</p>
+                        <a href="selecao_militar.php" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div>
+            </div>
 
         </div>
 

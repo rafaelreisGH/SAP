@@ -110,8 +110,8 @@ $stmt->execute();
                         <input type="hidden" name="criterio_quadro" value="<?= $criterios_quadro ?>">
                     </div>
 
-
                     <button class="btn btn-outline-danger active" type="submit" name="buscar">Promover militares</button>
+                    
                 </div>
                 <div class="col-md-4">
                     <?php
