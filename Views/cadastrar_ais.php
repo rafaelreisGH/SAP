@@ -94,40 +94,6 @@ try {
                 <button class="btn btn-outline-success active" type="submit">Salvar</button>
             </form>
             <hr>
-
-            <label class="form-label">Arquivo digital A.I.S.</label>
-            <form enctype="multipart/form-data" action="arquivos_upload.php" method="post">
-
-                <div class="input-group">
-                    <input type="file" name="arquivo" class="form-control" aria-label="Upload">
-                    <input type="hidden" name="tipo_do_documento" value="certidao_tj_2_inst">
-                    <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
-                    <input type="submit" class="btn btn-outline-success" value="Salvar">
-                </div>
-                <small class="form-text text-muted">Envie o <strong>arquivo digital</strong> correspondente.</small>
-
-            </form>
-
-            <div>
-
-                <?php
-                
-                // if (isset($resultado['cursos_e_estagios'])) {
-                //     $cursos_e_estagios = $resultado['cursos_e_estagios'];
-                //     echo '<label class="form-label">Ações disponíveis:</label>'
-                //         . '<form action="arquivos_excluir.php" method="post">'
-                //         . '<div class="form-group">'
-                //         . '<a target="_blank" href="' . $cursos_e_estagios . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
-                //         . '<input type="hidden" name="tipo_do_documento" value="cursos_e_estagios">'
-                //         . '<input type="hidden" name="id_pasta" value="' . $id_da_pasta . '">'
-                //         . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
-                //         . '</div>'
-                //         . '</form>';
-                // }
-                ?>
-
-            </div>
-
         </div>
 
         <div class="col-md-6">
@@ -159,7 +125,84 @@ try {
             ?>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="form-label">Arquivo digital A.I.S.</label>
 
+            <?php
+            if (isset($_GET['erro']) && ($_GET['erro']) == 1) {
+                echo '<p><font style="color:#0000ff"><i class="bi bi-exclamation-circle" fill="currentColor"></i><strong>&nbspÉ preciso informar a situração da A.I.S.</strong></font></p>';
+            }
+            ?>
+
+            <form enctype="multipart/form-data" action="arquivos_upload_ais_taf.php" method="post">
+                <div class="input-group">
+                    <span class="input-group-text">Especifique a AIS</span>
+                    <select name="documento_id" class="form-select">
+                        <option value="" selected>Selecione</option>
+                        <?php
+                        try {
+                            $stmt = $conn->query('SELECT * FROM promocao.ais WHERE militar_id = ' . $militar_id . '');
+                            while ($resultado_ais = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                require_once '../Controllers/alias_ultima_promocao.php';
+                                $aux_id = $resultado_ais['id'];
+                                $aux_data_da_inspecao = alias_ultima_promocao($resultado_ais['data_da_inspecao']);
+                                $aux_bge = $resultado_ais['bge_numero'];
+                                $aux_data_public = alias_ultima_promocao($resultado_ais['data_public']);
+                                $aux_aptidao = $resultado_ais['aptidao'];
+                                $aux_retricoes = $resultado_ais['restricoes'];
+
+                                echo '<option value="' . $aux_id . '">Data: ' . $aux_data_da_inspecao . ' - Resultado: ' . $aux_aptidao . '</option>';
+                            }
+                        } catch (PDOException $ex) {
+                            return $ex->getMessage();
+                        }
+                        ?>
+                    </select>
+                </div>
+                <small class="form-text text-muted">Informe a <strong>AIS</strong> correspondente.</small>
+
+                <div class="input-group">
+                    <input type="file" name="arquivo" class="form-control" aria-label="Upload">
+                    <input type="hidden" name="tipo_do_documento" value="ais">
+                    <input type="hidden" name="militar_id" value="<?= $militar_id ?>">
+                    <input type="submit" class="btn btn-outline-success" value="Salvar">
+                </div>
+                <small class="form-text text-muted">Envie o <strong>arquivo digital</strong> correspondente.</small>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <div>
+                <?php
+                if (isset($_GET['documento_id'])) {
+                    try {
+                        $stmt = $conn->query('SELECT * FROM promocao.ais WHERE id = ' . $_GET['documento_id'] . '')->fetch();
+                        if($stmt) {
+                            $id = $stmt['id'];
+                            $caminho = $stmt['caminho_do_arquivo'];
+                            echo '<label class="form-label">Ações disponíveis:</label>'
+                                . '<form action="arquivos_excluir.php" method="post">'
+                                . '<div class="form-group">'
+                                . '<a target="_blank" href="' . $caminho . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                                . '<input type="hidden" name="tipo_do_documento" value="ais">'
+                                . '<input type="hidden" name="caminho_do_documento" value="'.$caminho.'">'
+                                . '<input type="hidden" name="id_ais" value="' . $id . '">'
+                                . '<input type="hidden" name="militar_id" value="' . $militar_id . '">'
+                                . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
+                                . '</div>'
+                                . '</form>';
+                        }
+                    } catch (PDOException $ex) {
+                        return $ex->getMessage();
+                    }
+                }
+                ?>
+
+            </div>
+
+        </div>
+    </div>
     <hr>
     <h3><strong>Edição de dados sobre A.I.S.</strong></h3>
     <hr>
@@ -218,7 +261,7 @@ try {
                                         $aux_data_public = alias_ultima_promocao($aux_data_public);
 
                                         echo '<tr>'
-                                            . '<td align="center"><input class="form-check-input mt-0" type="checkbox" value="' . $aux_id . '" name="aux_id"><input type="hidden" name="militar_id" value="'. $militar_id .'"></td>'
+                                            . '<td align="center"><input class="form-check-input mt-0" type="checkbox" value="' . $aux_id . '" name="aux_id"><input type="hidden" name="militar_id" value="' . $militar_id . '"></td>'
                                             . '<td align="center">' . $aux_data_da_inspecao . '</td>'
                                             . '<td align="center">' . $aux_aptidao . '</td>'
                                             . '<td align="center">' . $aux_retricoes . '</td>'

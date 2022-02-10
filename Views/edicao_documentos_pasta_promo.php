@@ -82,9 +82,9 @@ if (isset($resultado['militar_id'])) {
         if (($sucesso[0] == 1) && (!is_null($documento))) {
             echo '<p><font style="color:#ff0000"><i class="bi bi-person-check" fill="currentColor"></i>&nbspAlteração de dados bem sucedida para <strong>' . $documento . '</strong>.</font></p>';
         } else {
-            echo '<p>Observação:<br>';
+            echo '<p><font style="color:#ff0000"><i class="bi bi-exclamation-circle" fill="currentColor"></i>&nbspObservação:<br>';
             echo 'Falha ao cadastrar a ' . $documento . '!';
-            echo '</p>';
+            echo '</font></p>';
         }
     }
     ?>
@@ -598,73 +598,157 @@ if (isset($resultado['militar_id'])) {
     </div>
     </br>
 
-    <div id="taf" class="row">
+    <div id="taf" class="col">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <form action="../Controllers/atualiza_tb_documentos.php" method="post" name="formTAF" onsubmit="return validateForm()">
+                    <label class="form-label">Avaliação de desempenho físico</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Selecionar TAF</span>
+                        <select class="form-select" name="id_taf" required>
+                            <option selected disabled>Selecione o TAF</option>
+                            <?php
+                            try {
+                                $stmt = $conn->query("SELECT * FROM promocao.taf");
+                                $res = $stmt->fetch(PDO::FETCH_ASSOC);
+                                if ($res) {
+                                    $id_taf = $res['id'];
+                                    $data_taf = $res['data_do_taf'];
+                                    $bge = $res['bge_numero'];
+                                    $public = $res['data_public'];
+                                    require_once '../Controllers/alias_ultima_promocao.php';
+                                    echo "<option value=" . $id_taf . ">Data: " . alias_ultima_promocao($data_taf) . " - BGE: " . $bge . ", de " . alias_ultima_promocao($public) . "</option>";
+                                }
+                            } catch (PDOException $ex) {
+                                return $ex->getMessage();
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <p id="alertaIdTafVazio" style="color:#FF0000"></p>
 
-        <div class="form-group col-md-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Aprovação no TAF</span>
+                        <select class="form-select" name="taf_aptidao" required>
+                            <option selected disabled>Selecione a situação</option>
+                            <option value="APTO">Apto</option>
+                            <option value="INAPTO">Inapto</option>
+                        </select>
+                    </div>
+                    <p id="alertaAptidaoVazio" style="color:#FF0000"></p>
 
-            <form action="cadastrar_taf.php" method="post">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Menção obtida</span>
+                        <select class="form-select" name="taf_mencao" required>
+                            <option selected disabled>Selecione a menção</option>
+                            <option value="E">Excelente</option>
+                            <option value="MB">Muito Bom</option>
+                            <option value="B">Bom</option>
+                            <option value="R">Regular</option>
+                            <option value="I">Insuficiente</option>
+                            <option value="">Sem menção (TAF Alternativo)</option>
+                        </select>
+                    </div>
+                    <p id="alertaMencaoVazio" style="color:#FF0000"></p>
 
-                <label class="form-label">Avaliação de desempenho físico</label>
-                <div class="input-group">
-                    <span class="input-group-text">Selecionar TAF.</span>
-                    <select class="form-select" name="criterio_ano_promocao_futura">
-                        <?php
-                        $ano_atual = date("Y");
-                        for ($i = $ano_atual; $i <= ($ano_atual + 4); $i++) {
-                            echo "<option value=" . $i . ">" . $i . "</option>";
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Tipo do TAF</span>
+                        <select class="form-select" name="taf_tipo" required>
+                            <option selected disabled>Selecione o tipo</option>
+                            <option value="ALTERNATIVO">Alternativo (TAF-5)</option>
+                            <option value="PADRÃO">Padrão (TAF-3)</option>
+                        </select>
+                    </div>
+                    <p id="alertaTipoVazio" style="color:#FF0000"></p>
+
+                    <input type="hidden" name="id_da_pasta" value="<?= $id_da_pasta ?>">
+                    <input type="hidden" name="id_militar" value="<?= $militar_id ?>">
+                    <button type="submit" class="btn btn-outline-success">Salvar</button>
+
+                </form>
+            </div>
+            <div class="form-group col-md-6">
+                <?php
+                if (isset($_GET['militar_tem_taf_id'])) {
+                    $militar_tem_taf_id = $_GET['militar_tem_taf_id'];
+                    try {
+                        $resultado_taf = $conn->query('SELECT aptidao, mencao, tipo_do_taf FROM militar_tem_taf INNER JOIN pasta_promocional on militar_tem_taf.id = pasta_promocional.militar_tem_taf_id  WHERE militar_tem_taf.id = ' . $militar_tem_taf_id . '')->fetch();
+                    } catch (PDOException $ex) {
+                        return $ex->getMessage();
+                    }
+
+                    if ($resultado_taf) {
+                        echo '<br><strong>Último registro de TAF</strong> <br> ';
+                        echo 'Resultado: ' . $resultado_taf['aptidao'] . ' <br> ';
+                        echo 'Menção: ' . $resultado_taf['mencao'] . '<br> ';
+                        echo 'Tipo do TAF: ' . $resultado_taf['tipo_do_taf'] . '';
+                    }
+                } else {
+                    $resultado_taf = $conn->query('SELECT militar_tem_taf_id FROM pasta_promocional WHERE id = ' . $id_da_pasta . '')->fetch();
+
+                    $auxiliar = $resultado_taf['militar_tem_taf_id'];
+                    if ($auxiliar != null) {
+                        $resultado_taf = $conn->query('SELECT aptidao, mencao, tipo_do_taf FROM militar_tem_taf INNER JOIN pasta_promocional on militar_tem_taf.id = pasta_promocional.militar_tem_taf_id  WHERE militar_tem_taf.id = ' . $auxiliar . '')->fetch();
+
+                        if ($resultado_taf) {
+                            echo '<br><strong>Último registro de TAF</strong> <br> ';
+                            echo 'Resultado: ' . $resultado_taf['aptidao'] . ' <br> ';
+                            echo 'Menção: ' . $resultado_taf['mencao'] . '<br> ';
+                            echo 'Tipo do TAF: ' . $resultado_taf['tipo_do_taf'] . '';
                         }
-                        ?>
-                    </select>
-                    <input type="hidden" name="tipo_do_documento" value="taf">
-                    <input type="hidden" name="dados_pasta" value="<?= $id_da_pasta ?>">
-                    <input type="submit" class="btn btn-outline-success" value="Salvar">
-                </div>
-
-            </form>
+                    }
+                }
+                ?>
+            </div>
         </div>
+
     </div>
 
     </br>
 
-    <div id="ais" class="row">
-        <div class="form-group col-md-6">
-            <form action="../Controllers/atualiza_tb_documentos.php" method="post">
-                <label class="form-label">Ata de inspeção de saúde</label>
-                <div class="input-group">
-                    <span class="input-group-text">Selecionar A.I.S.</span>
-                    <select class="form-select" name="id_ais">
-                        <option selected disabled>Selecione a situação</option>
-                        <?php
-                        try {
-                            //pegar no BD dados do militar selecionado
-                            if (isset($militar_id)) {
-                                $stmt = $conn->query("SELECT * FROM promocao.ais WHERE militar_id = '" . $militar_id . "'");
-                                $res = $stmt->fetch(PDO::FETCH_ASSOC);
-                                if ($res) {
-                                    $id_ais = $res['id'];
-                                    $data_ais = $res['data_da_inspecao'];
-                                    $aptidao = $res['aptidao'];
-                                    require_once '../Controllers/alias_ultima_promocao.php';
-                                    echo "<option value=" . $id_ais . ">Data: " . alias_ultima_promocao($data_ais) . " - Resultado: " . ucfirst(strtolower($aptidao)) . "</option>";
+    <div id="ais" class="col">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <form action="../Controllers/atualiza_tb_documentos.php" method="post">
+                    <label class="form-label">Ata de inspeção de saúde</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Selecionar A.I.S.</span>
+                        <select class="form-select" name="id_ais">
+                            <option selected disabled>Selecione a situação</option>
+                            <?php
+                            try {
+                                //pegar no BD dados do militar selecionado
+                                if (isset($militar_id)) {
+                                    $stmt = $conn->query("SELECT * FROM promocao.ais WHERE militar_id = '" . $militar_id . "'");
+                                    $res = $stmt->fetch(PDO::FETCH_ASSOC);
+                                    if ($res) {
+                                        $id_ais = $res['id'];
+                                        $data_ais = $res['data_da_inspecao'];
+                                        $aptidao = $res['aptidao'];
+                                        require_once '../Controllers/alias_ultima_promocao.php';
+                                        echo "<option value=" . $id_ais . ">Data: " . alias_ultima_promocao($data_ais) . " - Resultado: " . ucfirst(strtolower($aptidao)) . "</option>";
+                                    }
                                 }
+                            } catch (PDOException $ex) {
+                                return $ex->getMessage();
                             }
-                        } catch (PDOException $ex) {
-                            return $ex->getMessage();
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
 
-                    <input type="hidden" name="id_pasta" value="<?= $id_da_pasta ?>">
-                    <input type="submit" class="btn btn-outline-success" value="Salvar">
-                </div>
-            </form>
+                        <input type="hidden" name="id_pasta" value="<?= $id_da_pasta ?>">
+                        <input type="submit" class="btn btn-outline-success" value="Salvar">
+                    </div>
+                </form>
 
-        </div>
-        <div class="form-group col-md-6">
-            <?php
+            </div>
+            <div class="form-group col-md-6">
+                <?php
 
-            try {
-                $resultado_ais = $conn->query('SELECT ais.aptidao, ais.bge_numero, ais.data_da_inspecao, ais.data_public  from pasta_promocional inner join ais on pasta_promocional.ais_id = ais.id WHERE pasta_promocional.id = ' . $id_da_pasta . '')->fetch();
+                try {
+                    $resultado_ais = $conn->query('SELECT ais.aptidao, ais.bge_numero, ais.data_da_inspecao, ais.data_public  from pasta_promocional inner join ais on pasta_promocional.ais_id = ais.id WHERE pasta_promocional.id = ' . $id_da_pasta . '')->fetch();
+                } catch (PDOException $ex) {
+                    return $ex->getMessage();
+                }
 
                 if ($resultado_ais) {
                     require_once '../Controllers/alias_ultima_promocao.php';
@@ -674,31 +758,48 @@ if (isset($resultado['militar_id'])) {
                     echo 'BGE nº ' . $resultado_ais['bge_numero'] . ', ';
                     echo 'de ' . alias_ultima_promocao($resultado_ais['data_public']) . '.';
                 }
-            } catch (PDOException $ex) {
-                return $ex->getMessage();
-            }
-            ?>
+                ?>
+            </div>
+
         </div>
-
     </div>
-
-    </br>
 </div>
 
+</br>
+
+</br>
+
 <script>
-    function checkUncheck(main) {
-        all = document.getElementsByName('militar_id[]');
-        for (var a = 0; a < all.length; a++) {
-            all[a].checked = main.checked;
+    function validateForm() {
+        // abaixo serve para Limite de Quantitativo
+        let aux1 = document.forms["formTAF"]["id_taf"].value;
+        if (aux1 == "Selecione o TAF") {
+            document.getElementById('alertaIdTafVazio').innerHTML = '* É necessário especificar um TAF. Deve-se cadastrar o Evento TAF, caso não conste nenhum. <a href="/Views/cadastrar_taf.php">Clique aqui</a> para acessar a página de cadastro de TAF'
+            return false;
+        } else {
+            document.getElementById('alertaIdTafVazio').innerHTML = ''
         }
-    }
-
-    function mostraDica() {
-        document.getElementById('paragrafoDica').innerHTML = 'Caso já exista registrada promoção para o mesmo posto/graduação, as informações serão atualizadas no banco de dados sobrescrevendo o registro anterior.'
-    }
-
-    function escondeDica() {
-        document.getElementById('paragrafoDica').innerHTML = ''
+        let aux2 = document.forms["formTAF"]["taf_aptidao"].value;
+        if (aux2 == "Selecione a situação") {
+            document.getElementById('alertaAptidaoVazio').innerHTML = '* Informe se o militar foi aprovado ou não.'
+            return false;
+        } else {
+            document.getElementById('alertaAptidaoVazio').innerHTML = ''
+        }
+        let aux3 = document.forms["formTAF"]["taf_mencao"].value;
+        if (aux3 == "Selecione a menção") {
+            document.getElementById('alertaMencaoVazio').innerHTML = '* Informe a menção obtida.'
+            return false;
+        } else {
+            document.getElementById('alertaMencaoVazio').innerHTML = ''
+        }
+        let aux4 = document.forms["formTAF"]["taf_tipo"].value;
+        if (aux4 == "Selecione o tipo") {
+            document.getElementById('alertaTipoVazio').innerHTML = '* Informe o tipo do TAF.'
+            return false;
+        } else {
+            document.getElementById('alertaTipoVazio').innerHTML = ''
+        }
     }
 </script>
 

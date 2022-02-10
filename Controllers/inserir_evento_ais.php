@@ -58,7 +58,7 @@ if (is_null($exclusao)) {
             $stmt->execute(array(
                 ':id' => $exclusao
             ));
-            
+                
             if ($stmt) header('Location:../Views/cadastrar_ais.php?retorno=4&militar_id='.$militar_id.'');
         } catch (PDOException $ex) {
             return $ex->getMessage();

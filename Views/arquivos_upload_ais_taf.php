@@ -1,6 +1,11 @@
 <?php
 include_once './header2.php';
 
+$documento = $_POST['tipo_do_documento'];
+
+if (($_POST['documento_id'] == '') && ($documento == 'ais')) header("Location:../Views/cadastrar_ais.php?militar_id={$_POST["militar_id"]}&erro=1");
+
+
 echo '<div class="container"><div class="col-md-12">';
 // --------------------------- //
 //INÍCIO
@@ -66,11 +71,13 @@ else {
 
         //SALVAR O CAMINHO DO ARQUIVO NO BANCO DE DADOS
         $caminho = $_UP['pasta'] . $novoNome; //salva o caminho completo do arquivo
-        if (salvaNoBanco($_POST['tipo_do_documento'], $caminho, $_POST['dados_pasta']) == 1) echo "<br>Documento salvo no Banco de Dados.";
+        if (salvaNoBanco($_POST['tipo_do_documento'], $caminho, $_POST['documento_id']) == 1) echo "<br>Documento salvo no Banco de Dados.";
         else echo "Documento não salvo no Banco de dados.";
 
         echo '<hr><a href="' . $_UP['pasta'] . $novoNome . '" target="_blank"><button class="btn btn-outline-info active" type="button">Clique aqui para acessar o arquivo</button></a>';
-        echo '&nbsp<a href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $_POST['dados_pasta'] . '"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
+
+        if ($documento == 'ais') echo '&nbsp<a href="cadastrar_ais.php?militar_id=' . $_POST['militar_id'] . '&documento_id='.$_POST['documento_id'].'"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
+        else echo '&nbsp<a href="cadastrar_taf.php?militar_id=' . $_POST['militar_id'] . '"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
     } else {
         // Não foi possível fazer o upload, provavelmente a pasta está incorreta
         echo "Não foi possível enviar o arquivo, tente novamente";
@@ -84,11 +91,39 @@ echo '</div></div>';
 function salvaNoBanco($documento, $caminho, $id)
 {
     require_once '../ConexaoDB/conexao.php';
-    $stmt = $conn->prepare('UPDATE pasta_promocional SET ' . $documento . ' = :caminho WHERE id = :id');
-    $stmt->execute(array(
-        ':id' => $id,
-        ':caminho' => $caminho
-    ));
+    $tem_ais = false;
+
+    if ($documento == 'ais') {
+        try {
+            $stmt = $conn->query('SELECT caminho_do_arquivo FROM promocao.ais WHERE id = ' . $_POST['documento_id'] . '')->fetch();
+            if (($stmt['caminho_do_arquivo'] != '')&&($stmt['caminho_do_arquivo'] != null)) {
+                unlink($stmt['caminho_do_arquivo']);
+            }
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        }
+        try {
+            $stmt = $conn->query('SELECT * FROM promocao.ais WHERE militar_id = ' . $_POST['militar_id'] . '');
+            if ($stmt->fetch(PDO::FETCH_ASSOC)) {
+                $tem_ais = true;
+            }
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        }
+        if ($tem_ais == true) {
+            try {
+                $stmt = $conn->prepare('UPDATE promocao.ais SET ais.caminho_do_arquivo = :caminho WHERE ais.id = :id');
+                $stmt->execute(array(
+                    ':id' => $id,
+                    ':caminho' => $caminho
+                ));
+            } catch (PDOException $ex) {
+                return $ex->getMessage();
+            }
+        }
+    } else {
+    }
+
     if ($stmt) {
         return 1;
     } else {
