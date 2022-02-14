@@ -383,146 +383,145 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
         </div>
 
         <div class="col-md-5">
-            <div style="position: fixed;">
-                <table class="table table-striped" style="text-align: center;">
-                    <caption>Resumo da Ficha de Avaliação</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Excelente</th>
-                            <th scope="col">Muito bom</th>
-                            <th scope="col">Bom</th>
-                            <th scope="col">Regular</th>
-                            <th scope="col">Insuficiente</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Total</th>
-                            <td id="qtdeExcelente">N/D</td>
-                            <td id="qtdeMuitoBom">N/D</td>
-                            <td id="qtdeBom">N/D</td>
-                            <td id="qtdeRegular">N/D</td>
-                            <td id="qtdeInsuficiente">N/D</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Fatores</th>
-                            <td>6</td>
-                            <td>5</td>
-                            <td>4</td>
-                            <td>3</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Resultados</th>
-                            <td id="resultadoExcelente">N/D</td>
-                            <td id="resultadoMuitoBom">N/D</td>
-                            <td id="resultadoBom">N/D</td>
-                            <td id="resultadoRegular">N/D</td>
-                            <td id="resultadoInsuficiente">N/D</td>
-                        <tr>
-                            <th scope="row">Conceito final</th>
-                            <td colspan="5" id="conceitoFinal"></td>
-                        </tr>
+            <table class="table table-striped" style="text-align: center;">
+                <caption>Resumo da Ficha de Avaliação</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Excelente</th>
+                        <th scope="col">Muito bom</th>
+                        <th scope="col">Bom</th>
+                        <th scope="col">Regular</th>
+                        <th scope="col">Insuficiente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Total</th>
+                        <td id="qtdeExcelente">N/D</td>
+                        <td id="qtdeMuitoBom">N/D</td>
+                        <td id="qtdeBom">N/D</td>
+                        <td id="qtdeRegular">N/D</td>
+                        <td id="qtdeInsuficiente">N/D</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Fatores</th>
+                        <td>6</td>
+                        <td>5</td>
+                        <td>4</td>
+                        <td>3</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Resultados</th>
+                        <td id="resultadoExcelente">N/D</td>
+                        <td id="resultadoMuitoBom">N/D</td>
+                        <td id="resultadoBom">N/D</td>
+                        <td id="resultadoRegular">N/D</td>
+                        <td id="resultadoInsuficiente">N/D</td>
+                    <tr>
+                        <th scope="row">Conceito final</th>
+                        <td colspan="5" id="conceitoFinal"></td>
+                    </tr>
 
-                        <tr>
-                            <th scope="row"></th>
-                            <td colspan="5"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Representa</th>
-                            <td colspan="5" id="escalaDeZeroAdez"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Média</th>
-                            <td colspan="5">
-                                <p>
-                                    <?php
-                                    $stmtPesquisar = $conn->query("SELECT nota FROM fad WHERE militar_id = '$id' AND grau_hierarquico_na_epoca = '$posto_grad'");
-                                    $stmtPesquisar->execute();
+                    <tr>
+                        <th scope="row"></th>
+                        <td colspan="5"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Representa</th>
+                        <td colspan="5" id="escalaDeZeroAdez"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Média</th>
+                        <td colspan="5">
+                            <p>
+                                <?php
+                                $stmtPesquisar = $conn->query("SELECT nota FROM fad WHERE militar_id = '$id' AND grau_hierarquico_na_epoca = '$posto_grad'");
+                                $stmtPesquisar->execute();
 
-                                    $resultado = $stmtPesquisar->fetchAll(PDO::FETCH_COLUMN, 0);
-                                    $elementos = count($resultado);
-                                    if ($elementos >= 3) {
-                                        sort($resultado);
-                                        array_shift($resultado);
-                                        array_pop($resultado);
-                                        $qtde = sizeof($resultado);
-                                        $media = array_sum($resultado) / $qtde;
-                                        //inserção da média no BD
-                                        $stmt3 = $conn->prepare("UPDATE militar SET media = ? WHERE id = '$id'");
-                                        $stmt3->bindParam(1, $media);
-                                        $stmt3->execute();
-                                    } else {
-                                        //vai colocar a média como ZERO quando houver menos de 3 notas de FAD
-                                        $stmt4 = $conn->prepare("UPDATE militar SET media = 0 WHERE id = '$id'");
-                                        $stmt4->execute();
-                                    }
-                                    ?>
-                                    <?php
-                                    $consulta = $conn->query("SELECT media FROM militar WHERE id = '" . $id . "' ");
-                                    $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
-                                    if (isset($resultado['media'])  && $resultado['media'] != 0) {
-                                        $media = $resultado['media'];
-                                        echo number_format($media, 2);
-                                    } else {
-                                        echo "Ainda não há notas suficientes para calcular a média.";
-                                    }
-                                    ?>
-                                <p>
+                                $resultado = $stmtPesquisar->fetchAll(PDO::FETCH_COLUMN, 0);
+                                $elementos = count($resultado);
+                                if ($elementos >= 3) {
+                                    sort($resultado);
+                                    array_shift($resultado);
+                                    array_pop($resultado);
+                                    $qtde = sizeof($resultado);
+                                    $media = array_sum($resultado) / $qtde;
+                                    //inserção da média no BD
+                                    $stmt3 = $conn->prepare("UPDATE militar SET media = ? WHERE id = '$id'");
+                                    $stmt3->bindParam(1, $media);
+                                    $stmt3->execute();
+                                } else {
+                                    //vai colocar a média como ZERO quando houver menos de 3 notas de FAD
+                                    $stmt4 = $conn->prepare("UPDATE militar SET media = 0 WHERE id = '$id'");
+                                    $stmt4->execute();
+                                }
+                                ?>
+                                <?php
+                                $consulta = $conn->query("SELECT media FROM militar WHERE id = '" . $id . "' ");
+                                $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+                                if (isset($resultado['media'])  && $resultado['media'] != 0) {
+                                    $media = $resultado['media'];
+                                    echo number_format($media, 2);
+                                } else {
+                                    echo "Ainda não há notas suficientes para calcular a média.";
+                                }
+                                ?>
+                            <p>
 
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-                <?php
-                if (isset($_GET['erro'])) {
-                    $erro = $_GET['erro'];
-                    if ($erro == 1) {
-                        echo '<br><font style="color:#ff0000"><i>*Já havia registro de FAD no período informado.<br>'
-                            . 'Portanto o registro foi <strong>atualizado</strong>.</i></font>';
-                    }
+            <?php
+            if (isset($_GET['erro'])) {
+                $erro = $_GET['erro'];
+                if ($erro == 1) {
+                    echo '<br><font style="color:#ff0000"><i>*Já havia registro de FAD no período informado.<br>'
+                        . 'Portanto o registro foi <strong>atualizado</strong>.</i></font>';
                 }
-                ?>
-                </p>
-                <table class="table table-striped">
-                    <caption>Registros de Ficha de Avaliação</caption>
-                    <thead>
-                        <tr>
-                            <th>Semestre</th>
-                            <th>Ano</th>
-                            <th>Nota</th>
-                            <th>Excluir</th>
-                            <th>Visualizar</th>
-                        </tr>
-                    </thead>
+            }
+            ?>
+            </p>
+            <table class="table table-striped">
+                <caption>Registros de Ficha de Avaliação</caption>
+                <thead>
+                    <tr>
+                        <th>Semestre</th>
+                        <th>Ano</th>
+                        <th>Nota</th>
+                        <th>Excluir</th>
+                        <th>Visualizar</th>
+                    </tr>
+                </thead>
 
-                    <tbody>
-                        <?php
-                        try {
-                            //PROCURA REGISTRO DE FAD CONFORME ID DO MILITAR
-                            $consulta = $conn->query("SELECT id, ano, semestre, nota FROM fad WHERE militar_id = '$id' ORDER BY ano ASC");
-                            //percorrer os resultados
-                            while ($resultado = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                                $id_da_fad = $resultado['id'];
-                                $aux_semestre = $resultado['semestre'];
-                                $aux_ano = $resultado['ano'];
-                                $aux_nota = $resultado['nota'];
+                <tbody>
+                    <?php
+                    try {
+                        //PROCURA REGISTRO DE FAD CONFORME ID DO MILITAR
+                        $consulta = $conn->query("SELECT id, ano, semestre, nota FROM fad WHERE militar_id = '$id' ORDER BY ano ASC");
+                        //percorrer os resultados
+                        while ($resultado = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                            $id_da_fad = $resultado['id'];
+                            $aux_semestre = $resultado['semestre'];
+                            $aux_ano = $resultado['ano'];
+                            $aux_nota = $resultado['nota'];
 
-                                echo '<tr>'
-                                    . '<td>' . $aux_semestre . 'º semestre</td>'
-                                    . '<td>' . $aux_ano . '</td>'
-                                    . '<td>' . $aux_nota . '</td>'
-                                    . '<td><form action="../Controllers/exclui_fad.php" method="POST"><input type="hidden" name="militar_id" value="' . $id . '"><button class="btn btn-danger" type="submit" name="id_da_fad" value="' . $id_da_fad . '"><em class="glyphicon glyphicon-trash" title="Excluir FAD."></em></button></form></td>'
-                                    . '<td><form action="../Controllers/view_fad.php" method="POST"><input type="hidden" name="militar_id" value="' . $id . '"><button class="btn btn-success" type="submit" name="id_da_fad" value="' . $id_da_fad . '"><em class="glyphicon glyphicon-file" title="Visualizar FAD."></em></button></form></td>';
-                            }
-                        } catch (PDOException $ex) {
-                            return $ex->getMessage();
+                            echo '<tr>'
+                                . '<td>' . $aux_semestre . 'º semestre</td>'
+                                . '<td>' . $aux_ano . '</td>'
+                                . '<td>' . $aux_nota . '</td>'
+                                . '<td><form action="../Controllers/exclui_fad.php" method="POST"><input type="hidden" name="militar_id" value="' . $id . '"><button class="btn btn-danger" type="submit" name="id_da_fad" value="' . $id_da_fad . '"><em class="glyphicon glyphicon-trash" title="Excluir FAD."></em></button></form></td>'
+                                . '<td><form action="../Controllers/view_fad.php" method="POST"><input type="hidden" name="militar_id" value="' . $id . '"><button class="btn btn-success" type="submit" name="id_da_fad" value="' . $id_da_fad . '"><em class="glyphicon glyphicon-file" title="Visualizar FAD."></em></button></form></td>';
                         }
-                        ?>
-                    </tbody>
-            </div>
+                    } catch (PDOException $ex) {
+                        return $ex->getMessage();
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

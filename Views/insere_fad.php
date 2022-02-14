@@ -4,7 +4,7 @@ require_once '../ConexaoDB/conexao.php';
 
 if (isset($_GET['militar_id'])) {
     $id = $_GET['militar_id'];
-//pegar no BD dados do militar selecionado
+    //pegar no BD dados do militar selecionado
     $stmt = $conn->query("SELECT * FROM militar WHERE id = '" . $id . "'");
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
     if (isset($resultado['nome'])) {
@@ -14,7 +14,7 @@ if (isset($_GET['militar_id'])) {
 }
 if (isset($_POST['militar_id'])) {
     $id = $_POST['militar_id'];
-//pegar no BD dados do militar selecionado
+    //pegar no BD dados do militar selecionado
     $stmt = $conn->query("SELECT * FROM militar WHERE id = '" . $id . "'");
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
     if (isset($resultado['nome'])) {
@@ -101,6 +101,15 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
     </div>
 
     <div class="col-md-4">
+        <?php
+        if (isset($_GET['erro'])) {
+            $erro = $_GET['erro'];
+            if ($erro == 1) {
+                echo '<br><font style="color:#ff0000"><i>*Já havia registro de FAD no período informado.<br>'
+                    . 'Exclua antes o registro anterior.</i></font>';
+            }
+        }
+        ?>
         <form action="../Controllers/processa_fad.php" method="POST">
             <h3>Lançamento de notas</h3>
             <div class="form-group">
@@ -111,7 +120,7 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
                     for ($i = $ano_atual; $i >= 2014; $i--) {
                         echo "<option value=" . $i . ">" . $i . "</option>";
                     }
-                    ?>                
+                    ?>
                 </select>
                 <small id="anoHelp" class="form-text text-muted">Insira o <strong>ano</strong> correspondente da F.A.D.</small>
             </div>
@@ -130,21 +139,31 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
             </div>
 
             <div class="form-group">
+                <label for="FormControlSelectPostoGrad">Posto/Graduação no período avaliado</label>
+                <select class="form-control" id="FormControlSelectPostoGrad" name="postoGradNoPerioAvaliado" required>
+                    <option value=""></option>
+                    <option value="TC BM">Tenente Coronel</option>
+                    <option value="MAJ BM">Major</option>
+                    <option value="CAP BM">Capitão</option>
+                    <option value="1º TEN BM">1º Tenente</option>
+                    <option value="2º TEN BM">2º Tenente</option>
+                    <option value="ASP OF BM">Aspirante-a-oficial</option>
+                    <option value="ST BM">Sub-tentente</option>
+                    <option value="1º SGT BM">1º Sargento</option>
+                    <option value="2º SGT BM">2º Sargento</option>
+                    <option value="3º SGT BM">3º Sargento</option>
+                    <option value="CB BM">Cabo</option>
+                    <option value="SD BM">Soldado</option>
+                </select>
+                <small id="anoHelp" class="form-text text-muted">Informe o <strong>posto/graduação</strong> do militar no período correspondente desta avaliação.</small>
+            </div>
+
+            <div class="form-group">
                 <input type="hidden" name="id" value="<?= $id ?>">
             </div>
 
             <button class="btn btn-primary">Salvar</button>
         </form>
-        <?php
-        if (isset($_GET['erro'])) {
-            $erro = $_GET['erro'];
-            if ($erro == 1) {
-                echo '<br><font style="color:#ff0000"><i>*Já havia registro de FAD no período informado.<br>'
-                . 'Portanto o registro foi <strong>atualizado</strong>.</i></font>';
-            }
-        }
-        ?>
-
 
     </div>
 
@@ -165,7 +184,7 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
                             <th>Ano</th>
                             <th>Nota</th>
                             <th>Excluir</th>
-                        </tr> 
+                        </tr>
                     </thead>
 
                     <tbody>
@@ -181,10 +200,11 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
                                 $aux_nota = $resultado['nota'];
 
                                 echo '<tr>'
-                                . '<td>' . $aux_semestre . 'º semestre</td>'
-                                . '<td>' . $aux_ano . '</td>'
-                                . '<td>' . $aux_nota . '</td>'
-                                . '<td align="center"><form action="../Controllers/exclui_fad.php" method="POST"><input type="hidden" name="militar_id" value="' . $id . '"><button class="btn btn-danger" type="submit" name="id_da_fad" value="' . $id_da_fad . '"><em class="glyphicon glyphicon-trash" title="Excluir FAD."></em></button></form></td>';
+                                    . '<td>' . $aux_semestre . 'º semestre</td>'
+                                    . '<td>' . $aux_ano . '</td>'
+                                    . '<td>' . $aux_nota . '</td>'
+                                    . '<td align="center"><form action="../Controllers/exclui_fad.php" method="POST"><input type="hidden" name="militar_id" value="' . $id . '"><input type="hidden" name="exclui_fad_original" value="1">'
+                                    .'<button class="btn btn-danger" type="submit" name="id_da_fad" value="' . $id_da_fad . '"><em class="glyphicon glyphicon-trash" title="Excluir FAD."></em></button></form></td>';
                             }
                         } catch (PDOException $ex) {
                             return $ex->getMessage();
@@ -192,6 +212,12 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
                         ?>
                     </tbody>
                 </table>
+                <?php
+                $sucesso = (isset($_GET['sucesso'])) ? $_GET['sucesso'] : null;
+                if (!is_null($sucesso)){
+                    echo '<font style="color:#ff0000"><i>Registro excluído com sucesso.</i></font>';
+                }
+                ?>
             </div>
         </div>
     </div>
