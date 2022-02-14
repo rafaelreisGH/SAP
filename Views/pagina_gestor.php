@@ -10,7 +10,6 @@ $update_xml_no_bd = isset($_GET['update']) ? $_GET['update'] : 0;
         <ul class="nav nav-pills">
             <li role="presentation" class="active"><a href="pagina_ferramentas.php">Ferramentas</a></li>
             <li role="presentation" class="active"><a href="pagina_relatorios.php">Relatórios</a></li>
-            <li role="presentation" class="active"><a href="pagina_atualiza_bd.php">Atualiza Banco de Dados</a></li>
         </ul>
         <hr>
     </div>
