@@ -47,7 +47,7 @@ $mail->SMTPAuth = true;
 $mail->Username = "rafael@cbm.mt.gov.br";
 
 //Password to use for SMTP authentication
-$mail->Password = "bomb.7625lilac";
+$mail->Password = "";
 
 //Set who the message is to be sent from
 $mail->setFrom('rafael@cbm.mt.gov.br', 'Admin');
