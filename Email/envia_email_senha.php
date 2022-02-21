@@ -44,18 +44,18 @@ $mail->SMTPSecure = 'tls';
 $mail->SMTPAuth = true;
 
 //Username to use for SMTP authentication - use full email address for gmail
-$mail->Username = "";
+$mail->Username = "rafael@cbm.mt.gov.br";
 
 //Password to use for SMTP authentication
-$mail->Password = "";
+$mail->Password = "bomb.7625lilac";
 
 //Set who the message is to be sent from
-$mail->setFrom('', '');
+$mail->setFrom('rafael@cbm.mt.gov.br', 'Admin');
 
 //Set an alternative reply-to address
 //$mail->addReplyTo('replyto@example.com', 'First Last');
 //Set who the message is to be sent to
-$mail->addAddress('rafael@cbm.mt.gov.br', 'Rafael Reis');
+$mail->addAddress($aux_email, $aux_nome);
 
 //Set the subject line
 $mail->Subject = 'Chave para acesso ao SAP - CBMMT';

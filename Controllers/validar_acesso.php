@@ -5,14 +5,14 @@ session_start();
 require_once '../ConexaoDB/conexao.php';
 
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-$senha = md5(filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_STRING));
+$senha = md5(filter_input(INPUT_POST, 'senha', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW));
 
 try {
     //$stmt = $conn->query("SELECT * FROM usuarios WHERE email = '".$email."' AND senha = '".$senha."'");
-    $stmt = $conn->query("SELECT nome, email, nivel_de_acesso, senha_reset FROM usuarios WHERE email = '" . $email . "' AND senha = '" . $senha . "'");
+    $stmt = $conn->query("SELECT nome, email, nivel_de_acesso, senha_reset, posto_grad_usuario FROM usuarios WHERE email = '" . $email . "' AND senha = '" . $senha . "'");
 
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-      echo $resultado['email'] . '<br />';
+    //   echo $resultado['email'] . '<br />';
 
     if (isset($resultado['email'])) {
         //recuperar dados do usuário e colocá-los na sessão
@@ -24,7 +24,7 @@ try {
     } else {
         header('Location: ../index.php?erro=1');
     }
-    if ($_SESSION['senha_reset'] == 1) {
+    if ($_SESSION['senha_reset'] == 0) {
         header('Location: ../Views/pagina_muda_senha.php');
     } else {
         switch ($_SESSION['nivel_de_acesso']) {

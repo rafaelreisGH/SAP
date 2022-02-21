@@ -3,7 +3,6 @@
 require_once '../ConexaoDB/conexao.php';
 
 $id = $_POST['id'];
-echo $id . '<br>';
 $ano = $_POST['ano'];
 $semestre = $_POST['semestre'];
 

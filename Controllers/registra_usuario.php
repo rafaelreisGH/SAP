@@ -3,15 +3,16 @@
 require_once '../ConexaoDB/conexao.php';
 $retorno_get = '';
 
-$nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
+$nome = filter_input(INPUT_POST, 'nome', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 //$senha = md5(filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_STRING));
+
 //verificar se o usuário já consta no Banco de Dados
 //$retorno_get;
 $nome_existe = false;
 $email_existe = false;
 $email_invalido = false;
-try {
+
     //verifica se o nome já existe no BD
     $consulta1 = $conn->query("SELECT * FROM usuarios WHERE nome = '" . $nome . "' ");
     $resultado = $consulta1->fetch(PDO::FETCH_ASSOC);
@@ -44,28 +45,21 @@ try {
         }
 
         header('Location: ../Views/inscrevase.php?' . $retorno_get);
-        die(); //temporário
     }
-} catch (PDOException $ex) {
-    return $ex->getMessage();
-}
-try {
+
     //SQL Antigo. De antes de retirar o campo senha do FORM de LOGIN
     //$stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (?,?,?)");
-    $stmt = $conn->prepare("INSERT INTO usuarios (nome, email) VALUES (?,?)");
-
-    $stmt->bindParam(1, $nome, PDO::PARAM_STR);
-    $stmt->bindParam(2, $email, PDO::PARAM_STR);
-    //$stmt->bindParam(3, $senha, PDO::PARAM_STR);
-
-    $stmt->execute();
+    $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha_reset) VALUES (:a,:b,:c)");
+    $stmt->execute(array(
+        ':a' => $nome,
+        ':b' => $email,
+        ':c' => 0
+    ));
 
     if ($stmt) {
         header('Location:../Views/recem_cadastrado.php');
     }
-} catch (PDOException $ex) {
-    return $ex->getMessage();
-}
+
 
 /*
   $stmt = $link->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (?,?,?);
@@ -91,4 +85,3 @@ try {
  */
 //$conexao = new ClassConexao();
 //$link = $conexao->conectaDB();
-?>

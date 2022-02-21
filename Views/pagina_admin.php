@@ -12,7 +12,7 @@ include_once './header.php';
     </div>
     <link rel="stylesheet" href="../css/tabela_usuarios_bloqueados.css">
 
-    <div class="col-md-6">
+    <div class="col-md-9">
 
         <div class="panel panel-default panel-table">
             <div class="panel-heading">
@@ -31,11 +31,13 @@ include_once './header.php';
                             <!--<th class="hidden-xs">ID</th>-->
                             <th><em class="glyphicon glyphicon-user"></em>&nbsp;Nome</th>
                             <th><em class="glyphicon glyphicon-inbox"></em>&nbsp;E-mail</th>
-                        </tr> 
+                            <th><em class="glyphicon glyphicon-pencil"></em>&nbsp;Perfil de usuário</th>
+                            <th>Posto/Graduação</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>                           
-                            <!--<td class="hidden-xs">1</td>-->  
+                        <tr>
+                            <!--<td class="hidden-xs">1</td>-->
                             <?php
                             include_once '../Controllers/usuarios_bloqueados.php';
                             ?>
@@ -70,18 +72,6 @@ include_once './header.php';
     </div>
 
     <div class="col-md-3">
-
-        <h3>Usuários Bloqueados:</h3>
-        <table>
-            <tr>
-                <th>Nome</th>
-                <th>E-mail</th>
-                <th>Ação</th>
-            </tr>
-            <?php
-            include_once '../Controllers/usuarios_bloqueados.php';
-            ?>
-        </table>
     </div>
 
     <div class="clearfix">
@@ -90,9 +80,10 @@ include_once './header.php';
     <br />
 
     <div class="container">
-        <div class="row">      
+        <div class="row">
 
-        </div></div>
+        </div>
+    </div>
 
 
 </div>
@@ -101,7 +92,7 @@ include_once './header.php';
     <h2>Lorem Ipsum</h2>
     <p style="text-align: justify">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, nibh sit amet gravida rhoncus, quam nisl bibendum ipsum, vitae vestibulum erat eros eget massa. Integer id velit vitae diam semper tempor. Donec sollicitudin mollis dolor ut mollis. Etiam quis lacinia ex, ut imperdiet nibh. Vivamus congue arcu tellus, non bibendum justo viverra id. Ut sollicitudin accumsan est, eget iaculis massa. Sed malesuada efficitur faucibus. Integer ut semper nulla. Nam dictum congue aliquam. Proin a nunc semper, ultrices magna a, ultricies justo. Sed ornare enim vel dapibus tincidunt. Aliquam egestas magna a diam consequat dictum. Vestibulum tincidunt ipsum non sodales congue. Aenean non suscipit sem. Maecenas a posuere mauris, quis interdum lorem. Donec egestas sem ligula, quis porta eros tincidunt non.
-    </p>    
+    </p>
 </div>
 
 </div>

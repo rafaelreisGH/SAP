@@ -82,9 +82,6 @@ $erro_email = isset($_GET['erro_email']) ? $_GET['erro_email'] : 0;
 
             <div class="clearfix"></div>
             <br />
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
 
         </div>
 
