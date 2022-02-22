@@ -17,7 +17,7 @@ if (!isset($_GET['pesquisar'])) {
             break;
     }
 } else {
-    $pesquisar = filter_input(INPUT_GET, 'pesquisar', FILTER_SANITIZE_STRING);
+    $pesquisar = filter_input(INPUT_GET, 'pesquisar', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
     switch ($pesquisar) {
         case "":
             //VERIFICAR A QUANTIDADE DE RESULTADOS QUE CORRESPONDEM AO CAMPO PESQUISAR

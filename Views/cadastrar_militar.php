@@ -9,7 +9,7 @@ $sucesso_cadastro = (isset($_GET['sucesso'])) ? $_GET['sucesso'] : null;
 //VERIFICAÇÃO SE VIERAM ERROS DO INSERE_DADOS_MILITAR.PHP
 $erro = isset($_GET['erro']) ? $_GET['erro'] : null;
 $erroNoBD = isset($_GET['erroNoBD']) ? $_GET['erro'] : null;
-if(!is_null($erroNoBD)){
+if (!is_null($erroNoBD)) {
     echo "Erro ao cadastrar no Banco de dados.";
 }
 
@@ -76,17 +76,15 @@ if(!is_null($erroNoBD)){
         <div class="col-md-3">
             <?php
             if (!is_null($erro)) {
-                echo '<p><font style="color:#ff0000"><i class="bi bi-exclamation-circle" fill="currentColor"></i> Alerta!</font></p>';
-                foreach ($erro as $item) {
-                    echo '<p><font style="color:#ff0000">' . $item . '</font></p>';
-                }
+                echo '<p><font style="color:#ff0000"><i class="bi bi-exclamation-circle" fill="currentColor"></i> Alerta!</font></p>'
+                    . '<p><font style="color:#ff0000">Militar já existe no banco de dados.</font></p>';
             }
-            if(!is_null($sucesso_cadastro)){
+            if (!is_null($sucesso_cadastro)) {
                 echo '<p><font style="color:#0000ff"><i class="bi bi-person-check" fill="currentColor"></i><strong>&nbspMilitar cadastrado com sucesso!</strong></font></p>';
-                $array = ['Nome:', 'Posto/Grad.:','Quadro:'];
+                $array = ['Nome:', 'Posto/Grad.:', 'Quadro:'];
                 $aux = 0;
                 foreach ($sucesso_cadastro as $item) {
-                    echo '<p><font style="color:#0000ff">'.$array[$aux].'&nbsp';
+                    echo '<p><font style="color:#0000ff">' . $array[$aux] . '&nbsp';
                     echo $item . '</font></p>';
                     $aux++;
                 }

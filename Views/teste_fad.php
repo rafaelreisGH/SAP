@@ -22,7 +22,6 @@ if (isset($_POST['militar_id'])) {
     if (isset($resultado['nome'])) {
         $nome = $resultado['nome'];
         $posto_grad = $resultado['posto_grad_mil'];
-        $ultima_promocao = $resultado['ultima_promocao'];
         $quadro = $resultado['quadro'];
         $media = $resultado['media'];
         $militar_id = $resultado['id'];
