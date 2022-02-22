@@ -18,7 +18,7 @@ $exclusao = (isset($_POST['aux_id'])) ? $_POST['aux_id'] : null;
 if (is_null($exclusao)) {
     if ((!is_null($data_realizacao)) && (!is_null($numero_bge))) {
         try {
-            $stmt = $conn->prepare('SELECT data_da_inspecao, bge_numero FROM promocao.ais WHERE data_da_inspecao = :data_realizacao AND bge_numero = :numero_bge AND militar_id = :militar_id');
+            $stmt = $conn->prepare('SELECT data_da_inspecao, bge_numero FROM ais WHERE data_da_inspecao = :data_realizacao AND bge_numero = :numero_bge AND militar_id = :militar_id');
             $stmt->execute(array(
                 ':data_realizacao' => $data_realizacao,
                 ':numero_bge' => $numero_bge,
@@ -31,7 +31,7 @@ if (is_null($exclusao)) {
             header('Location:../Views/cadastrar_ais.php?retorno=1&militar_id='.$militar_id.'');
         } else {
             try {
-                $stmt = $conn->prepare('INSERT INTO promocao.ais (data_da_inspecao, data_public, bge_numero, aptidao, restricoes, militar_id) VALUES (:a,:b,:c,:d,:e,:f)');
+                $stmt = $conn->prepare('INSERT INTO ais (data_da_inspecao, data_public, bge_numero, aptidao, restricoes, militar_id) VALUES (:a,:b,:c,:d,:e,:f)');
                 $stmt->execute(array(
                     ':a' => $data_realizacao,
                     ':b' => $data_publicacao,
@@ -50,11 +50,11 @@ if (is_null($exclusao)) {
     }
 } else {
         try {
-            $stmt = $conn->prepare('UPDATE promocao.pasta_promocional SET ais_id = null WHERE ais_id = :id');
+            $stmt = $conn->prepare('UPDATE pasta_promocional SET ais_id = null WHERE ais_id = :id');
             $stmt->execute(array(
                 ':id' => $exclusao
             ));
-            $stmt = $conn->prepare('DELETE FROM promocao.ais WHERE id = :id');
+            $stmt = $conn->prepare('DELETE FROM ais WHERE id = :id');
             $stmt->execute(array(
                 ':id' => $exclusao
             ));

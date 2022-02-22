@@ -39,7 +39,7 @@ if (isset($_POST['id_ais']) && isset($_POST['caminho_do_documento'])) {
 } else {
     try {
         //pegar no BD dados do militar selecionado
-        $stmt = $conn->query('SELECT ' . $documento . ' FROM promocao.pasta_promocional WHERE id = ' . $id . '');
+        $stmt = $conn->query('SELECT ' . $documento . ' FROM pasta_promocional WHERE id = ' . $id . '');
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($stmt) {
             $caminho = $res[$documento];

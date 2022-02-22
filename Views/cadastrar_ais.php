@@ -142,7 +142,7 @@ try {
                         <option value="" selected>Selecione</option>
                         <?php
                         try {
-                            $stmt = $conn->query('SELECT * FROM promocao.ais WHERE militar_id = ' . $militar_id . '');
+                            $stmt = $conn->query('SELECT * FROM ais WHERE militar_id = ' . $militar_id . '');
                             while ($resultado_ais = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 require_once '../Controllers/alias_ultima_promocao.php';
                                 $aux_id = $resultado_ais['id'];
@@ -177,7 +177,7 @@ try {
                 <?php
                 if (isset($_GET['documento_id'])) {
                     try {
-                        $stmt = $conn->query('SELECT * FROM promocao.ais WHERE id = ' . $_GET['documento_id'] . '')->fetch();
+                        $stmt = $conn->query('SELECT * FROM ais WHERE id = ' . $_GET['documento_id'] . '')->fetch();
                         if($stmt) {
                             $id = $stmt['id'];
                             $caminho = $stmt['caminho_do_arquivo'];
@@ -246,7 +246,7 @@ try {
                             <tbody>
                                 <?php
                                 try {
-                                    $stmt = $conn->query('SELECT * FROM promocao.ais WHERE militar_id = ' . $militar_id . '');
+                                    $stmt = $conn->query('SELECT * FROM ais WHERE militar_id = ' . $militar_id . '');
                                     while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         $aux_id = $resultado['id'];
                                         $aux_data_da_inspecao = $resultado['data_da_inspecao'];
