@@ -76,8 +76,8 @@ else {
 
         echo '<hr><a href="' . $_UP['pasta'] . $novoNome . '" target="_blank"><button class="btn btn-outline-info active" type="button">Clique aqui para acessar o arquivo</button></a>';
 
-        if ($documento == 'ais') echo '&nbsp<a href="cadastrar_ais.php?militar_id=' . $_POST['militar_id'] . '&documento_id='.$_POST['documento_id'].'"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
-        else echo '&nbsp<a href="cadastrar_taf.php?militar_id=' . $_POST['militar_id'] . '"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
+        if ($documento == 'ais') echo '&nbsp<a href="cadastrar_ais.php?militar_id=' . $_POST['militar_id'] . '&documento_id=' . $_POST['documento_id'] . '"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
+        else if ($documento == 'taf') echo '&nbsp<a href="cadastrar_taf.php"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
     } else {
         // Não foi possível fazer o upload, provavelmente a pasta está incorreta
         echo "Não foi possível enviar o arquivo, tente novamente";
@@ -95,33 +95,58 @@ function salvaNoBanco($documento, $caminho, $id)
 
     if ($documento == 'ais') {
         try {
-            $stmt = $conn->query('SELECT caminho_do_arquivo FROM promocao.ais WHERE id = ' . $_POST['documento_id'] . '')->fetch();
-            if (($stmt['caminho_do_arquivo'] != '')&&($stmt['caminho_do_arquivo'] != null)) {
+            $stmt = $conn->query('SELECT caminho_do_arquivo FROM ais WHERE id = ' . $_POST['documento_id'] . '')->fetch();
+            if (($stmt['caminho_do_arquivo'] != '') && ($stmt['caminho_do_arquivo'] != null)) {
                 unlink($stmt['caminho_do_arquivo']);
             }
         } catch (PDOException $ex) {
-            return $ex->getMessage();
+            echo $ex->getMessage();
+            die();
         }
         try {
-            $stmt = $conn->query('SELECT * FROM promocao.ais WHERE militar_id = ' . $_POST['militar_id'] . '');
+            $stmt = $conn->query('SELECT * FROM ais WHERE militar_id = ' . $_POST['militar_id'] . '');
             if ($stmt->fetch(PDO::FETCH_ASSOC)) {
                 $tem_ais = true;
             }
         } catch (PDOException $ex) {
-            return $ex->getMessage();
+            echo $ex->getMessage();
+            die();
         }
         if ($tem_ais == true) {
             try {
-                $stmt = $conn->prepare('UPDATE promocao.ais SET ais.caminho_do_arquivo = :caminho WHERE ais.id = :id');
+                $stmt = $conn->prepare('UPDATE ais SET ais.caminho_do_arquivo = :caminho WHERE ais.id = :id');
                 $stmt->execute(array(
                     ':id' => $id,
                     ':caminho' => $caminho
                 ));
             } catch (PDOException $ex) {
-                return $ex->getMessage();
+                echo $ex->getMessage();
+                die();
             }
         }
-    } else {
+    } else if ($documento == 'taf') {
+
+        try {
+            $stmt = $conn->query('SELECT * FROM taf WHERE id = ' . $id . '')->fetch();
+            if (($stmt['taf_arquivo'] != '') && ($stmt['taf_arquivo'] != null)) {
+                unlink($stmt['taf_arquivo']);
+            }
+            
+            if (!empty($stmt)) {
+                $taf_existe = true;
+            }
+
+            if ($taf_existe == true) {
+                $stmt = $conn->prepare('UPDATE taf SET taf_arquivo = :caminho WHERE id = :id');
+                $stmt->execute(array(
+                    ':id' => $id,
+                    ':caminho' => $caminho
+                ));
+            }
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+            die();
+        }
     }
 
     if ($stmt) {

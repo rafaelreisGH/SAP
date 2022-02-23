@@ -6,10 +6,10 @@ $retorno = (isset($_GET['retorno'])) ? $_GET['retorno'] : null;
 $sucesso_cadastro = (isset($_GET['dados'])) ? $_GET['dados'] : null;
 
 try {
-    $stmt = $conn->query("SELECT * FROM promocao.taf");
+    $stmt = $conn->query("SELECT * FROM taf");
     // $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $ex) {
-    return $ex->getMessage();
+    echo "Falha: " . $ex->getMessage();
 }
 
 ?>
@@ -82,6 +82,55 @@ try {
     </div>
 
     <hr>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <label class="form-label">Arquivo digital - Publicação do resultado do TAF</label>
+
+            <?php
+            if (isset($_GET['erro']) && ($_GET['erro']) == 1) {
+                echo '<p><font style="color:#0000ff"><i class="bi bi-exclamation-circle" fill="currentColor"></i><strong>&nbspÉ preciso informar a situração da A.I.S.</strong></font></p>';
+            }
+            ?>
+
+            <form enctype="multipart/form-data" action="arquivos_upload_ais_taf.php" method="post">
+                <div class="input-group">
+                    <span class="input-group-text">Especifique o TAF</span>
+                    <select name="documento_id" class="form-select">
+                        <option value="" selected>Selecione</option>
+                        <?php
+                        try {
+                            $stmt = $conn->query('SELECT * FROM taf');
+                            while ($consulta_taf = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                require_once '../Controllers/alias_ultima_promocao.php';
+                                $aux_id = $consulta_taf['id'];
+                                $aux_data_do_taf = alias_ultima_promocao($consulta_taf['data_do_taf']);
+                                $aux_bge = $consulta_taf['bge_numero'];
+                                $aux_data_public = alias_ultima_promocao($consulta_taf['data_public']);
+
+                                echo '<option value="' . $aux_id . '">Data: ' . $aux_data_do_taf . ' - BGE: ' . $aux_bge . ' Publicado em: ' . $aux_data_public . '</option>';
+                            }
+                        } catch (PDOException $ex) {
+                            echo $ex->getMessage();
+                        }
+                        ?>
+                    </select>
+                </div>
+                <small class="form-text text-muted">Informe o <strong>TAF</strong> correspondente.</small>
+
+                <div class="input-group">
+                    <input type="file" name="arquivo" class="form-control" aria-label="Upload">
+                    <input type="hidden" name="tipo_do_documento" value="taf">
+                    <input type="submit" class="btn btn-outline-success" value="Salvar">
+                </div>
+                <small class="form-text text-muted">Envie o <strong>arquivo digital</strong> correspondente.</small>
+            </form>
+        </div>
+
+    </div>
+
+    <hr>
     <h3><strong>Edição de dados sobre TAF</strong></h3>
     <hr>
 
@@ -109,16 +158,27 @@ try {
                                     <th>
                                         <p align="center">BGE publicado em</p>
                                     </th>
+                                    <th>
+                                        <p align="center">Arquivo</p>
+                                    </th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 <?php
-                                while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+
+                                try {
+                                    $stmt = $conn->query('SELECT * FROM taf')->fetchAll();
+                                } catch (PDOException $ex) {
+                                    echo $ex->getMessage();
+                                }
+                                foreach ($stmt as $resultado) {
                                     $aux_id = $resultado['id'];
                                     $aux_data_do_taf = $resultado['data_do_taf'];
                                     $aux_bge = $resultado['bge_numero'];
                                     $aux_data_public = $resultado['data_public'];
+                                    $aux_caminho = $resultado['taf_arquivo'];
 
                                     require_once '../Controllers/alias_ultima_promocao.php';
                                     $aux_data_do_taf = alias_ultima_promocao($aux_data_do_taf);
@@ -129,6 +189,9 @@ try {
                                         . '<td align="center">' . $aux_data_do_taf . '</td>'
                                         . '<td align="center">' . $aux_bge . '</td>'
                                         . '<td align="center">' . $aux_data_public . '</td>';
+                                        if ($aux_caminho == null) echo '<td align="center">N/C</td>';
+                                        else echo '<td align="center"><a target="_blank" href="' . $aux_caminho . '"><button class="btn btn-outline-warning" type="button"><i class="bi bi-eye-fill"></i> Visualizar</button></a>&nbsp'
+                                        .'</td>';
                                 }
                                 ?>
                             </tbody>

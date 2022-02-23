@@ -16,21 +16,21 @@ $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 $aux_ano;
 $aux_sem;
 $id_militar_fad;
-if (isset($resultado)) {
+if (!empty($resultado)) {
     $aux_ano = $resultado['ano'];
     $aux_sem = $resultado['semestre'];
-    $id_militar_fad = $resultado['id_fad'];
-}
-if (($aux_ano == $ano) && ($aux_sem == $semestre)) {
-    // $stmt = $conn->prepare("UPDATE fad SET ano = :ano, semestre = :semestre, nota = :nota, militar_id = :militar_id WHERE id = :id");
-    // $stmt->execute(array(
-    //     ':id' => $id_militar_fad,
-    //     ':ano' => $ano,
-    //     ':semestre' => $semestre,
-    //     ':nota' => $pontuacao,
-    //     ':militar_id' => $id_militar,
-    // ));
-    header('Location:../Views/insere_fad.php?militar_id=' . $id_militar . '&erro=1');
+    $id_militar_fad = $resultado['id'];
+    if (($aux_ano == $ano) && ($aux_sem == $semestre)) {
+        // $stmt = $conn->prepare("UPDATE fad SET ano = :ano, semestre = :semestre, nota = :nota, militar_id = :militar_id WHERE id = :id");
+        // $stmt->execute(array(
+        //     ':id' => $id_militar_fad,
+        //     ':ano' => $ano,
+        //     ':semestre' => $semestre,
+        //     ':nota' => $pontuacao,
+        //     ':militar_id' => $id_militar,
+        // ));
+        header('Location:../Views/insere_fad.php?militar_id=' . $id_militar . '&erro=1');
+    }
 } else {
     $stmt = $conn->prepare("INSERT INTO fad (ano, semestre, nota, militar_id, grau_hierarquico_na_epoca) VALUES (?,?,?,?,?)");
     $stmt->bindParam(1, $ano);

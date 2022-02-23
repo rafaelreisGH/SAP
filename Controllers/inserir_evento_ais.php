@@ -25,10 +25,10 @@ if (is_null($exclusao)) {
                 ':militar_id' => $militar_id
             ));
         } catch (PDOException $ex) {
-            return $ex->getMessage();
+            echo $ex->getMessage();
         }
         if ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) { //se encontrou
-            header('Location:../Views/cadastrar_ais.php?retorno=1&militar_id='.$militar_id.'');
+            header('Location:../Views/cadastrar_ais.php?retorno=1&militar_id=' . $militar_id . '');
         } else {
             try {
                 $stmt = $conn->prepare('INSERT INTO ais (data_da_inspecao, data_public, bge_numero, aptidao, restricoes, militar_id) VALUES (:a,:b,:c,:d,:e,:f)');
@@ -40,28 +40,36 @@ if (is_null($exclusao)) {
                     ':e' => $restricoes,
                     ':f' => $militar_id
                 ));
-                if ($stmt) header('Location:../Views/cadastrar_ais.php?retorno=2&dados[]=' . $data_realizacao . '&dados[]=' . $numero_bge . '&dados[]=' . $data_publicacao . '&militar_id='.$militar_id.'');
+                if ($stmt) header('Location:../Views/cadastrar_ais.php?retorno=2&dados[]=' . $data_realizacao . '&dados[]=' . $numero_bge . '&dados[]=' . $data_publicacao . '&militar_id=' . $militar_id . '');
             } catch (PDOException $ex) {
-                return $ex->getMessage();
+                echo $ex->getMessage();
             }
         }
     } else {
-        header('Location:../Views/cadastrar_ais.php?retorno=3&militar_id='.$militar_id.'');
+        header('Location:../Views/cadastrar_ais.php?retorno=3&militar_id=' . $militar_id . '');
     }
 } else {
-        try {
-            $stmt = $conn->prepare('UPDATE pasta_promocional SET ais_id = null WHERE ais_id = :id');
-            $stmt->execute(array(
-                ':id' => $exclusao
-            ));
-            $stmt = $conn->prepare('DELETE FROM ais WHERE id = :id');
-            $stmt->execute(array(
-                ':id' => $exclusao
-            ));
-                
-            if ($stmt) header('Location:../Views/cadastrar_ais.php?retorno=4&militar_id='.$militar_id.'');
-        } catch (PDOException $ex) {
-            return $ex->getMessage();
+    try {
+        $stmt = $conn->prepare('UPDATE pasta_promocional SET ais_id = null WHERE ais_id = :id');
+        $stmt->execute(array(
+            ':id' => $exclusao
+        ));
+
+        //consulta no BD o caminho do arquivo que estava salvo no servidor
+        $stmt = $conn->query('SELECT caminho_do_arquivo FROM ais WHERE id = ' . $exclusao . '')->fetch();
+        //se encontrar resultado
+        if (!empty($stmt)) {
+            //apaga o arquivo do servidor
+            unlink($stmt['caminho_do_arquivo']);
         }
-    
+        //apaga todo o registro de ais do BD
+        $stmt = $conn->prepare('DELETE FROM ais WHERE id = :id');
+        $stmt->execute(array(
+            ':id' => $exclusao
+        ));
+
+        if ($stmt) header('Location:../Views/cadastrar_ais.php?retorno=4&militar_id=' . $militar_id . '');
+    } catch (PDOException $ex) {
+        echo $ex->getMessage();
+    }
 }

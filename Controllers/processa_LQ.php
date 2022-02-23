@@ -28,10 +28,10 @@ $location = "Location:../Views/listar_resultado_LQ.php?data={$lq_ano}&";
 //uma vez que não TEN CEL não é promovido por antiguidade
 // e
 //porque ST só sai oficial se passar no QCO, ou se for por requerimento
-$consulta = $conn->query("SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, militar.quadro, militar.antiguidade FROM registro_de_promocoes CROSS JOIN militar WHERE registro_de_promocoes.militar_id = militar.id AND militar.posto_grad_mil != 'TC BM' AND militar.posto_grad_mil != 'ST BM' ORDER BY militar.antiguidade");
+$consulta = $conn->query("SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, militar.quadro, militar.antiguidade FROM registro_de_promocoes CROSS JOIN militar WHERE registro_de_promocoes.militar_id = militar.id AND militar.posto_grad_mil != 'TC BM' AND militar.posto_grad_mil != 'ST BM' ORDER BY militar.antiguidade")->fetchAll();
 
-if ($consulta) {
-    while ($resultado = $consulta->fetch(PDO::FETCH_ASSOC)) {
+if (!empty($consulta)) {
+    foreach ($consulta as $resultado) {
         $aux_a_contar_de = $resultado['a_contar_de'];
         $aux_posto_grad = $resultado['grau_hierarquico'];
         $aux_nome = $resultado['nome'];

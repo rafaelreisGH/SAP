@@ -174,30 +174,7 @@ try {
 
         <div class="col-md-6">
             <div>
-                <?php
-                if (isset($_GET['documento_id'])) {
-                    try {
-                        $stmt = $conn->query('SELECT * FROM ais WHERE id = ' . $_GET['documento_id'] . '')->fetch();
-                        if($stmt) {
-                            $id = $stmt['id'];
-                            $caminho = $stmt['caminho_do_arquivo'];
-                            echo '<label class="form-label">Ações disponíveis:</label>'
-                                . '<form action="arquivos_excluir.php" method="post">'
-                                . '<div class="form-group">'
-                                . '<a target="_blank" href="' . $caminho . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
-                                . '<input type="hidden" name="tipo_do_documento" value="ais">'
-                                . '<input type="hidden" name="caminho_do_documento" value="'.$caminho.'">'
-                                . '<input type="hidden" name="id_ais" value="' . $id . '">'
-                                . '<input type="hidden" name="militar_id" value="' . $militar_id . '">'
-                                . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
-                                . '</div>'
-                                . '</form>';
-                        }
-                    } catch (PDOException $ex) {
-                        return $ex->getMessage();
-                    }
-                }
-                ?>
+                
 
             </div>
 
@@ -268,10 +245,39 @@ try {
                                             . '<td align="center">' . $aux_bge . '</td>'
                                             . '<td align="center">' . $aux_data_public . '</td>';
                                         if ($aux_caminho == null) echo '<td align="center">N/C</td>';
-                                        else echo '<td align="center">' . $aux_caminho . '</td>';
+                                        else echo '<td align="center"><a target="_blank" href="' . $aux_caminho . '"><button class="btn btn-outline-warning" type="button"><i class="bi bi-eye-fill"></i> Visualizar</button></a>&nbsp'
+                                        .'</td>';
                                     }
                                 } catch (PDOException $ex) {
-                                    return $ex->getMessage();
+                                    echo $ex->getMessage();
+
+                                    
+                                    // if (isset($_GET['documento_id'])) {
+                                    //     try {
+                                    //         $stmt = $conn->query('SELECT * FROM ais WHERE id = ' . $_GET['documento_id'] . '')->fetch();
+                                    //         var_dump($stmt);
+                                    //         if($stmt) {
+                                    //             $id = $stmt['id'];
+                                    //             $caminho = $stmt['caminho_do_arquivo'];
+                                    //             echo '<label class="form-label">Ações disponíveis:</label>'
+                                    //                 . '<form action="arquivos_excluir.php" method="post">'
+                                    //                 . '<div class="form-group">'
+                                    //                 . '<a target="_blank" href="' . $caminho . '"><button class="btn btn-outline-warning" type="button">Visualizar arquivo</button></a>&nbsp'
+                                    //                 . '<input type="hidden" name="tipo_do_documento" value="ais">'
+                                    //                 . '<input type="hidden" name="caminho_do_documento" value="'.$caminho.'">'
+                                    //                 . '<input type="hidden" name="id_ais" value="' . $id . '">'
+                                    //                 . '<input type="hidden" name="militar_id" value="' . $militar_id . '">'
+                                    //                 . '<button class="btn btn-outline-danger" type="submit">Excluir arquivo</button>'
+                                    //                 . '</div>'
+                                    //                 . '</form>';
+                                    //         }
+                                    //     } catch (PDOException $ex) {
+                                    //         echo $ex->getMessage();
+                                    //     }
+                                    // }
+                                    
+
+
                                 }
                                 ?>
                             </tbody>

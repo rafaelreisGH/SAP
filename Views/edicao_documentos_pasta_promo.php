@@ -608,19 +608,17 @@ if (isset($resultado['militar_id'])) {
                         <select class="form-select" name="id_taf" required>
                             <option selected disabled>Selecione o TAF</option>
                             <?php
-                            try {
-                                $stmt = $conn->query("SELECT * FROM promocao.taf");
-                                $res = $stmt->fetch(PDO::FETCH_ASSOC);
-                                if ($res) {
-                                    $id_taf = $res['id'];
-                                    $data_taf = $res['data_do_taf'];
-                                    $bge = $res['bge_numero'];
-                                    $public = $res['data_public'];
-                                    require_once '../Controllers/alias_ultima_promocao.php';
-                                    echo "<option value=" . $id_taf . ">Data: " . alias_ultima_promocao($data_taf) . " - BGE: " . $bge . ", de " . alias_ultima_promocao($public) . "</option>";
-                                }
-                            } catch (PDOException $ex) {
-                                return $ex->getMessage();
+
+                            $stmt = $conn->query("SELECT * FROM taf");
+                            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                            if ($res) {
+                                $id_taf = $res['id'];
+                                $data_taf = $res['data_do_taf'];
+                                $bge = $res['bge_numero'];
+                                $public = $res['data_public'];
+                                require_once '../Controllers/alias_ultima_promocao.php';
+                                echo "<option value=" . $id_taf . ">Data: " . alias_ultima_promocao($data_taf) . " - BGE: " . $bge . ", de " . alias_ultima_promocao($public) . "</option>";
                             }
                             ?>
                         </select>
@@ -674,7 +672,7 @@ if (isset($resultado['militar_id'])) {
                     try {
                         $resultado_taf = $conn->query('SELECT aptidao, mencao, tipo_do_taf FROM militar_tem_taf INNER JOIN pasta_promocional on militar_tem_taf.id = pasta_promocional.militar_tem_taf_id  WHERE militar_tem_taf.id = ' . $militar_tem_taf_id . '')->fetch();
                     } catch (PDOException $ex) {
-                        return $ex->getMessage();
+                        echo "Falha: " . $ex->getMessage();
                     }
 
                     if ($resultado_taf) {
@@ -719,7 +717,7 @@ if (isset($resultado['militar_id'])) {
                             try {
                                 //pegar no BD dados do militar selecionado
                                 if (isset($militar_id)) {
-                                    $stmt = $conn->query("SELECT * FROM promocao.ais WHERE militar_id = '" . $militar_id . "'");
+                                    $stmt = $conn->query("SELECT * FROM ais WHERE militar_id = '" . $militar_id . "'");
                                     $res = $stmt->fetch(PDO::FETCH_ASSOC);
                                     if ($res) {
                                         $id_ais = $res['id'];
@@ -747,7 +745,7 @@ if (isset($resultado['militar_id'])) {
                 try {
                     $resultado_ais = $conn->query('SELECT ais.aptidao, ais.bge_numero, ais.data_da_inspecao, ais.data_public  from pasta_promocional inner join ais on pasta_promocional.ais_id = ais.id WHERE pasta_promocional.id = ' . $id_da_pasta . '')->fetch();
                 } catch (PDOException $ex) {
-                    return $ex->getMessage();
+                    echo "Falha: " . $ex->getMessage();
                 }
 
                 if ($resultado_ais) {
