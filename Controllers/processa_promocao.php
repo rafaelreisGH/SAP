@@ -29,7 +29,12 @@ $resultado = $stmt->execute();
 while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $vetor_antiguidade_mais_moderno_anteriormente[] = $resultado['antiguidade'];
 }
-$mais_moderno_anteriormente = (int)max($vetor_antiguidade_mais_moderno_anteriormente);
+if (!empty($vetor_antiguidade_mais_moderno_anteriormente)) {
+    $mais_moderno_anteriormente = (int)max($vetor_antiguidade_mais_moderno_anteriormente);
+} else { //se vazio, ou seja, se não houver ninguém no posto/grad imediatamente superior
+    $stmt = $conn->query("SELECT min(antiguidade) FROM militar WHERE posto_grad_mil = '$criterio_posto_grad'")->fetch();
+    $mais_moderno_anteriormente = $stmt['min(antiguidade)'] - 1;
+}
 //---------------------------//
 
 // vetor para armazenar os militares e sua antiguidade

@@ -68,28 +68,28 @@ if (!is_null($pesquisar)) {
                             echo '<tr>'
                                 . '<td align="center"><input type="radio" class="btn-radio" name="militar_id" value="' . $aux_id . '" id="radio"></td>'
                                 . '<td align="center">' . $aux_posto_grad . '</td>'
-                                . '<td align="center">' . $aux_nome . '</td>'
-                                .'</tbody>'
-                                .'</table>'
-                                .'<button class="btn btn-outline-primary active" type="submit" name="buscar">Selecionar</button>';
-                            }
+                                . '<td align="center">' . $aux_nome . '</td>';
                         }
+                        echo '</tbody></table>';
+                        echo '<button class="btn btn-outline-primary active" type="submit" name="buscar">Selecionar</button>';
+                    }
                     ?>
                 </form>
             </div>
         </div>
     </div>
+    </br>
 </div>
 
 <script>
     function validate() {
-        var x = document.formName.militar_id;
-            if(x.checked){
-                return true;
-            } else {
+        let x = document.getElementById('radio').checked
+        if (x == true) {
+            return true;
+        } else {
             alert("Selecione um militar.");
             return false;
-            }
+        }
     }
 </script>
 
