@@ -13,39 +13,40 @@ $nome_existe = false;
 $email_existe = false;
 $email_invalido = false;
 
-    //verifica se o nome já existe no BD
-    $consulta1 = $conn->query("SELECT * FROM usuarios WHERE nome = '" . $nome . "' ");
-    $resultado = $consulta1->fetch(PDO::FETCH_ASSOC);
-    if (isset($resultado['nome'])) {
-        $nome_existe = true;
+//verifica se o nome já existe no BD
+$consulta1 = $conn->query("SELECT * FROM usuarios WHERE nome = '" . $nome . "' ");
+$resultado = $consulta1->fetch(PDO::FETCH_ASSOC);
+if (isset($resultado['nome'])) {
+    $nome_existe = true;
+}
+//verifica se o email já existe no BD
+$consulta2 = $conn->query("SELECT * FROM usuarios WHERE email = '" . $email . "' ");
+$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
+if (isset($resultado2['email'])) {
+    $email_existe = true;
+}
+
+//verifica se email é inválido
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $email_invalido = true;
+}
+//
+
+if ($nome_existe || $email_existe || $email_invalido) {
+    //$retorno_get = '';
+    if ($nome_existe) {
+        $retorno_get .= "erro_nome=1&";
     }
-    //verifica se o email já existe no BD
-    $consulta2 = $conn->query("SELECT * FROM usuarios WHERE email = '" . $email . "' ");
-    $resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
-    if (isset($resultado2['email'])) {
-        $email_existe = true;
+    if ($email_existe) {
+        $retorno_get .= "erro_email=1&";
+    }
+    if ($email_invalido) {
+        $retorno_get .= "email_invalido=1&";
     }
 
-    //verifica se email é inválido
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $email_invalido = true;
-    }
-    //
+    header('Location:../Views/inscrevase.php?' . $retorno_get);
 
-    if ($nome_existe || $email_existe || $email_invalido) {
-        //$retorno_get = '';
-        if ($nome_existe) {
-            $retorno_get .= "erro_nome=1&";
-        }
-        if ($email_existe) {
-            $retorno_get .= "erro_email=1&";
-        }
-        if ($email_invalido) {
-            $retorno_get .= "email_invalido=1&";
-        }
-
-        header('Location: ../Views/inscrevase.php?' . $retorno_get);
-    }
+} else {
 
     //SQL Antigo. De antes de retirar o campo senha do FORM de LOGIN
     //$stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (?,?,?)");
@@ -59,6 +60,7 @@ $email_invalido = false;
     if ($stmt) {
         header('Location:../Views/recem_cadastrado.php');
     }
+}
 
 
 /*
