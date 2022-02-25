@@ -2,7 +2,7 @@
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
 
-$pesquisar = isset($_POST['pesquisar']) ? filter_input(INPUT_POST, 'pesquisar', FILTER_SANITIZE_STRING) : null;
+$pesquisar = isset($_POST['pesquisar']) ? filter_input(INPUT_POST, 'pesquisar', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW) : null;
 
 if (!is_null($pesquisar)) {
     switch ($pesquisar) {

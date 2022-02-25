@@ -80,12 +80,12 @@ try {
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">Número do Boletim</span>
-                    <input type="number" class="form-control" name="numero_bge" placeholder="Informe o número" required>
+                    <input type="number" class="form-control" name="numero_bge" placeholder="Informe o número">
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">Data do Boletim</span>
-                    <input type="date" class="form-control" name="data_publicacao" required>
+                    <input type="date" class="form-control" name="data_publicacao">
                 </div>
 
                 <input type="hidden" class="form-control" name="militar_id" value="<?= $militar_id ?>">
