@@ -10,6 +10,12 @@ $original = (isset($_POST['exclui_fad_original'])) ? $_POST['exclui_fad_original
 $delete = "DELETE FROM fad WHERE id = '" . $id_da_fad . "'";
 
 try {
+    //remove o arquivo do servidor
+    $stmt = $conn->query('SELECT caminho_do_arquivo FROM fad WHERE id = ' . $id_da_fad . '')->fetch();
+    if (($stmt['caminho_do_arquivo'] != '') && ($stmt['caminho_do_arquivo'] != null)) {
+        unlink($stmt['caminho_do_arquivo']);
+    }
+    //deleta o registro da fad
     $conn->exec($delete);
     if (!is_null($original)) header('Location:../Views/insere_fad.php?militar_id=' . $id . '&sucesso=1');
     else header('Location:../Views/teste_fad.php?militar_id=' . $id . '');

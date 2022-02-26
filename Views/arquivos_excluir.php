@@ -47,7 +47,7 @@ if (isset($_POST['id_ais']) && isset($_POST['caminho_do_documento'])) {
             $sucesso_pasta = 1;
         }
     } catch (PDOException $ex) {
-        return $ex->getMessage();
+        echo $ex->getMessage();
     }
     try {
         $stmt = $conn->prepare('UPDATE pasta_promocional SET ' . $documento . ' = :campo_a_ser_apagado WHERE id = :id');
@@ -59,7 +59,7 @@ if (isset($_POST['id_ais']) && isset($_POST['caminho_do_documento'])) {
             $sucesso_servidor = 1;
         }
     } catch (PDOException $ex) {
-        return $ex->getMessage();
+        echo $ex->getMessage();
     }
 
     if ((!is_null($sucesso_pasta)) && (!is_null($sucesso_servidor))) {

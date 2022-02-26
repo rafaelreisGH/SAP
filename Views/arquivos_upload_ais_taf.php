@@ -3,7 +3,21 @@ include_once './header2.php';
 
 $documento = $_POST['tipo_do_documento'];
 
+//CÓDIGO ESPECÍFICO PARA O UPLOAD DE FAD
+// --------------------------- //
+$militar_id_fad = (isset($_POST['militar_id'])) ? $_POST['militar_id'] : null;
+// --------------------------- //
+//FIM DO ESPECÍFICO
+
+
+// --------------------------- //
+//AIS
 if (($_POST['documento_id'] == '') && ($documento == 'ais')) header("Location:../Views/cadastrar_ais.php?militar_id={$_POST["militar_id"]}&erro=1");
+//TAF
+if (($_POST['documento_id'] == '') && ($documento == 'taf')) header("Location:../Views/cadastrar_taf.php?&erro=1");
+//FAD
+if (($_POST['documento_id'] == '') && ($documento == 'fad')) header("Location:../Views/insere_fad.php?militar_id={$militar_id_fad}&erro=2");
+// --------------------------- //
 
 
 echo '<div class="container"><div class="col-md-12">';
@@ -78,6 +92,7 @@ else {
 
         if ($documento == 'ais') echo '&nbsp<a href="cadastrar_ais.php?militar_id=' . $_POST['militar_id'] . '&documento_id=' . $_POST['documento_id'] . '"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
         else if ($documento == 'taf') echo '&nbsp<a href="cadastrar_taf.php"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
+        else echo '&nbsp<a href="insere_fad.php?militar_id='.$militar_id_fad.'"><button class="btn btn-outline-success active" type="button">Voltar</button></a>';
     } else {
         // Não foi possível fazer o upload, provavelmente a pasta está incorreta
         echo "Não foi possível enviar o arquivo, tente novamente";
@@ -88,8 +103,7 @@ else {
 //http://www.linhadecodigo.com.br/artigo/3578/php-upload-de-arquivos.aspx
 // --------------------------- //
 echo '</div></div>';
-function salvaNoBanco($documento, $caminho, $id)
-{
+function salvaNoBanco($documento, $caminho, $id){
     require_once '../ConexaoDB/conexao.php';
     $tem_ais = false;
 
@@ -140,6 +154,28 @@ function salvaNoBanco($documento, $caminho, $id)
                 $stmt = $conn->prepare('UPDATE taf SET taf_arquivo = :caminho WHERE id = :id');
                 $stmt->execute(array(
                     ':id' => $id,
+                    ':caminho' => $caminho
+                ));
+            }
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+            die();
+        }
+    } else {
+        try {
+            $stmt = $conn->query('SELECT caminho_do_arquivo FROM fad WHERE id = ' . $_POST['documento_id'] . '')->fetch();
+            if (($stmt['caminho_do_arquivo'] != '') && ($stmt['caminho_do_arquivo'] != null)) {
+                unlink($stmt['caminho_do_arquivo']);
+            }
+            
+            if (!empty($stmt)) {
+                $fad_existe = true;
+            }
+
+            if ($fad_existe == true) {
+                $stmt = $conn->prepare('UPDATE fad SET caminho_do_arquivo = :caminho WHERE id = :id');
+                $stmt->execute(array(
+                    ':id' => $_POST['documento_id'] ,
                     ':caminho' => $caminho
                 ));
             }

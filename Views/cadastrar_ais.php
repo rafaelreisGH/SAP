@@ -131,7 +131,7 @@ try {
 
             <?php
             if (isset($_GET['erro']) && ($_GET['erro']) == 1) {
-                echo '<p><font style="color:#0000ff"><i class="bi bi-exclamation-circle" fill="currentColor"></i><strong>&nbspÉ preciso informar a situração da A.I.S.</strong></font></p>';
+                echo '<p><font style="color:#0000ff"><i class="bi bi-exclamation-circle" fill="currentColor"></i><strong>&nbspÉ preciso informar a situação da A.I.S.</strong></font></p>';
             }
             ?>
 
