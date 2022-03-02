@@ -3,7 +3,7 @@ session_start();
 //verifica se o usuário fez o login
 //se não fez, é redirecionado para a página index.php
 if (!isset($_SESSION['email'])) {
-    header('Location: ../index.php?erro=1');
+    header('Location: ../index.php?erro=2');
 }
 header('Content-Type: text/html; charset=utf-8');
 ?>

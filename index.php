@@ -61,7 +61,7 @@ $erro = isset($_GET['erro']) ? $_GET['erro'] : 0;
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="Views/inscrevase.php">Registre-se</a></li>
-                        <li class="<?= $erro == 1 ? 'open' : '' ?>">
+                        <li class="<?= $erro == (1 || 2 ) ? 'open' : '' ?>">
                             <a id="entrar" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Entrar</a>
                             <ul class="dropdown-menu" aria-labelledby="entrar">
                                 <div class="col-md-12">
@@ -85,6 +85,8 @@ $erro = isset($_GET['erro']) ? $_GET['erro'] : 0;
                                     <?php
                                     if ($erro == 1) {
                                         echo '<font style="color:#ff0000">*Usuário e/ou senha inválido(s). </font>';
+                                    } else if ($erro == 2) {
+                                        echo '<font style="color:#ff0000">*É preciso fazer login no sistema. </font>';
                                     }
                                     ?>
 

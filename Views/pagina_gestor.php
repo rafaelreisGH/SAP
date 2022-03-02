@@ -1,7 +1,7 @@
 <?php
 include_once './header.php';
-
-$update_xml_no_bd = isset($_GET['update']) ? $_GET['update'] : 0;
+include_once '../Controllers/verifica_permissoes.php';
+// $update_xml_no_bd = isset($_GET['update']) ? $_GET['update'] : 0;
 ?>
 
 <div class="container">
@@ -17,11 +17,6 @@ $update_xml_no_bd = isset($_GET['update']) ? $_GET['update'] : 0;
 
     </div>
     <div class="col-md-4">
-        <!--
-        <h3>Perfil Gestor</h3><br>
-        <p><strong>Bem-vindo(a), </strong> <?= $_SESSION['nome'] ?>.</p>
-        <p><strong>Email/Login:</strong> <?= $_SESSION['email'] ?>.</p>
-        -->
     </div>
     <div class="col-md-4">
         <h3>SAP - CBMMT</h3><br>               
