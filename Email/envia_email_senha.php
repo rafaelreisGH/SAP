@@ -16,11 +16,11 @@ try {
 	$mail->isSMTP();
 	$mail->Host = 'smtp.gmail.com';
 	$mail->SMTPAuth = true;
-	$mail->Username = 'rafael@cbm.mt.gov.br';
-	$mail->Password = 'pF55M5SM';
+	$mail->Username = 'sapcbmmt@gmail.com';
+	$mail->Password = 'bombeirosSAP';
 	$mail->Port = 587;
 
-	$mail->setFrom('rafael@cbm.mt.gov.br', 'Admin');
+	$mail->setFrom('sapcbmmt@gmail.com', 'Admin');
 	$mail->addAddress($aux_email, $aux_nome);
 
 	$mail->isHTML(true);
