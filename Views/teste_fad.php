@@ -40,7 +40,7 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="../Views/pagina_gestor.php">Voltar</a></li>
+            <li role="presentation" class="active"><a href="javascript:javascript:history.go(-1)">Voltar</a></li>
         </ul>
         <hr>
     </div>

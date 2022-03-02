@@ -28,7 +28,7 @@ try {
     return $ex->getMessage();
 }
 ?>
-
+<script type="text/javascript" src="../js/meus_scripts/confirma_exclusao.js"></script>
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-pills">
@@ -188,7 +188,7 @@ try {
         <div class="col-md-12">
             <div class="panel panel-default panel-table">
                 <div class="panel-body">
-                    <form action="../Controllers/inserir_evento_ais.php" method="POST">
+                    <form action="../Controllers/inserir_evento_ais.php" method="POST" onsubmit="return confirma_exclusao();">
                         <table class="table table-striped table-bordered table-list">
                             <thead>
                                 <tr>

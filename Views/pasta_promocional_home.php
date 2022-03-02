@@ -29,7 +29,7 @@ if (isset($_POST['militar_id'])) {
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="../Views/pagina_gestor.php">Voltar</a></li>
+            <li role="presentation" class="active"><a href="javascript:javascript:history.go(-1)">Voltar</a></li>
             <li role="presentation" class="active"><a href="../Views/cadastro_de_pasta.php?militar_id=<?= $militar_id ?>">Criar Pasta Promocional</a></li>
             <li role="presentation" class="active"><a href="../Views/exclusão_de_pasta.php?militar_id=<?= $militar_id ?>">Excluir pasta</a></li>
         </ul>

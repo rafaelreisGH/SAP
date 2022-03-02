@@ -98,9 +98,7 @@ if (isset($ultima_promocao)) {
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-pills">
-            <?php
-            echo ('<li class="nav-item"><a class="nav-link active" aria-current="page" href="../Views/listar_militares.php?pesquisar=' . $nome . '">Voltar</a></li>');
-            ?>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="javascript:javascript:history.go(-1)">Voltar</a></li>
         </ul>
         <hr>
     </div>
@@ -195,7 +193,7 @@ if (isset($ultima_promocao)) {
             <form name="formInativar" action="../Controllers/inativa_militar.php" method="POST" onsubmit="confirmarInativacao()">
                 <label class="form-label">Ação Opcional</label>
                 <ul class="nav nav-pills">
-                    <input type="hidden" name="antiguidade" value="<?=  $antiguidade  ?>">
+                    <input type="hidden" name="antiguidade" value="<?= $antiguidade  ?>">
                     <button class="btn btn-outline-danger " type="submit">Inativar militar</button>
                     <small id="InativacaoHelp" class="form-text text-muted">Esta opção faz com que o militar não seja mais listado, e libera o número de antiguidade, porém não o exclui preservando seus registros no banco de dados.</small>
                 </ul>

@@ -28,7 +28,7 @@ $id_url = isset($_GET['militar_id']) ? $_GET['militar_id'] : 0;
 $semestre_url = isset($_GET['semestre']) ? $_GET['semestre'] : 0;
 $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
 ?>
-
+<script type="text/javascript" src="../js/meus_scripts/confirma_exclusao.js"></script>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -217,7 +217,8 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col col-xs-6">
-                        <label class="form-label">Registros de FAD</label>
+                            <label class="form-label">Registros de FAD</label></br> 
+                            <small class="form-text text-muted">Somente fichas do posto/graduação atual.</small>
                         </div>
                     </div>
                 </div>
@@ -247,10 +248,10 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
                                     $aux_caminho = $resultado['caminho_do_arquivo'];
 
                                     echo '<tr>'
-                                        . '<td>' . $aux_semestre . 'º semestre</td>'
-                                        . '<td>' . $aux_ano . '</td>'
-                                        . '<td>' . $aux_nota . '</td>'
-                                        . '<td align="center"><form action="../Controllers/exclui_fad.php" method="POST"><input type="hidden" name="militar_id" value="' . $id . '"><input type="hidden" name="exclui_fad_original" value="1">'
+                                        . '<td align="center">' . $aux_semestre . 'º semestre</td>'
+                                        . '<td align="center">' . $aux_ano . '</td>'
+                                        . '<td align="center">' . $aux_nota . '</td>'
+                                        . '<td align="center"><form action="../Controllers/exclui_fad.php" method="POST" onclick="return confirma_exclusao();"><input type="hidden" name="militar_id" value="' . $id . '"><input type="hidden" name="exclui_fad_original" value="1">'
                                         . '<button class="btn btn-danger" type="submit" name="id_da_fad" value="' . $id_da_fad . '"><i class="bi bi-trash" ></i></button></form></td>';
                                     if ($aux_caminho == null) echo '<td align="center">N/C</td>';
                                     else echo '<td align="center"><a target="_blank" href="' . $aux_caminho . '"><button class="btn btn-outline-warning" type="button"><i class="bi bi-eye-fill"></i> Visualizar</button></a>&nbsp'
