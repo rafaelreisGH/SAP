@@ -1,10 +1,5 @@
 <?php
-session_start();
-//verifica se o usuário fez o login
-//se não fez, é redirecionado para a página index.php
-if (!isset($_SESSION['email'])) {
-    header('Location: ../index.php?erro=2');
-}
+include_once '../Controllers/controle_de_sessao.php';
 header('Content-Type: text/html; charset=utf-8');
 ?>
 

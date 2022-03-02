@@ -21,6 +21,7 @@ try {
         $_SESSION['nivel_de_acesso'] = $resultado['nivel_de_acesso'];
         $_SESSION['senha_reset'] = $resultado['senha_reset'];
         $_SESSION['posto_grad_usuario'] = $resultado['posto_grad_usuario'];
+        $_SESSION['logado'] = true;
     } else {
         header('Location: ../index.php?erro=1');
     }
