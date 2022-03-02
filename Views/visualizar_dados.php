@@ -1,6 +1,7 @@
 <?php
 include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
+include_once '../Controllers/verifica_permissoes.php';
 
 /*
 erro[0] é referente a $erroNome

@@ -1,6 +1,7 @@
     <?php
     include_once '../Views/header.php';
     require_once '../ConexaoDB/conexao.php';
+    include_once '../Controllers/verifica_permissoes.php';
     ?>
 
     <div class="container">

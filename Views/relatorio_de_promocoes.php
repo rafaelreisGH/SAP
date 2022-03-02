@@ -1,6 +1,7 @@
 <?php
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
+include_once '../Controllers/verifica_permissoes.php';
 
 //sucesso;
 $sucesso_exclusao = isset($_GET['sucesso_exclusao']) ? $_GET['sucesso_exclusao'] : null;

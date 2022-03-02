@@ -1,6 +1,7 @@
 <?php
 include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
+include_once '../Controllers/verifica_permissoes.php';
 
 //VERIFICAR INSERÇÃO
 $sucesso_cadastro = (isset($_GET['sucesso'])) ? $_GET['sucesso'] : null;

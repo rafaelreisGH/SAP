@@ -1,6 +1,6 @@
 <?php
 include_once './header2.php';
-
+include_once '../Controllers/verifica_permissoes.php';
 ?>
 
 <div class="container">

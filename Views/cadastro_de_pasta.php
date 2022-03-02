@@ -1,6 +1,7 @@
 <?php
 include_once '../Views/header.php';
 require_once '../ConexaoDB/conexao.php';
+include_once '../Controllers/verifica_permissoes.php';
 
 if (isset($_GET['militar_id'])) {
     $militar_id = $_GET['militar_id'];

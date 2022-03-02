@@ -1,6 +1,8 @@
 <?php
 include_once './header.php';
 require_once '../ConexaoDB/conexao.php';
+include_once '../Controllers/verifica_permissoes.php';
+
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
 if (!isset($_GET['pesquisar'])) {
     //redirecionar o usuário conforme seu nível de acesso

@@ -1,6 +1,7 @@
 <?php
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
+include_once '../Controllers/verifica_permissoes.php';
 
 //verificar de houve alterações
 $alteracoes_realizadas = isset($_GET['sucesso']) ? $_GET['sucesso'] : 0;

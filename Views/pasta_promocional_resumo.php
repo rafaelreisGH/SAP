@@ -1,6 +1,7 @@
 <?php
 include_once '../Views/header3.php';
 require_once '../ConexaoDB/conexao.php';
+include_once '../Controllers/verifica_permissoes.php';
 
 if (isset($_GET['id_da_pasta'])) {
     $id_da_pasta = $_GET['id_da_pasta'];
