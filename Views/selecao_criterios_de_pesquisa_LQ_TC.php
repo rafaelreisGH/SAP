@@ -13,7 +13,7 @@ include_once '../Controllers/verifica_permissoes.php';
         </ul>
         <hr>
     </div>
-    <form action="../Controllers/processa_LQ_TC.php" method="POST" name="formLQ" onsubmit="return validateForm()">
+    <form action="../Views/listar_resultado_LQ_TC.php" method="POST" name="formLQ" onsubmit="return validateForm()">
 
         <h3><strong>Seleção de critérios de pesquisa TCs com interstício</strong></h3>
         <hr>

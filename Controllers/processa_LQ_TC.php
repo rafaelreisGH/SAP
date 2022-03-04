@@ -1,5 +1,4 @@
 <?php
-
 require_once '../ConexaoDB/conexao.php';
 //cálculo do intervalo de tempo entre as datas
 require_once 'date_difference.php';
@@ -45,13 +44,10 @@ if ($consulta) {
 
         //o interstício deve ser igual ou maior E o posto/grad atual tem de ser igual ao do registro
         if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
-            $militar_com_intersticio[] = "{$aux_a_contar_de},{$aux_posto_grad},{$aux_nome},{$aux_quadro}";
+            $alteracoes_realizadas[] = "{$aux_a_contar_de},{$aux_posto_grad},{$aux_nome},{$aux_quadro}";
         }
     }
-    if (!empty($militar_com_intersticio)) {
-        $location .= "militar_com_intersticio[]=" . implode("&militar_com_intersticio[]=", $militar_com_intersticio);
-        header("$location");
-    } else {
+    if (empty($alteracoes_realizadas)) {
         header("Location:../Views/listar_resultado_LQ_TC.php?nada_alterado=1");
     }
 } else {
