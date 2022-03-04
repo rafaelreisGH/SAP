@@ -6,7 +6,7 @@ include_once '../Controllers/verifica_permissoes.php';
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
 
 if (isset($_GET['pesquisar'])) {
-    $pesquisar = filter_input(INPUT_GET, 'pesquisar', FILTER_SANITIZE_STRING);
+    $pesquisar = filter_input(INPUT_GET, 'pesquisar');
     switch ($pesquisar) {
         case "":
             //VERIFICAR A QUANTIDADE DE RESULTADOS QUE CORRESPONDEM AO CAMPO PESQUISAR
