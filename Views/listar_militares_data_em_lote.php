@@ -2,16 +2,12 @@
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
 include_once '../Controllers/verifica_permissoes.php';
+include_once '../Controllers/inserir_registro_de_promocao.php';
 
 //GET para verificar se nada foi alterado
 //ou seja, se o usuário não selecionou nenhum militar
 //não é realizado nenhuma operação no BD
 $nada_alterado = (isset($_GET['nada_alterado'])) ? $_GET['nada_alterado'] : 0;
-
-//verificar se houve alterações
-if (isset($_GET['alteracoes_realizadas'])) {
-    $alteracoes_realizadas = $_GET['alteracoes_realizadas'];
-}
 
 //declaração de variáveis
 $criterios_posto_grad;
@@ -57,10 +53,10 @@ $stmt->execute();
     </div>
     <h3><strong>Resultados de pesquisa</strong></h3>
     <hr>
-    <form action="../Controllers/inserir_registro_de_promocao.php" method="POST">
+    <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
         <div class="col-md-12">
             <div class="row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-5">
                     <div class="input-group mb-3">
                         <label for="basic-addon3" class="form-label">Inserir registro de promoção</label>
                         <div class="input-group mb-3">
@@ -99,32 +95,12 @@ $stmt->execute();
                             </select>
                         </div>
                     </div>
-                    <button class="btn btn-outline-danger active" type="submit" name="buscar">Atualizar data</button>
+                    <button class="btn btn-outline-danger active" type="submit" name="atualizar">Atualizar data</button>
                 </div>
-                <div class="col-md-4">
-                    <?php
-                    if ($nada_alterado == 1) {
-                        echo '<br><font style="color:#ff0000"><i>*Nenhum registro foi inserido. Selecione ao menos um militar.</i><br>';
-                    }
-                    if (!empty($alteracoes_realizadas)) {
-                        foreach ($alteracoes_realizadas as $item) {
-                            //$stmt2 = $conn->prepare("SELECT nome, posto_grad_mil FROM militar WHERE id = " . $item . "");
-                            $stmt2 = $conn->prepare("SELECT militar.nome, militar.posto_grad_mil, registro_de_promocoes.a_contar_de FROM militar CROSS JOIN registro_de_promocoes WHERE militar.id = registro_de_promocoes.militar_id AND militar.id = '" . $item . "'");
-                            $resultado = $stmt2->execute();
 
-                            while ($resultado = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                                $_nome = $resultado['nome'];
-                                $_posto_grad = $resultado['posto_grad_mil'];
-                                $_a_contar_de = $resultado['a_contar_de'];
-                                require_once '../Controllers/alias_ultima_promocao.php';
-                                $_a_contar_de = alias_ultima_promocao($_a_contar_de);
-                            }
-                            echo '<br><font style="color:#ff0000"><i>*Registro alterado para ' . $_posto_grad . ' ' . $_nome . '. Data: ' . $_a_contar_de . '.</i>';
-                        }
-                    }
-                    ?>
+                <div class="col-md-1">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <button class="btn btn-primary" type="button" onmouseout="escondeDica()" onmouseover="mostraDica()">
                         <i class="bi bi-question-square-fill"></i>&nbsp Observação
                     </button>
@@ -136,6 +112,31 @@ $stmt->execute();
             </div>
             </br>
         </div>
+
+        <div id="resultado_autalizacao" class="col-md-12">
+            <?php
+            if ($nada_alterado == 1) {
+                echo '<br><font style="color:#ff0000"><i>*Nenhum registro foi inserido. Selecione ao menos um militar.</i><br>';
+            }
+            if (!empty($alteracoes_realizadas)) {
+                foreach ($alteracoes_realizadas as $item) {
+                    //$stmt2 = $conn->prepare("SELECT nome, posto_grad_mil FROM militar WHERE id = " . $item . "");
+                    $stmt2 = $conn->prepare("SELECT militar.nome, militar.posto_grad_mil, registro_de_promocoes.a_contar_de FROM militar CROSS JOIN registro_de_promocoes WHERE militar.id = registro_de_promocoes.militar_id AND militar.id = '" . $item . "'");
+                    $resultado = $stmt2->execute();
+
+                    while ($resultado = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                        $_nome = $resultado['nome'];
+                        $_posto_grad = $resultado['posto_grad_mil'];
+                        $_a_contar_de = $resultado['a_contar_de'];
+                        require_once '../Controllers/alias_ultima_promocao.php';
+                        $_a_contar_de = alias_ultima_promocao($_a_contar_de);
+                    }
+                    echo '<font style="color:#ff0000"><i>*Registro alterado para ' . $_posto_grad . ' ' . $_nome . '. Data: ' . $_a_contar_de . '.</i>';
+                }
+            }
+            ?>
+        </div>
+        <br>
 
         <div class="col-md-12">
             <div class="panel panel-default panel-table">
@@ -194,10 +195,12 @@ $stmt->execute();
             all[a].checked = main.checked;
         }
     }
-    function mostraDica(){
+
+    function mostraDica() {
         document.getElementById('paragrafoDica').innerHTML = 'Caso já exista registrada promoção para o mesmo posto/graduação, as informações serão atualizadas no banco de dados sobrescrevendo o registro anterior.'
     }
-    function escondeDica(){
+
+    function escondeDica() {
         document.getElementById('paragrafoDica').innerHTML = ''
     }
 </script>
