@@ -13,7 +13,7 @@ include_once '../Controllers/verifica_permissoes.php';
         </ul>
         <hr>
     </div>
-    <form action="../Controllers/processa_LQ.php" method="POST" name="formLQ" onsubmit="return validateForm()">
+    <form action="listar_resultado_LQ.php" method="POST" name="formLQ" onsubmit="return validateForm()">
         <h3><strong>Seleção de critérios para Limite de Quantitativo por Antiguidade</strong></h3>
         <hr>
         <div class="form-row">

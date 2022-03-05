@@ -17,8 +17,6 @@ unset($lq_dia_mes); //destrói a variável
 $consulta =  $conn->query("SELECT * FROM intersticio");
 $intersticio_bd = $consulta->fetch(PDO::FETCH_ASSOC);
 
-//array para guardar os resultados positivos
-$militar_com_intersticio = array();
 //variável para montar a string do header Location
 $location = "Location:../Views/listar_resultado_LQ_TC.php?data={$lq_ano}&";
 

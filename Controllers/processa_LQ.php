@@ -18,8 +18,6 @@ unset($lq_dia_mes); //destrói a variável
 $consulta =  $conn->query("SELECT * FROM intersticio");
 $intersticio_bd = $consulta->fetch(PDO::FETCH_ASSOC);
 
-//array para guardar os resultados positivos
-$militar_com_intersticio = array();
 //variável para montar a string do header Location
 $location = "Location:../Views/listar_resultado_LQ.php?data={$lq_ano}&";
 
@@ -48,13 +46,10 @@ if (!empty($consulta)) {
 
         //o interstício deve ser igual ou maior E o posto/grad atual tem de ser igual ao do registro
         if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
-            $militar_com_intersticio[] = "{$aux_a_contar_de},{$aux_posto_grad},{$aux_nome},{$aux_quadro}";
+            $alteracoes_realizadas[] = "{$aux_a_contar_de},{$aux_posto_grad},{$aux_nome},{$aux_quadro}";
         }
     }
-    if (!empty($militar_com_intersticio)) {
-        $location .= "militar_com_intersticio[]=" . implode("&militar_com_intersticio[]=", $militar_com_intersticio);
-        header("$location");
-    } else {
+    if (empty($alteracoes_realizadas)) {
         header("Location:../Views/listar_resultado_LQ.php?nada_alterado=1");
     }
 } else {

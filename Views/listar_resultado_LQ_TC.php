@@ -8,11 +8,6 @@ include_once '../Controllers/processa_LQ_TC.php';
 //não é realizado nenhuma operação no BD
 $nada_alterado = (isset($_GET['nada_alterado'])) ? $_GET['nada_alterado'] : 0;
 
-//verificar de houve alterações
-// if (isset($_GET['militar_com_intersticio'])) {
-//     $alteracoes_realizadas = $_GET['militar_com_intersticio'];
-// }
-
 $parametro_data = (isset($_GET['data'])) ? $_GET['data'] : null;
 ?>
 
