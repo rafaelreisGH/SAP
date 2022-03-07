@@ -10,6 +10,7 @@ include_once '../Controllers/verifica_permissoes.php';
         <h3>Página de Admin</h3>
         <p><strong>Bem-vindo(a), </strong> <?= $_SESSION['nome'] ?>.</p><br>
         <p><strong>Email/Login:</strong> <?= $_SESSION['email'] ?>.</p><br>
+        <p><strong>sapcbmmt@gmail.com - bombeirosSAP</p><br>
     </div>
     <link rel="stylesheet" href="../css/tabela_usuarios_bloqueados.css">
 
