@@ -1,7 +1,7 @@
 <?php
 include_once '../Controllers/controle_de_sessao.php';
-
-header('Content-Type: text/html; charset=utf-8');
+include_once '../Controllers/verifica_permissoes.php';
+//header('Content-Type: text/html; charset=utf-8');
 ?>
 
 <!DOCTYPE HTML>
