@@ -1,9 +1,9 @@
 <?php
 session_start();
 //tempo limite de sessão
-if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > 900)) {//900 => 15 minutos
-    session_unset(); 
-    session_destroy(); 
+if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > 900)) { //900 => 15 minutos
+    session_unset();
+    session_destroy();
     header('Location: ../index.php?erro=2');
     exit();
 }

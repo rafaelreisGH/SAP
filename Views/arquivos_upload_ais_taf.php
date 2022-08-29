@@ -1,4 +1,5 @@
 <?php
+require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 
 $documento = $_POST['tipo_do_documento'];

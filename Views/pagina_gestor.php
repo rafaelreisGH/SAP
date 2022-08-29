@@ -1,7 +1,6 @@
 <?php
+require_once '../Controllers/nivel_gestor.php';
 include_once './header.php';
-// include_once '../Controllers/verifica_permissoes.php';
-// $update_xml_no_bd = isset($_GET['update']) ? $_GET['update'] : 0;
 ?>
 
 <div class="container">

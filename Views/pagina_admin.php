@@ -1,6 +1,6 @@
 <?php
+require_once '../Controllers/nivel_admin.php';
 include_once './header.php';
-// include_once '../Controllers/verifica_permissoes.php';
 ?>
 
 <div class="container">

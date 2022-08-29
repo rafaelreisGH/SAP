@@ -1,7 +1,6 @@
 <?php
 include_once '../Controllers/controle_de_sessao.php';
-include_once '../Controllers/verifica_permissoes.php';
-//header('Content-Type: text/html; charset=utf-8');
+include_once '../Controllers/verifica_permissoes.php'; //verifica o perfil do usuário, e bloqueia página que não pode acessar
 ?>
 
 <!DOCTYPE HTML>

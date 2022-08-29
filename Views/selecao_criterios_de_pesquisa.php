@@ -1,7 +1,7 @@
 <?php
+require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
-include_once '../Controllers/verifica_permissoes.php';
 
 $alteracao_antiguidade = isset($_GET['alteracao_antiguidade']) ? $_GET['alteracao_antiguidade'] : null;
 $promover = isset($_GET['promover']) ? $_GET['promover'] : null;

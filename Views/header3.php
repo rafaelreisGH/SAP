@@ -5,7 +5,6 @@ session_start();
 if (!isset($_SESSION['email'])) {
     header('Location: ../index.php?erro=1');
 }
-header('Content-Type: text/html; charset=utf-8');
 ?>
 
 <!DOCTYPE HTML>

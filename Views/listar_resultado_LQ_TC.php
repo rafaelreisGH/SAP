@@ -1,6 +1,6 @@
 <?php
+require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
-include_once '../Controllers/verifica_permissoes.php';
 include_once '../Controllers/processa_LQ_TC.php';
 
 //GET para verificar se nada foi alterado
