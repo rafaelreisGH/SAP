@@ -2,12 +2,11 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 include_once '../Controllers/processa_LQ.php';
-//GET para verificar se nada foi alterado
-//ou seja, se o usuário não selecionou nenhum militar
-//não é realizado nenhuma operação no BD
-$nada_alterado = (isset($_GET['nada_alterado'])) ? $_GET['nada_alterado'] : 0;
 
 $parametro_data = (isset($_GET['data'])) ? $_GET['data'] : null;
+
+list($ano, $mes, $dia) = explode("-", $lq_ano);
+$lq_ano = $dia . '/' . $mes . '/' . $ano;
 ?>
 
 <div class="container">
@@ -21,6 +20,9 @@ $parametro_data = (isset($_GET['data'])) ? $_GET['data'] : null;
         <h3>
             <strong>Limite de Quantitativo</strong>
         </h3>
+        <p>Data considerada:&nbsp
+            <?= $lq_ano; ?></p>
+        <p><em>São relacionados os candidatos que completarão o interstício mínimo previsto para cada posto ou graduação até a data considerada, bem como aqueles que já haviam completado.</em></p>
         <hr>
         <?php
         require_once '../Controllers/alias_ultima_promocao.php';
@@ -29,7 +31,7 @@ $parametro_data = (isset($_GET['data'])) ? $_GET['data'] : null;
             echo "<p><i>Promoção em {$parametro_data}.</i></p>";
         }
         ?>
-        
+
         <div class="panel-body">
             <table class="table table-striped table-bordered table-list">
                 <thead>
@@ -71,11 +73,6 @@ $parametro_data = (isset($_GET['data'])) ? $_GET['data'] : null;
                 </tbody>
             </table>
             <div class="col-md-12">
-                <?php
-                if ($nada_alterado == 1) {
-                    echo '<p align="center">Nenhum resultado encontrado.</p>';
-                }
-                ?>
             </div>
 
         </div>

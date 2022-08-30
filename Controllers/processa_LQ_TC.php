@@ -46,8 +46,8 @@ if ($consulta) {
         }
     }
     if (empty($alteracoes_realizadas)) {
-        header("Location:../Views/listar_resultado_LQ_TC.php?nada_alterado=1");
+        header("Location:../Views/nenhum_resultado.php");
     }
 } else {
-    header("Location:../Views/listar_resultado_LQ_TC.php?nada_alterado=1");
+    header("Location:../Views/nenhum_resultado.php");
 }

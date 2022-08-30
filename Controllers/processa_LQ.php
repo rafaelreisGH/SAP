@@ -50,8 +50,8 @@ if (!empty($consulta)) {
         }
     }
     if (empty($alteracoes_realizadas)) {
-        header("Location:../Views/listar_resultado_LQ.php?nada_alterado=1");
+        header("Location:../Views/nenhum_resultado.php");
     }
 } else {
-    header("Location:../Views/listar_resultado_LQ.php?nada_alterado=1");
+    header("Location:../Views/nenhum_resultado.php");
 }

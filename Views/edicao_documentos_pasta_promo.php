@@ -51,6 +51,9 @@ if (isset($resultado['militar_id'])) {
     <hr>
     <h3><strong>Edição de documentos da pasta</strong></h3>
     <h6>Referência:&nbsp<?= $semestre_pasta ?>º semestre de <?= $ano_pasta ?></h6>
+    
+    <?='<strong>Id da pasta: '.$id_da_pasta.'</strong><br>';?>
+
     <hr>
 
     <?php
