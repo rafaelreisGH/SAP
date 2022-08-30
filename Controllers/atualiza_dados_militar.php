@@ -3,15 +3,15 @@ require_once '../ConexaoDB/conexao.php';
 
 //inicialização de variáveis
 $militar_id = $_POST['id'];
-$nome_atualizado = filter_input(INPUT_POST, 'nome_atualizado', FILTER_SANITIZE_STRING);
+$nome_atualizado = filter_input(INPUT_POST, 'nome_atualizado', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $posto_grad_atualizado = $_POST['posto_grad_atualizado'];
 $quadro_atualizado = $_POST['quadro_atualizado'];
 $data_atualizada =  isset($_POST['data_atualizada']) ? $_POST['data_atualizada'] : null;
 
-$erroNome;
-$erroData;
-$erroPostoGrad;
-$erroQuadro;
+$erroNome ='';
+$erroData ='';
+$erroPostoGrad ='';
+$erroQuadro ='';
 
 /*CÓDIGOS DOS ERROS
 1 = ERRO DE INSERÇÃO DE NOME
@@ -107,10 +107,10 @@ try {
     } else {
         $erroQuadro = 0;
     }
+    header($location . 'militar_id=' . $militar_id . '&erro[]=' . $erroNome . '&erro[]=' . $erroPostoGrad . '&erro[]=' . $erroQuadro . '');
 } catch (PDOException $ex) {
     return $ex->getMessage();
 }
-header($location . 'militar_id=' . $militar_id . '&erro[]=' . $erroNome . '&erro[]=' . $erroPostoGrad . '&erro[]=' . $erroQuadro . '');
 
 /*<?php
 require_once '../ConexaoDB/conexao.php';
