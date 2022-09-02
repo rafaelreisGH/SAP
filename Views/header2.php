@@ -31,9 +31,26 @@ include_once '../Controllers/verifica_permissoes.php'; //verifica o perfil do us
             </div>
         </nav>
 
+        <?php
+        $pagina;
+        if (isset($nivel)) {
+            switch ($nivel) {
+                case 1:
+                    $pagina = 'pagina_gestor.php';
+                    break;
+                case 2:
+                    $pagina = 'pagina_admin.php';
+                    break;
+                case 3:
+                    $pagina = 'pagina_usuario.php';
+                    break;
+            }
+        }
+        ?>
+
         <div class="col-md-12">
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="nav-link " aria-current="page" href="pagina_gestor.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link " aria-current="page" href="<?= $pagina ?>">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="../sair.php">Sair</a></li>
             </ul>
             <hr>

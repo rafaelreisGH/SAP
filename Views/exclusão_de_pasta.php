@@ -36,7 +36,6 @@ if (isset($_POST['militar_id'])) {
         <ul class="nav nav-pills">
             <li role="presentation" class="active"><a href="../Views/pagina_gestor.php">Voltar</a></li>
             <li role="presentation" class="active"><a href="../Views/pasta_promocional_home.php?militar_id=<?=$militar_id?>">Início da pasta</a></li>
-            <li role="presentation" class="active"><a href="../Views/cadastro_de_documentos.php?militar_id=<?=$militar_id?>">Cadastrar documentos</a></li>
         </ul>
         <hr>
     </div>

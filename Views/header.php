@@ -15,9 +15,6 @@ include_once '../Controllers/verifica_permissoes.php'; //verifica o perfil do us
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <!--<link rel="stylesheet" href="../css/bootstrap.css">-->
         <link rel="icon" href="../imagens/Vetor CBMMT.png">
-
-        
-
     </head>
     <body>
         <!-- Static navbar -->

@@ -9,13 +9,14 @@ $senha = md5(filter_input(INPUT_POST, 'senha', FILTER_UNSAFE_RAW, FILTER_FLAG_ST
 
 try {
     //$stmt = $conn->query("SELECT * FROM usuarios WHERE email = '".$email."' AND senha = '".$senha."'");
-    $stmt = $conn->query("SELECT nome, email, nivel_de_acesso, senha_reset, posto_grad_usuario FROM usuarios WHERE email = '" . $email . "' AND senha = '" . $senha . "'");
+    $stmt = $conn->query("SELECT id, nome, email, nivel_de_acesso, senha_reset, posto_grad_usuario FROM usuarios WHERE email = '" . $email . "' AND senha = '" . $senha . "'");
 
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
     //   echo $resultado['email'] . '<br />';
 
     if (isset($resultado['email'])) {
         //recuperar dados do usuário e colocá-los na sessão
+        $_SESSION['id'] = $resultado['id'];
         $_SESSION['nome'] = $resultado['nome'];
         $_SESSION['email'] = $resultado['email'];
         $_SESSION['nivel_de_acesso'] = $resultado['nivel_de_acesso'];
