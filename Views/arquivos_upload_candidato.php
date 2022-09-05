@@ -1,5 +1,5 @@
 <?php
-require_once '../Controllers/nivel_gestor.php';
+require_once '../Controllers/nivel_usuario.php';
 include_once './header2.php';
 
 echo '<div class="container"><div class="col-md-12">';
