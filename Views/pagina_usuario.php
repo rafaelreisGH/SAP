@@ -6,18 +6,7 @@ require_once '../ConexaoDB/conexao.php';
 // --------------------------- //
 //pegar informação da Session (ID do usuário)
 $id_usuario = $_SESSION['id'];
-//pegar informação no BD
-//quais militares o usuário tem acesso
-try {
-    $stmt = $conn->query("SELECT militar.id, militar.nome, militar.posto_grad_mil, militar.quadro
-    FROM militar
-    INNER JOIN usuario_acesso_militar
-    ON militar.id = usuario_acesso_militar.militar_id
-    WHERE usuario_acesso_militar.usuario_id = '$id_usuario'");
-} catch (PDOException $ex) {
-    echo 'Exceção capturada: ', $ex->getMessage(), "\n";
-}
-$resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <div class="container">
 
@@ -65,6 +54,8 @@ $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php
                         require_once '../Controllers/alias_posto_grad.php';
                         //consultar dados de todos os militares que o usuário tem acesso
+                        require_once '../Controllers/consulta_acessos_do_usuario.php';
+                        $resultado = consulta_acessos_do_usuario($conn, $id_usuario);
 
                         if (isset($resultado)) {
                             foreach ($resultado as $item) {

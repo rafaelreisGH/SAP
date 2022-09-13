@@ -96,7 +96,6 @@ $stmt->execute();
                             <tr>
                                 <th>
                                     <p align="center"></br>
-
                                         <input type="checkbox" class="btn-check" id="btn-check">
                                         <label class="btn btn-light" for="btn-check"><strong>Selecionar</strong></label>
                                     </p>

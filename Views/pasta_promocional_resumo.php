@@ -6,7 +6,7 @@ require_once '../ConexaoDB/conexao.php';
 if (isset($_GET['id_da_pasta'])) {
     $id_da_pasta = $_GET['id_da_pasta'];
 
-    //se o GET for igual a 0, ou não for uma string
+    //se o GET for igual a 0, ou for uma string
     //bloqueia o acesso
     if (filter_var($id_da_pasta, FILTER_VALIDATE_INT) === 0 || filter_var($id_da_pasta, FILTER_VALIDATE_INT) === false) {
         header('Location: ../Views/acesso_restrito.php');
@@ -30,7 +30,6 @@ if (isset($_GET['id_da_pasta'])) {
     //pegar os documentos salvos no BD
     $stmt = $conn->query("SELECT descricao, documento_valido, informacao FROM documento WHERE pasta_promo_id = '" . $id_da_pasta . "'");
     $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (!isset($resultado)) echo "Nenhum resultado encontrado.";
 }
 
 //impedir acesso de pasta promocional que não lhe pertence
@@ -55,7 +54,8 @@ verifica_permissao_usuario_resumo($conn, $id_da_pasta);
             <p><Strong>Referência:&nbsp</Strong>
                 <?php
                 echo $aux_semestre_promocional . 'º semestre de ';
-                echo $aux_ano_promocional;
+                echo $aux_ano_promocional . '</br>';
+                if (!isset($resultado['descricao'])) echo "<strong>Nenhum resultado encontrado.</strong>";
                 ?>
             </p>
         </div>
@@ -90,7 +90,7 @@ verifica_permissao_usuario_resumo($conn, $id_da_pasta);
                                 try {
                                     include_once '../Controllers/alias_nomes_de_documentos.php';
                                 } catch (PDOException $ex) {
-                                    return $ex->getMessage();
+                                    echo $ex->getMessage();
                                 }
 
                                 $ordem = 1;
@@ -113,7 +113,7 @@ verifica_permissao_usuario_resumo($conn, $id_da_pasta);
                                             $info = $aux['informacao'];
                                             break;
                                     }
-                                    
+
                                     echo '<tr>'
                                         . '<td align="center">' . $ordem . '</td>'
                                         . '<td align="center">' . alias_documentos($aux['descricao']) . '</td>'
@@ -136,22 +136,26 @@ verifica_permissao_usuario_resumo($conn, $id_da_pasta);
     <hr>
 
     <div class="col-md-12">
-        <h4><strong>Documentos faltantes</strong></h4>
+        <h4><strong>Requisitos/documentos faltantes</strong></h4>
         <div class="form-text">
             <p>
                 <?php
-
                 $doc = array('certidao_tj_1_inst', 'certidao_tj_2_inst', 'certidao_trf_1', 'certidao_tse', 'nada_consta_correg', 'conceito_moral', 'cursos_e_estagios', 'militar_tem_taf_id', 'ais_id', 'media_das_avaliacoes');
 
-                foreach ($resultado as $item) {
-                    $vetor[] = $item['descricao'];
-                }
-
-                foreach ($doc as $item) {
-                    if (!in_array($item, $vetor)) {
+                if (isset($resultado['descricao'])) {
+                    foreach ($resultado as $item) {
+                        $vetor[] = $item['descricao'];
+                    }
+                    foreach ($doc as $item) {
+                        if (!in_array($item, $vetor)) {
+                            echo alias_documentos($item) . '<br>';
+                        } else {
+                            continue;
+                        }
+                    }
+                } else {
+                    foreach ($doc as $item) {
                         echo alias_documentos($item) . '<br>';
-                    } else {
-                        continue;
                     }
                 }
                 ?>
