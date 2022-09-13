@@ -23,14 +23,14 @@ if (!isset($_GET['pesquisar'])) {
     switch ($pesquisar) {
         case "":
             //VERIFICAR A QUANTIDADE DE RESULTADOS QUE CORRESPONDEM AO CAMPO PESQUISAR
-            $stmtPesquisar = $conn->prepare("SELECT COUNT(*) FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO'/* AND posto_grad_mil != 'CEL BM'*/");
+            $stmtPesquisar = $conn->prepare("SELECT COUNT(*) FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO'AND posto_grad_mil != 'CEL BM'");
             $stmtPesquisar->execute();
             $total_resultados = $stmtPesquisar->fetchColumn();
             //VARIÁVEIS DA PAGINAÇÃO
             $itens_por_pagina = 10;
             $numero_da_pagina = ceil($total_resultados / $itens_por_pagina);
             $inicio = ($itens_por_pagina * $pagina) - $itens_por_pagina;
-            $stmt = $conn->prepare("SELECT * FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' /*AND posto_grad_mil != 'CEL BM'*/  ORDER BY antiguidade LIMIT " . $inicio . "," . $itens_por_pagina . "");
+            $stmt = $conn->prepare("SELECT * FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' AND posto_grad_mil != 'CEL BM'  ORDER BY antiguidade LIMIT " . $inicio . "," . $itens_por_pagina . "");
             $stmt->execute();
             break;
         default:

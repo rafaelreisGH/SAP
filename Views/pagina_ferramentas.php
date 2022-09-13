@@ -118,8 +118,24 @@ include_once './header2.php';
                     </div>
                 </div>
             </div>
-
         </div>
+
+        <div class="clearfix"></br></div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Pasta promocional</h5>
+                    <div class="card-body">
+                        <h6 class="card-title">Criação em lote</h6>
+                        <p class="card-text">Selecione os militares e crie as respectivas pastas promocionais em lote.</p>
+                        <a href="selecao_criterios_de_pesquisa.php?pasta=1" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="clearfix"></br></div>
 

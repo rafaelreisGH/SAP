@@ -5,7 +5,14 @@ include_once './header2.php';
 
 <div class="container">
 
-    <div class="clearfix"></div>
+    <div class="col-md-12">
+        <ul class="nav nav-pills">
+            <li role="presentation" class="nav-item">
+                <a href="pagina_gestor.php" class="nav-link">Voltar</a>
+            </li>
+        </ul>
+        <hr>
+    </div>
 
     <div class="col-md-12">
         <H3>
@@ -33,7 +40,7 @@ include_once './header2.php';
             </div>
 
         </div>
-        
+
         <div class="clearfix"></br></div>
 
         <div class="row">

@@ -5,6 +5,7 @@ require_once '../ConexaoDB/conexao.php';
 
 $alteracao_antiguidade = isset($_GET['alteracao_antiguidade']) ? $_GET['alteracao_antiguidade'] : null;
 $promover = isset($_GET['promover']) ? $_GET['promover'] : null;
+$pasta = isset($_GET['pasta']) ? $_GET['pasta'] : null;
 
 ?>
 
@@ -22,6 +23,8 @@ $promover = isset($_GET['promover']) ? $_GET['promover'] : null;
                         echo 'listar_militares_atualizar_antiguidade.php';
                     } else if(!is_null($promover)){
                         echo 'listar_militares_promocao_em_lote.php';
+                    } else if(!is_null($pasta)){
+                        echo 'listar_militares_criar_pasta_em_lote.php';
                     } else {
                         echo 'listar_militares_data_em_lote.php';
                     }
