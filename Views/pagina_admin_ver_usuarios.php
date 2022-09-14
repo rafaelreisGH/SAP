@@ -28,7 +28,7 @@ if ((isset($usuario_id_GET)) && ($usuario_id_GET != null)) {
                 echo '<p><font style="color:#ff0000"><i class="bi bi-exclamation-circle" fill="currentColor"></i>&nbspRegistro excluído com sucesso!<br></font></p>';
             } else if ($sucesso == 2){
                 echo '<p><font style="color:#00ff00"><i class="bi bi-exclamation-circle" fill="currentColor"></i>&nbspRegistro incluído com sucesso!<br></font></p>';
-            } else if ($sucesso == 0){
+            } else if ($sucesso === 0){
                 echo '<p><font style="color:#0000ff"><i class="bi bi-exclamation-circle" fill="currentColor"></i>&nbspNada foi alterado! É possível que o usuário já tenha acesso ao candidato.<br></font></p>';
             }
             ?>

@@ -134,6 +134,16 @@ include_once './header2.php';
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Pasta promocional</h5>
+                    <div class="card-body">
+                        <h6 class="card-title">Bloqueio em lote</h6>
+                        <p class="card-text">Selecione e bloqueie em lote, de modo a impedir a alteração de dados após o fim do processo promocional.</p>
+                        <a href="selecao_criterios_de_pesquisa_pasta.php" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
