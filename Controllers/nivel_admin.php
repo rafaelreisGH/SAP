@@ -1,3 +1,3 @@
 <?php
 
-$nivel = 2; //admin
+$nivel = array(2); //admin

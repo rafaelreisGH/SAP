@@ -33,8 +33,11 @@ if (isset($_GET['id_da_pasta'])) {
 }
 
 //impedir acesso de pasta promocional que não lhe pertence
-require_once '../Controllers/verifica_permissoes_usuario.php';
-verifica_permissao_usuario_resumo($conn, $id_da_pasta);
+if ($_SESSION['nivel_de_acesso'] == 3) {
+    require_once '../Controllers/verifica_permissoes_usuario.php';
+    verifica_permissao_usuario_resumo($conn, $id_da_pasta);
+}
+
 ?>
 
 <div class="container">

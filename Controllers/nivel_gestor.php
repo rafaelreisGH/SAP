@@ -1,3 +1,3 @@
 <?php
 
-$nivel = 1; //gestor
+$nivel = array(1,2); //gestor

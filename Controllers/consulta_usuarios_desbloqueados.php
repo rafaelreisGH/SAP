@@ -2,7 +2,7 @@
 function consulta_usuarios_desbloqueados($conn){
 
     try {
-        $stmt = $conn->query("SELECT id, nome, posto_grad_usuario, email FROM usuarios WHERE nivel_de_acesso = 3");
+        $stmt = $conn->query("SELECT id, nome, posto_grad_usuario, email FROM usuarios WHERE nivel_de_acesso = 3 OR nivel_de_acesso = 1");
     } catch (PDOException $ex) {
         echo $ex->getMessage();
     }

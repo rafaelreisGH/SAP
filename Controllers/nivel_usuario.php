@@ -1,3 +1,3 @@
 <?php
 
-$nivel = 3; //usuário
+$nivel = array(1,2,3); //usuário

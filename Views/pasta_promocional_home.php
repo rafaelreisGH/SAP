@@ -92,7 +92,7 @@ if (isset($_POST['militar_id'])) {
                 try {
                     //PROCURA REGISTRO DE DOCUMENTOS CONFORME ID DO MILITAR
                     $consulta = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional FROM pasta_promocional WHERE militar_id = '$militar_id'");
-                    $consulta2 = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional FROM pasta_promocional WHERE militar_id = '$militar_id'");
+                    $consulta2 = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional, pasta_bloqueada FROM pasta_promocional WHERE militar_id = '$militar_id'");
                     //percorrer os resultados
                     if(($consulta->fetch(PDO::FETCH_ASSOC)) == false){
                         echo "Nenhum registro encontrado.";
@@ -105,8 +105,7 @@ if (isset($_POST['militar_id'])) {
                         echo '<li class="list-group-item">'
                             . '<p><strong>Processo promocional</br></strong>' . $aux_semestre_promocional . 'º semestre/' . $aux_ano_promocional . '</p>'
                             . '<ul class="nav nav-pills">'
-                            .'<li role="presentation" ><a class="btn btn-success" href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta . '" role="button"><em class="glyphicon glyphicon-pencil" title="Cadastrar Documentos."></em>&nbspEditar</a></li>'
-                            . '<li role="presentation" ><a class="btn btn-info" href="pasta_promocional_resumo.php?id_da_pasta=' . $id_da_pasta . '" role="button" target="_blank"><em class="glyphicon glyphicon-eye-open" title="Visualizar Documentos."></em>&nbspResumo</a></li>'
+                            .'<li role="presentation" ><a class="btn btn-info" href="pasta_promocional_resumo.php?id_da_pasta=' . $id_da_pasta . '" role="button" target="_blank"><em class="glyphicon glyphicon-eye-open" title="Visualizar Documentos."></em>&nbspResumo</a></li>'
                             . '</ul></li><br>';
                     }
                 } catch (PDOException $ex) {

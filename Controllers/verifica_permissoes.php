@@ -6,7 +6,12 @@
 3 => Usuário
 */
 
-if (isset($_SESSION['nivel_de_acesso']) && ($_SESSION['nivel_de_acesso'] != $nivel)) {
+// if (isset($_SESSION['nivel_de_acesso']) && ($_SESSION['nivel_de_acesso'] != $nivel)) {
+//     header('Location: ../Views/acesso_restrito.php');
+//     exit();
+// }
+
+if ((isset($_SESSION['nivel_de_acesso'])) && (!in_array($_SESSION['nivel_de_acesso'], $nivel))) {
     header('Location: ../Views/acesso_restrito.php');
     exit();
 }
