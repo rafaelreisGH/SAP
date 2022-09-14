@@ -5,28 +5,44 @@ require_once '../ConexaoDB/conexao.php';
 
 // --------------------------- //
 if (isset($_GET['id_da_pasta'])) {
-    $id_da_pasta = $_GET['id_da_pasta'];
+    $id_da_pasta[] = $_GET['id_da_pasta'];
 } else if (isset($_POST['id_da_pasta'])) {
-    $id_da_pasta = $_POST['id_da_pasta'];
+    $id_da_pasta[] = $_POST['id_da_pasta'];
 }
 // --------------------------- //
+//verifica se a pasta está bloqueada para edição
+$aux = $id_da_pasta[0];
+require_once '../Controllers/select_pasta_bloqueada.php';
+$resultado = verifica_pasta_bloqueada($conn, $aux);
+
+if ($resultado) {
+    header('Location: ../Views/acesso_restrito.php');
+}
+// --------------------------- //
+
+$militar_id;
+$semestre_pasta;
+$ano_pasta;
+$nome;
+$posto_grad;
 
 // --------------------------- //
 //pegar no BD dados do militar selecionado
-$stmt = $conn->query("SELECT militar_id, semestre_processo_promocional, ano_processo_promocional FROM pasta_promocional WHERE id = '$id_da_pasta'");
-$resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-if (isset($resultado['militar_id'])) {
-    $militar_id = $resultado['militar_id'];
-    $semestre_pasta = $resultado['semestre_processo_promocional'];
-    $ano_pasta = $resultado['ano_processo_promocional'];
+if (isset($id_da_pasta)) {
+    require_once '../Controllers/select_dados_militar.php';
+    $dados = select_dados_militar_por_id_da_pasta2($conn, $id_da_pasta);
 
-    $stmt = $conn->query("SELECT nome, posto_grad_mil FROM militar WHERE id = '" . $militar_id . "'");
-    $res = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (isset($res['nome'])) {
-        $nome = $res['nome'];
-        $posto_grad = $res['posto_grad_mil'];
+    foreach ($dados as $item) {
+        $militar_id =  $item['id'];
+        $semestre_pasta =  $item['semestre_processo_promocional'];
+        $ano_pasta =  $item['ano_processo_promocional'];
+        $nome =  $item['nome'];
+        $posto_grad =  $item['posto_grad_mil'];
     }
 }
+
+$id_da_pasta = $id_da_pasta[0];
+
 // --------------------------- //
 require_once '../Controllers/verifica_permissoes_usuario.php';
 verifica_permissao_usuario($conn, $militar_id);
