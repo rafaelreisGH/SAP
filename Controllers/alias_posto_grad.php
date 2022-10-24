@@ -10,7 +10,7 @@ function alias_posto_grad($posto_grad)
             return 'Coronel';
             break;
         case 'TC BM':
-            return 'Tenente Coronel';
+            return 'Tenente-Coronel';
             break;
         case 'MAJ BM':
             return 'Major';
@@ -26,6 +26,9 @@ function alias_posto_grad($posto_grad)
             break;
         case 'ASP OF BM':
             return 'Aspirante-a-oficial';
+            break;
+        case 'AL OF BM':
+            return 'Aluno-oficial';
             break;
         case 'ST BM':
             return 'Subtenente';

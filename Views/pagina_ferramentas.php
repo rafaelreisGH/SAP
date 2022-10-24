@@ -18,7 +18,7 @@ include_once './header2.php';
         <div class="row">
             <div class="col-md-4">
 
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Registro de promoções passadas</h5>
                     <div class="card-body">
                         <h6 class="card-title">Atualização em lote</h6>
@@ -29,7 +29,7 @@ include_once './header2.php';
             </div>
 
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Limite Quantitativo</h5>
                     <div class="card-body">
                         <h6 class="card-title">Militares em geral</h6>
@@ -39,7 +39,7 @@ include_once './header2.php';
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Interstício para último posto</h5>
                     <div class="card-body">
                         <h6 class="card-title">Específico para Tenentes Coronéis</h6>
@@ -55,7 +55,7 @@ include_once './header2.php';
 
         <div class="row">
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Cadastro de militar</h5>
                     <div class="card-body">
                         <h6 class="card-title">Registro de informações básicas</h6>
@@ -65,7 +65,7 @@ include_once './header2.php';
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Atualização de antiguidade</h5>
                     <div class="card-body">
                         <h6 class="card-title">Atualização individual</h6>
@@ -75,7 +75,7 @@ include_once './header2.php';
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Processar Promoção</h5>
                     <div class="card-body">
                         <h6 class="card-title">Registre a promoção de militares</h6>
@@ -89,7 +89,7 @@ include_once './header2.php';
 
         <div class="row">
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Cadastro de TAF</h5>
                     <div class="card-body">
                         <h6 class="card-title">Informações gerais sobre o teste</h6>
@@ -99,7 +99,7 @@ include_once './header2.php';
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Cadastro de AIS</h5>
                     <div class="card-body">
                         <h6 class="card-title">Ata de inspeção de saúde</h6>
@@ -109,7 +109,7 @@ include_once './header2.php';
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Cadastro de FAD</h5>
                     <div class="card-body">
                         <h6 class="card-title">Inserção de FAD</h6>
@@ -125,7 +125,7 @@ include_once './header2.php';
         <div class="row">
 
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Pasta promocional</h5>
                     <div class="card-body">
                         <h6 class="card-title">Criação em lote</h6>
@@ -135,7 +135,7 @@ include_once './header2.php';
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card">
+                <div class="card text-bg-light mb-3">
                     <h5 class="card-header">Pasta promocional</h5>
                     <div class="card-body">
                         <h6 class="card-title">Bloqueio em lote</h6>

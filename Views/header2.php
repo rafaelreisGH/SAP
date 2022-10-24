@@ -18,7 +18,7 @@ include_once '../Controllers/verifica_permissoes.php'; //verifica o perfil do us
     <link rel="icon" href="../imagens/Vetor CBMMT.png">
 </head>
 
-<body>
+<body class="text-bg-light p-3">
     <div class="container">
         <nav class="navbar navbar-light">
             <div class="container">
@@ -34,8 +34,8 @@ include_once '../Controllers/verifica_permissoes.php'; //verifica o perfil do us
 
         <?php
         $pagina;
-        if (isset($nivel)) {
-            switch ($nivel) {
+        if (isset($_SESSION['nivel_de_acesso'])) {
+            switch ($_SESSION['nivel_de_acesso']) {
                 case 1:
                     $pagina = 'pagina_gestor.php';
                     break;

@@ -1,6 +1,6 @@
 <?php
 require_once '../Controllers/nivel_gestor.php';
-include_once './header.php';
+include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
 
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
@@ -52,7 +52,7 @@ if (!isset($_GET['pesquisar'])) {
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="pagina_gestor.php">Voltar</a></li>
+            <li role="presentation" class="nav-item"><a class="nav-link" href="pagina_gestor.php">Voltar</a></li>
         </ul>
         <hr>
     </div>
@@ -68,12 +68,12 @@ if (!isset($_GET['pesquisar'])) {
                 </div>
             </div>
             <div class="panel-body">
-                <table class="table table-striped table-bordered table-list">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>
+                            <!-- <th>
                                 <p align="center">FAD</p>
-                            </th>
+                            </th> -->
                             <th>
                                 <p align="center">Pasta<br>Promocional</p>
                             </th>
@@ -97,6 +97,7 @@ if (!isset($_GET['pesquisar'])) {
 
                     <tbody>
                         <?php
+                        include_once '../Controllers/alias_posto_grad.php';
                         while ($resultados = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             $aux_id = $resultados['id'];
                             $aux_nome = $resultados['nome'];
@@ -108,10 +109,10 @@ if (!isset($_GET['pesquisar'])) {
                             }
 
                             echo '<tr>'
-                                . '<td align="center"><form action="../Views/teste_fad.php" method="POST"><button class="btn btn-info" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-copy" title="Cadastrar FAD."></em></button></form></td>'
-                                . '<td align="center"><form action="../Views/pasta_promocional_home.php" method="POST"><button class="btn btn-danger" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-folder-open" title="Cadastrar Documentos."></em></button></form></td>'
-                                . '<td align="center"><form action="../Views/visualizar_dados.php" method="POST"><button class="btn btn-success" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-pencil" title="Editar dados"></em></button></form></td>'
-                                . '<td align="center">' . $aux_posto_grad . '</td>'
+                                /*. '<td align="center"><form action="../Views/teste_fad.php" method="POST"><button class="btn btn-info" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-copy" title="Cadastrar FAD."></em></button></form></td>'*/
+                                . '<td align="center"><form action="../Views/pasta_promocional_home.php" method="POST"><button class="btn btn-danger" type="submit" name="militar_id" value="' . $aux_id . '"><i class="bi bi-briefcase-fill"></i></button></form></td>'
+                                . '<td align="center"><form action="../Views/visualizar_dados.php" method="POST"><button class="btn btn-success" type="submit" name="militar_id" value="' . $aux_id . '"><i class="bi bi-pencil-square"></i></button></form></td>'
+                                . '<td align="center">' . alias_posto_grad($aux_posto_grad) . '</td>'
                                 . '<td align="center">' . $aux_nome . '</td>'
                                 . '<td align="center">' . $aux_quadro . '</td>'
                                 . '<td align="center">' . $aux_media . '</td>';
@@ -130,21 +131,21 @@ if (!isset($_GET['pesquisar'])) {
                     <div class="col col-xs-4">Page <?php echo $pagina; ?> de <?php echo $numero_da_pagina; ?>
                     </div>
                     <div class="col col-xs-8">
-                        <ul class="pagination hidden-xs pull-right">
-                            <li>
+                        <ul class="pagination">
+                            <li class="page-item">
                                 <?php if ($pagina_anterior != 0) { ?>
-                                    <a href="listar_militares.php?pagina=<?php echo $pagina_anterior ?>&pesquisar=<?php echo $pesquisar; ?>" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
+                                    <a class="page-link" href="listar_militares.php?pagina=<?php echo $pagina_anterior ?>&pesquisar=<?php echo $pesquisar; ?>" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
                                     </a>
                                 <?php } else { ?>
-                                    <span aria-hidden="true">&laquo;</span>
+                                    <a class="page-link"><span aria-hidden="true">&laquo;</span></a>
                                 <?php } ?>
                             </li>
                             <?php for ($i = 1; $i < $numero_da_pagina + 1; $i++) { ?>
-                                <li><a href="listar_militares.php?pagina=<?php echo $i ?>&pesquisar=<?php echo $pesquisar; ?>"><?php echo $i; ?></a></li>
+                                <li class="page-item"><a class="page-link" href="listar_militares.php?pagina=<?php echo $i ?>&pesquisar=<?php echo $pesquisar; ?>"><?php echo $i; ?></a></li>
                             <?php } ?>
-                            <li>
+                            <li class="page-item">
                                 <?php if ($pagina_posterior <= $numero_da_pagina) { ?>
-                                    <a href="listar_militares.php?pagina=<?php echo $pagina_posterior; ?>&pesquisar=<?php echo $pesquisar; ?>" aria-label="Previous"><span aria-hidden="true">&raquo;</span>
+                                    <a class="page-link" href="listar_militares.php?pagina=<?php echo $pagina_posterior; ?>&pesquisar=<?php echo $pesquisar; ?>" aria-label="Previous"><span aria-hidden="true">&raquo;</span>
                                     </a>
                                 <?php } else { ?>
                                     <span aria-hidden="true">&laquo;</span>
