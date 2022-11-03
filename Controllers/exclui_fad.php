@@ -18,7 +18,7 @@ try {
     //deleta o registro da fad
     $conn->exec($delete);
     if (!is_null($original)) header('Location:../Views/insere_fad.php?militar_id=' . $id . '&sucesso=1');
-    else header('Location:../Views/teste_fad.php?militar_id=' . $id . '');
+    else header('Location:../Views/formulario_fad.php?militar_id=' . $id . '');
 } catch (PDOException $e) {
     echo $delete . "<br>" . $e->getMessage();
 }

@@ -1,6 +1,6 @@
 <?php
 require_once '../Controllers/nivel_usuario.php';
-include_once '../Views/header.php';
+include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
 
 if (isset($_GET['militar_id']) && $_GET['militar_id'] != "") {
@@ -34,7 +34,7 @@ verifica_permissao_usuario($conn, $militar_id);
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="pagina_usuario.php">Voltar</a></li>
+            <a class="btn btn-primary" href="pagina_usuario.php">Voltar</A>
         </ul>
         <hr>
     </div>
@@ -89,7 +89,7 @@ verifica_permissao_usuario($conn, $militar_id);
             </div>
         </div>
 
-        <div class="card" style="width: auto;">
+        <div style="width: auto;">
             <ul class="list-group list-group-flush">
                 <?php
                 try {
@@ -98,7 +98,7 @@ verifica_permissao_usuario($conn, $militar_id);
                     $consulta2 = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional, pasta_bloqueada FROM pasta_promocional WHERE militar_id = '$militar_id'");
                     //percorrer os resultados
                     if (($consulta->fetch(PDO::FETCH_ASSOC)) == false) {
-                        echo "Nenhum registro encontrado.";
+                        echo "Nenhum registro encontrado.</br>Entre em contato com a SCP/BM1, e solicite a criação da pasta promocional.";
                     }
                     while ($res = $consulta2->fetch(PDO::FETCH_ASSOC)) {
                         $id_da_pasta = $res['id'];
@@ -114,7 +114,7 @@ verifica_permissao_usuario($conn, $militar_id);
                         } else {
                             echo '<li role="presentation" ><a class="btn btn-danger"><em class="glyphicon glyphicon-lock" title="Visualizar Documentos."></em>&nbspBloqueada</a>';
                         }
-                        echo '<li role="presentation" ><a class="btn btn-info" href="pasta_promocional_resumo.php?id_da_pasta=' . $id_da_pasta . '" role="button" target="_blank"><em class="glyphicon glyphicon-eye-open" title="Visualizar Documentos."></em>&nbspResumo</a></li>'
+                        echo '&nbsp<li role="presentation" ><a class="btn btn-info" href="pasta_promocional_resumo.php?id_da_pasta=' . $id_da_pasta . '" role="button" target="_blank"><em class="glyphicon glyphicon-eye-open" title="Visualizar Documentos."></em>&nbspResumo</a></li>'
                             . '</ul></li><br>';
                     }
                 } catch (PDOException $ex) {

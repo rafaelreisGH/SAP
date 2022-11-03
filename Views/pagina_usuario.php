@@ -36,7 +36,13 @@ $id_usuario = $_SESSION['id'];
                     <thead>
                         <tr>
                             <th>
-                                <p align="center">Documentação</p>
+                                <p align="center">Validar FAD/Acessar pasta</p>
+                            </th>
+                            <th>
+                                <p align="center">Juntar documentos à pasta promocional</p>
+                            </th>
+                            <th>
+                                <p align="center">Preencher Avaliação de desempenho</p>
                             </th>
                             <th>
                                 <p align="center">Posto/Graduação</p>
@@ -60,11 +66,32 @@ $id_usuario = $_SESSION['id'];
                         if (isset($resultado)) {
                             foreach ($resultado as $item) {
                                 $aux_id = $item['id'];
-                                echo '<tr>'
-                                    . '<td align="center"><form action="../Views/pasta_promocional_home_candidato.php" method="POST"><button type="submit" class="btn btn-outline-primary" type="submit" name="militar_id" value="' . $aux_id . '"><i class="bi bi-file-earmark-arrow-up-fill" title="Enviar documentação"></i>&nbspAcessar</button></form></td>'
+                                echo '<tr>';
+                                switch ($item['acesso_candidato']) {
+                                    case 1:
+                                        echo '<td align="center"><form action="../Views/home_candidato.php" method="POST"><button type="submit" class="btn btn-outline-danger" type="submit" name="militar_id" value="' . $aux_id . '"><i class="bi bi-file-earmark-arrow-up-fill" title="Preencher FAD"></i>&nbspVer opções</button></form></td>';
+                                        break;
+                                    default:
+                                        echo '<td align="center"><p>N/D</p></td>';
+                                }
+                                switch ($item['acesso_sadm']) {
+                                    case 1:
+                                        echo '<td align="center"><form action="../Views/pasta_promocional_home_candidato.php" method="POST"><button type="submit" class="btn btn-outline-primary" type="submit" name="militar_id" value="' . $aux_id . '"><i class="bi bi-file-earmark-arrow-up-fill" title="Enviar documentação"></i>&nbspVer opções</button></form></td>';
+                                        break;
+                                    default:
+                                        echo '<td align="center"><p>N/D</p></td>';
+                                }
+                                switch ($item['acesso_avaliador']) {
+                                    case 1:
+                                        echo '<td align="center"><form action="../Views/formulario_fad.php" method="POST"><button type="submit" class="btn btn-outline-success" type="submit" name="militar_id" value="' . $aux_id . '"><i class="bi bi-file-earmark-arrow-up-fill" title="Preencher FAD"></i>&nbspAcessar formulário</button></form></td>';
+                                        break;
+                                    default:
+                                        echo '<td align="center"><p>N/D</p></td>';
+                                }
+                                echo ''
                                     . '<td align="center">' . alias_posto_grad($item['posto_grad_mil']) . '</td>'
                                     . '<td align="center">' . $item['nome'] . '</td>'
-                                    . '<td align="center">' . $item['quadro'] . '</td>';
+                                    . '<td align="center">' . $item['quadro'] . '</td></tr>';
                             }
                         }
                         ?>

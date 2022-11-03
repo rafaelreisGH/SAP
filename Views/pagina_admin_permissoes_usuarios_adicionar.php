@@ -52,6 +52,9 @@ $stmt->execute();
                                     <p align="center">Conceder acesso</p>
                                 </th>
                                 <th>
+                                    <p align="center">Permissões</p>
+                                </th>
+                                <th>
                                     <p align="center">Posto/Graduação</p>
                                 </th>
                                 <th>
@@ -72,6 +75,9 @@ $stmt->execute();
 
                                 echo '<tr>'
                                     . '<td align="center"><form action="../Controllers/adicionar_acesso_a_militar.php" method="POST"><button class="btn btn-outline-primary" type="submit" name="militar_id" value="' . $aux_id . '"><i class="bi-person-plus-fill"></i></button>'
+                                    . '<td><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="switch01" name="opcao01"><label class="form-check-label" for="switch01" name="check_01">Validar FAD/Acessar pasta</label></div>'
+                                    .'<div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="switch03" name="opcao02"><label class="form-check-label" for="switch02" name="check_02">Juntar documentos à pasta promocional</label></div>'
+                                    .'<div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="switch03" name="opcao03"><label class="form-check-label" for="switch03" name="check_03">Avaliar o desempenho via FAD</label></div>'
                                     .'<input type="hidden" name="usuario_id" value="' . $usuario_id . '"></form></td>'
                                     . '<td align="center">' . $aux_posto_grad . '</td>'
                                     . '<td align="center">' . $aux_nome . '</td>'

@@ -49,3 +49,35 @@ function select_dados_militar_por_id_da_pasta2($conn, $vetor)
     }
     return $resultado;
 }
+
+function select_dados_militar_por_id($conn, $id)
+{
+    $resultado = array();
+    //pegar no BD dados do militar selecionado
+    try {
+        $stmt = $conn->query("SELECT militar.id, militar.nome, militar.posto_grad_mil FROM militar WHERE militar.id = $id ");
+        $stmt->execute();
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+
+    $rowCount = $stmt->rowCount();
+
+    if ($rowCount) {
+        $aux[] = $stmt->fetch(PDO::FETCH_ASSOC);
+        $resultado[] = $aux[0]['nome'];
+        $resultado[] = $aux[0]['posto_grad_mil'];
+    }
+
+    return $resultado;
+}
+
+function select_dados_avaliador()
+{
+    $aux1 = $_SESSION['nome'];
+    $aux2 = $_SESSION['posto_grad_usuario'];
+
+    $resultado = $aux1 . " - " . $aux2;
+
+    return $resultado;
+}
