@@ -42,7 +42,7 @@ if ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id_fad = $resultado['id'];
     // atualizar o sql com os novos campos
     if (($aux_ano == $ano) && ($aux_sem == $semestre)) {
-        $stmt = $conn->prepare("UPDATE fad SET ano = :ano, semestre = :semestre, nota = :nota, militar_id = :militar_id, funcao_desempenhada = :funcao, grau_hierarquico_na_epoca = :posto, produtividade = :produtividade, lideranca = :lideranca, decisao = :decisao, relacionamento_interpessoal = :interpessoal, saude_fisica = :saude, planejamento = :planejamento, disciplina = :disciplina, disposicao_para_o_trabalho = :disposicao, assiduidade = :assiduidade, preparo_intelectual = :preparo, justificativa = :justificativa, avaliador = :avaliador WHERE id = :id");
+        $stmt = $conn->prepare("UPDATE fad SET ano = :ano, semestre = :semestre, nota = :nota, militar_id = :militar_id, funcao_desempenhada = :funcao, grau_hierarquico_na_epoca = :posto, produtividade = :produtividade, lideranca = :lideranca, decisao = :decisao, relacionamento_interpessoal = :interpessoal, saude_fisica = :saude, planejamento = :planejamento, disciplina = :disciplina, disposicao_para_o_trabalho = :disposicao, assiduidade = :assiduidade, preparo_intelectual = :preparo, justificativa = :justificativa, avaliador = :avaliador, fad_digital = :digital WHERE id = :id");
         $stmt->execute(array(
             ':id' => $id_fad,
             ':ano' => $ano,
@@ -62,12 +62,13 @@ if ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
             ':assiduidade' => $assiduidade,
             ':preparo' => $preparo,
             ':justificativa' => $justificativa,
-            ':avaliador' => $avaliador
+            ':avaliador' => $avaliador,
+            ':digital' => 1
         ));
         header('Location:../Views/formulario_fad.php?militar_id=' . $id_militar . '&erro=1&nota=' . $nota . '&semestre=' . $semestre . '&id=' . $semestre . '&ano=' . $ano . '');
     }
 } else {
-    $stmt = $conn->prepare("INSERT INTO fad (ano, semestre, nota, militar_id, funcao_desempenhada, grau_hierarquico_na_epoca, produtividade, lideranca, decisao, relacionamento_interpessoal, saude_fisica, planejamento, disciplina, disposicao_para_o_trabalho, assiduidade, preparo_intelectual, justificativa, avaliador) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    $stmt = $conn->prepare("INSERT INTO fad (ano, semestre, nota, militar_id, funcao_desempenhada, grau_hierarquico_na_epoca, produtividade, lideranca, decisao, relacionamento_interpessoal, saude_fisica, planejamento, disciplina, disposicao_para_o_trabalho, assiduidade, preparo_intelectual, justificativa, avaliador, fad_digital) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     $stmt->bindParam(1, $ano);
     $stmt->bindParam(2, $semestre);
     $stmt->bindParam(3, $nota);
@@ -86,6 +87,7 @@ if ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $stmt->bindParam(16, $preparo);
     $stmt->bindParam(17, $justificativa);
     $stmt->bindParam(18, $avaliador);
+    $stmt->bindParam(19, 1);
     $stmt->execute();
 
     if ($stmt) {
