@@ -3,8 +3,16 @@
 require_once '../ConexaoDB/conexao.php';
 
 //verificação se foram settados os critérios de pesquisa
-if (isset($_POST['data_promocao'])) {
+/*if (isset($_POST['data_promocao'])) {
     $data_promocao = $_POST['data_promocao'];
+    }*/
+
+if (isset($_POST['ano'])) {
+    $data_promocao = $_POST['ano'];
+}
+
+if (isset($_POST['dia_e_mes'])) {
+    $data_promocao .= $_POST['dia_e_mes'];
 }
 
 if (isset($_POST['modalidade'])) {

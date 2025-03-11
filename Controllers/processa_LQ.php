@@ -24,9 +24,10 @@ $location = "Location:../Views/listar_resultado_LQ.php?data={$lq_ano}&";
 //CONSULTA
 //aqui os TEN CEL e ST são excluídos
 //uma vez que não TEN CEL não é promovido por antiguidade
-// e
+//os CEL também por estarem no último posto
+//e
 //porque ST só sai oficial se passar no QCO, ou se for por requerimento
-$consulta = $conn->query("SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, militar.quadro, militar.antiguidade FROM registro_de_promocoes CROSS JOIN militar WHERE registro_de_promocoes.militar_id = militar.id AND militar.posto_grad_mil != 'TC BM' AND militar.posto_grad_mil != 'ST BM' ORDER BY militar.antiguidade")->fetchAll();
+$consulta = $conn->query("SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, militar.quadro, militar.antiguidade FROM registro_de_promocoes CROSS JOIN militar WHERE registro_de_promocoes.militar_id = militar.id AND militar.posto_grad_mil != 'TC BM' AND militar.posto_grad_mil != 'ST BM' AND militar.posto_grad_mil != 'CEL BM' ORDER BY militar.antiguidade")->fetchAll();
 
 if (!empty($consulta)) {
     foreach ($consulta as $resultado) {

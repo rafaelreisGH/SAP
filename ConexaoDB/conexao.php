@@ -6,12 +6,16 @@ $username = "root";
 $password = "root";
 
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$myDB; charset=utf8", $username, $password,
-            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-    // set the PDO error mode to exception
+    $conn = new PDO("mysql:host=$servername;dbname=$myDB;charset=utf8mb4", $username, $password);
+    // Configurando o modo de erro para exceção
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    //echo "Connected successfully";
+
+    //echo "Connected successfully"; // Pode ser removido para produção
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+    // Registra o erro em um arquivo de log em vez de exibir na tela
+    error_log("Connection failed: " . $e->getMessage(), 3, "errors.log");
+    
+    // Opcional: Exibir uma mensagem genérica para o usuário
+    die("Erro ao conectar ao banco de dados.");
 }
 ?>

@@ -60,8 +60,27 @@ $stmt->execute();
                     <div class="input-group mb-3">
                         <label for="basic-addon3" class="form-label">Inserir registro de promoção</label>
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon3">Data da promoção</span>
-                            <input type="date" class="form-control" name="data_promocao" required>
+                            <span class="input-group-text" id="basic-addon3">Dia e mês da promoção</span>
+                            <!-- <input type="date" class="form-control" name="data_promocao" required> -->
+                            <select class="form-select" name="dia_e_mes" required>
+                                <option selected disabled>Selecione</option>
+                                <option value="-07-02">02 de julho</option>
+                                <option value="-12-02">02 de dezembro</option>
+                                <option value="-12-21">21 de dezembro</option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon3">Ano da promoção</span>
+                            <!-- <input type="date" class="form-control" name="data_promocao" required> -->
+                            <select class="form-select" name="ano" required>
+                                <option selected disabled>Selecione</option>
+                                <?php
+                                $ano_atual = date("Y");
+                                for ($i = $ano_atual; $i >= 2014; $i--) {
+                                    echo "<option value=" . $i . ">" . $i . "</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon3">Modalidade</span>

@@ -1,146 +1,147 @@
 <?php
-require_once '../ConexaoDB/conexao.php';
-// var_dump($_POST);
-// die();
+require_once '../Controllers/nivel_gestor.php';
 
-//exclusivo para AIS
-$id_pasta = isset($_POST['id_pasta']) ? $_POST['id_pasta'] : null;
-$id_ais = isset($_POST['id_ais']) ? $_POST['id_ais'] : null;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST)) {
+    header('Location:../Views/acesso_restrito.php');
+} elseif ($_POST["excluir_documento"]) {
+    echo 'excluir do documento de id:' . $_POST["excluir_documento"] . '';
+    $aux_id = $_POST["excluir_documento"];
+    $aux_id = (int)filter_var($aux_id, FILTER_SANITIZE_NUMBER_INT);
 
-//outros documentos
-$dados_pasta = isset($_POST['dados_pasta']) ? $_POST['dados_pasta'] : null;
-$tipo_doc = isset($_POST['tipo_do_documento']) ? $_POST['tipo_do_documento'] : null;
-$status = isset($_POST['status']) ? $_POST['status'] : null;
-
-//outros documentos
-if ((!is_null($dados_pasta)) && (!is_null($tipo_doc)) && (!is_null($status))) {
-    switch ($status) {
-        case '':
-            $status = null;
-            break;
+    if (!filter_var($aux_id, FILTER_VALIDATE_INT)) {
+        return false;
     }
-
-    $stmt = $conn->prepare('UPDATE pasta_promocional SET ' . $tipo_doc . ' = :status WHERE id = :dados_pasta');
-    $stmt->execute(array(
-        ':status' => $status,
-        ':dados_pasta' => $dados_pasta
-    ));
-
-    if ($stmt) {
-        $sucesso = 1;
-        header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $dados_pasta . '&sucesso=' . $sucesso . '&documento=' . $tipo_doc . '');
+    $resultado = ExcluiDoBancoDocPromo($aux_id);
+    if ($resultado) {
+        header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $_POST["id_da_pasta"] . '');
+        exit;
     } else {
-        $sucesso = 0;
-        header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $dados_pasta . '&sucesso=' . $sucesso . '&documento=' . $tipo_doc . '');
+        echo "Erro ao salvar o documento.";
     }
-} else if (isset($_POST['id_taf'])) {
-    $id_da_pasta = $_POST['id_da_pasta'];
-    $id_taf = $_POST['id_taf'];
-    $id_militar = $_POST['id_militar'];
-
-    //VERIFICAR NO BD SE JÁ EXISTE REGISTRO DO MESMO (ID)TAF PARA O MESMO MILITAR
-    $stmt = $conn->query('SELECT militar_tem_taf.id FROM militar_tem_taf WHERE taf_id = ' . $id_taf . ' AND militar_id = ' . $id_militar . '')->fetch();
-
-    //SE EXISTIR FAZ UM UPDATE NA TABELA
-    if ($stmt == true) {
-        $militar_tem_taf_id = $stmt['id'];
-
-        $stmt = $conn->prepare('UPDATE militar_tem_taf SET aptidao = :a, mencao = :b, tipo_do_taf = :c, militar_id = :d, taf_id =:e WHERE taf_id = ' . $id_taf . ' AND militar_id = ' . $id_militar . '');
-        $stmt->execute(array(
-            ':a' => $_POST['taf_aptidao'],
-            ':b' => $_POST['taf_mencao'],
-            ':c' => $_POST['taf_tipo'],
-            ':d' => $_POST['id_militar'],
-            ':e' => $_POST['id_taf']
-        ));
-    } else {
-        //SE NÃO EXISTIR, FAZ UM INSERT
-        $stmt = $conn->prepare('INSERT INTO militar_tem_taf (aptidao, mencao, tipo_do_taf, militar_id, taf_id) VALUES (:a, :b, :c, :d, :e)');
-        $stmt->execute(array(
-            ':a' => $_POST['taf_aptidao'],
-            ':b' => $_POST['taf_mencao'],
-            ':c' => $_POST['taf_tipo'],
-            ':d' => $_POST['id_militar'],
-            ':e' => $_POST['id_taf']
-        ));
-
-        //AGORA ATUALIZA A PASTA PROMOCIONAL
-        //descobrir qual o id da inserçao acima para poder atualizar a tabela pasta_promocional
-        $stmt = $conn->query('SELECT militar_tem_taf.id FROM militar_tem_taf WHERE taf_id = ' . $id_taf . ' AND militar_id = ' . $id_militar . '')->fetch();
-        $militar_tem_taf_id = $stmt['id'];
-
-        //ATUALIZA PASTA PROMOCIONAL
-        $stmt = $conn->prepare('UPDATE pasta_promocional SET militar_tem_taf_id = :a WHERE id = :id');
-        $stmt->execute(array(
-            ':a' => $militar_tem_taf_id,
-            ':id' => $id_da_pasta
-        ));
-
-        if ($stmt) {
-            $sucesso = 1;
-            $documento = 'TAF';
-            header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta . '&sucesso=' . $sucesso . '&documento=' . $documento . '&militar_tem_taf_id=' . $militar_tem_taf_id . '');
-        } else {
-            $sucesso = 0;
-            $documento = 'TAF';
-            header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta . '&sucesso[=' . $sucesso . '&documento=' . $documento . '');
-        }
-    }
-    //ATUALIZA PASTA PROMOCIONAL
-    $stmt = $conn->prepare('UPDATE pasta_promocional SET militar_tem_taf_id = :a WHERE id = :id');
-    $stmt->execute(array(
-        ':a' => $militar_tem_taf_id,
-        ':id' => $id_da_pasta
-    ));
-
-    if ($stmt) {
-        $sucesso = 1;
-        $documento = 'TAF';
-        header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta . '&sucesso=' . $sucesso . '&documento=' . $documento . '&militar_tem_taf_id=' . $militar_tem_taf_id . '');
-    } else {
-        $sucesso = 0;
-        $documento = 'TAF';
-        header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta . '&sucesso=' . $sucesso . '&documento=' . $documento . '');
-    }
-
-//A PARTIR DAQUI É AIS
-
-} else if (is_null($id_ais)) {
-    $sucesso = 0;
-    $documento = 'AIS';
-    header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_pasta . '&sucesso=' . $sucesso . '&documento=' . $documento . '');
 } else {
+    //Salva os dados recebidos no INPUT em variáveis e executa o SANITIZE
+    $id_da_pasta_promo = filter_input(INPUT_POST, "id_da_pasta", FILTER_SANITIZE_NUMBER_INT);
+    $militar_id = filter_input(INPUT_POST, "militar_id", FILTER_SANITIZE_NUMBER_INT);
+    $nome_documento = filter_input(INPUT_POST, "nome_do_documento", FILTER_SANITIZE_SPECIAL_CHARS);
+    $caminho_do_arquivo = filter_input(INPUT_POST, "caminho_do_arquivo", FILTER_SANITIZE_URL);
+    $documento_validado = filter_input(INPUT_POST, "documento_validado", FILTER_SANITIZE_NUMBER_INT);
 
-    //VERIFICAR SE A MESMA AIS JÁ CONSTA NO BD
-    $stmt = $conn->query('SELECT ais_id FROM pasta_promocional WHERE ais_id = ' . $id_ais . '')->fetch();
-    //Se não encontra nenhum resultado, faz um UPDATE
-    if ($stmt) {
-        $stmt = $conn->prepare('UPDATE pasta_promocional SET ais_id = :ais WHERE id = '. $id_pasta .'');
-        $stmt->execute(array(
-            ':ais' => $id_ais
-        ));
-        if ($stmt) {
-            $sucesso = 1;
-            $documento = 'AIS';
-            header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_pasta . '&sucesso=' . $sucesso . '&documento=' . $documento . '');
-        } else {
-            $sucesso = 0;
-            $documento = 'AIS';
-            header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_pasta . '&sucesso=' . $sucesso . '&documento=' . $documento . '');
-        }
+    //Definição de array para armazenar os erros
+    $erros = array();
+
+    //Validação das variáveis
+    if (!filter_var($id_da_pasta_promo, FILTER_VALIDATE_INT)) {
+        $erros[] = "O id da pasta promocional deve ser um número inteiro.";
+    }
+    if (!filter_var($militar_id, FILTER_VALIDATE_INT)) {
+        $erros[] = "O id do militar deve ser um número inteiro.";
+    }
+    if (!filter_var($caminho_do_arquivo, FILTER_VALIDATE_URL)) {
+        $erros[] = "URL inválida.";
+    }
+    if (filter_var($documento_validado, FILTER_VALIDATE_INT) === false) {
+        $erros[] = "O documento deve ser válido ou não.";
+    }
+
+    //verificação se houve erros ou não
+    if (!empty($erros)) {
+        foreach ($erros as $erro)
+            echo '<li> $erro </li>' .
+                '<div class="container">' .
+                '<div class="col-md-12">' .
+                '<h4>Atenção!</h4><hr>' .
+                '<p>' .
+                '<A class="btn btn-primary" HREF="../Views/edicao_documentos_pasta_promo.php?' . $id_da_pasta_promo . '">Voltar</A>' .
+                '</div></div>';
     } else {
-        $stmt = $conn->prepare('UPDATE pasta_promocional SET ais_id = :ais WHERE id = '. $id_pasta .'');
-        $stmt->execute(array(
-            ':ais' => $id_ais
-        ));
-        if ($stmt) {
-            $sucesso = 1;
-            $documento = 'AIS';
-            header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_pasta . '&sucesso=' . $sucesso . '&documento=' . $documento . '');
+        if (isset($id_da_pasta_promo, $militar_id, $nome_documento, $caminho_do_arquivo, $documento_validado)) {
+            $resultado = salvaNoBancoDocPromo($id_da_pasta_promo, $militar_id, $nome_documento, $caminho_do_arquivo, $documento_validado);
+            if ($resultado) {
+                header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta_promo . '');
+                exit;
+            } else {
+                echo "Erro ao salvar o documento.";
+            }
         } else {
-            $sucesso = 0;
-            $documento = 'AIS';
-            header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_pasta . '&sucesso=' . $sucesso . '&documento=' . $documento . '');
+            header('Location:../Views/acesso_restrito.php');
+            exit;
         }
+    }
+}
+
+function salvaNoBancoDocPromo($id, $militar_id, $nome, $caminho, $validado)
+{
+    require_once '../ConexaoDB/conexao.php';
+
+    try {
+        //aqui se encontra o id do documento em específico
+        $stmt = $conn->prepare('SELECT id_doc_promo FROM documento_promocao WHERE doc_promo_nome = :a AND pasta_promocional_id = :b');
+        $stmt->bindParam(':a', $nome, PDO::PARAM_STR);
+        $stmt->bindParam(':b', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $resultado1 = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($resultado1)) {
+            // Documento não existe, então insere um novo registro
+            $stmt = $conn->prepare('INSERT INTO documento_promocao (doc_promo_nome, doc_promo_url, doc_promo_validado, pasta_promocional_id, militar_id) VALUES (:nome, :doc_url, :validado, :id, :militar_id)');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+            $stmt->bindParam(':doc_url', $caminho, PDO::PARAM_STR);
+            $stmt->bindParam(':validado', $validado, PDO::PARAM_INT);
+            $stmt->bindParam(':militar_id', $militar_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Verifica se alguma linha foi afetada
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+        } else {
+            //pega o valor do array e coloca na variável
+            $id = reset($resultado1);
+
+            // Atualiza o caminho do arquivo e outros dados
+            $stmt = $conn->prepare('UPDATE documento_promocao SET doc_promo_url = :b, doc_promo_validado = :c WHERE id_doc_promo = :id');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':b', $caminho, PDO::PARAM_STR);
+            $stmt->bindParam(':c', $validado, PDO::PARAM_INT);
+            $stmt->execute();
+            // Verifica se alguma linha foi afetada
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+        }
+    } catch (PDOException $ex) {
+        echo $ex->getMessage();
+        die();
+    }
+}
+
+function ExcluiDoBancoDocPromo($id)
+{
+    require_once '../ConexaoDB/conexao.php';
+
+    try {
+        //aqui se encontra o id do documento em específico
+        $stmt = $conn->prepare('SELECT id_doc_promo FROM documento_promocao WHERE id_doc_promo = :a');
+        $stmt->bindParam(':a', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $resultado1 = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($resultado1)) {
+            // Documento não existe, retorna false
+            return false;
+        } else {
+            //documento existe, será excluído
+            $stmt = $conn->prepare('DELETE FROM documento_promocao WHERE id_doc_promo = :id');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            // Verifica se alguma linha foi afetada
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+        }
+    } catch (PDOException $ex) {
+        echo $ex->getMessage();
+        die();
     }
 }

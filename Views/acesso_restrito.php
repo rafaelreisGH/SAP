@@ -9,8 +9,10 @@ include_once './header3.php';
     <p>
             <?php
             echo 'Sr(Srª) ';
-            echo $_SESSION['posto_grad_usuario'] . ' ' . $_SESSION['nome'] .'.</br>';
-            echo '<strong>Infelizmente você não tem permissão para acessar esta página.</strong></br></br>';
+            echo $_SESSION['posto_grad_usuario'] . ' ' . $_SESSION['nome'] .',</br>';
+            echo '</br><strong>Não foi possível acessar essa página.</strong></br>';
+            echo 'Seu perfil de usuário não permite o acesso.</br>';
+            echo 'Ou a operação não foi realizada por falta de dados.</br></br>';
             ?>
         </p>
         <A class="btn btn-primary" HREF="javascript:javascript:history.go(-1)">Voltar</A>

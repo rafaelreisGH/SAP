@@ -1,6 +1,6 @@
 <?php
 require_once '../Controllers/nivel_gestor.php';
-include_once '../Views/header.php';
+include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
 
 if (isset($_GET['militar_id'])) {
@@ -28,10 +28,9 @@ if (isset($_POST['militar_id'])) {
 
 <div class="container">
     <div class="col-md-12">
-        <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="javascript:javascript:history.go(-1)">Voltar</a></li>
-            <li role="presentation" class="active"><a href="../Views/cadastro_de_pasta.php?militar_id=<?= $militar_id ?>">Criar Pasta Promocional</a></li>
-            <li role="presentation" class="active"><a href="../Views/exclusão_de_pasta.php?militar_id=<?= $militar_id ?>">Excluir pasta</a></li>
+        <ul class="nav nav-pills" style="list-style: none; display: flex; gap: 10px; padding: 0;">
+            <li class="active"><a class="nav-link active" aria-current="page" href="../Views/pagina_gestor.php">Voltar</a></li>
+            <li class="active"><a class="nav-link active" aria-current="page" href="../Views/cadastro_de_pasta.php?militar_id=<?= $militar_id ?>">Criar Pasta Promocional</a></li>
         </ul>
         <hr>
     </div>
@@ -56,12 +55,7 @@ if (isset($_POST['militar_id'])) {
     <div class="clearfix"></div>
     <br />
 
-    <div class="clearfix"></div>
-    <br />
     <div class="col-md-12">
-
-
-
 
         <div class="row">
             <div class="col col-md-12">
@@ -94,7 +88,7 @@ if (isset($_POST['militar_id'])) {
                     $consulta = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional FROM pasta_promocional WHERE militar_id = '$militar_id'");
                     $consulta2 = $conn->query("SELECT id, ano_processo_promocional, semestre_processo_promocional FROM pasta_promocional WHERE militar_id = '$militar_id'");
                     //percorrer os resultados
-                    if(($consulta->fetch(PDO::FETCH_ASSOC)) == false){
+                    if (($consulta->fetch(PDO::FETCH_ASSOC)) == false) {
                         echo "Nenhum registro encontrado.";
                     }
                     while ($res = $consulta2->fetch(PDO::FETCH_ASSOC)) {
@@ -104,10 +98,11 @@ if (isset($_POST['militar_id'])) {
 
                         echo '<li class="list-group-item">'
                             . '<p><strong>Processo promocional</br></strong>' . $aux_semestre_promocional . 'º semestre/' . $aux_ano_promocional . '</p>'
-                            . '<ul class="nav nav-pills">'
-                            .'<li role="presentation" ><a class="btn btn-success" href="edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta . '" role="button"><em class="glyphicon glyphicon-pencil" title="Cadastrar Documentos."></em>&nbspEditar</a></li>'
-                            . '<li role="presentation" ><a class="btn btn-info" href="pasta_promocional_resumo.php?id_da_pasta=' . $id_da_pasta . '" role="button" target="_blank"><em class="glyphicon glyphicon-eye-open" title="Visualizar Documentos."></em>&nbspResumo</a></li>'
-                            . '</ul></li><br>';
+                            . '<ul class="nav nav-pills" style="list-style: none; display: flex; gap: 10px; padding: 0;">'
+                            .'<li role="presentation"><form action="edicao_documentos_pasta_promo.php" method="POST" style="display: inline;"><input type="hidden" name="id_da_pasta" value="' . $id_da_pasta . '"><button type="submit" class="btn btn-outline-success"><i class="bi bi-pencil-square">&nbsp</i>Editar</button></form></li>'
+                            . '<li role="presentation"><a class="btn btn-outline-primary" href="pasta_promocional_resumo.php?id_da_pasta=' . $id_da_pasta . '" role="button" target="_blank"><i class="bi bi-list-check"></i>&nbspResumo</a></li>'
+                            .'<li role="presentation"><form action="../Controllers/exclui_pasta_v2.php" method="POST" style="display: inline;" onsubmit="return confirmarExclusao();"><input type="hidden" name="id_da_pasta" value="' . $id_da_pasta . '"><input type="hidden" name="militar_id" value="' . $militar_id . '"><button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash3"></i>&nbsp;Excluir</button></form></li>'
+                            . '</ul><br>';
                     }
                 } catch (PDOException $ex) {
                     return $ex->getMessage();
@@ -116,6 +111,12 @@ if (isset($_POST['militar_id'])) {
             </ul>
         </div>
     </div>
+
+    <script>
+        function confirmarExclusao() {
+            return confirm("Tem certeza que deseja excluir esta pasta? Esta ação não pode ser desfeita!");
+        }
+    </script>
 
     <div class="clearfix"></div>
     <br />

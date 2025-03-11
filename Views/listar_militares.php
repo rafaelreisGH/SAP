@@ -27,7 +27,7 @@ if (!isset($_GET['pesquisar'])) {
             $stmtPesquisar->execute();
             $total_resultados = $stmtPesquisar->fetchColumn();
             //VARIÁVEIS DA PAGINAÇÃO
-            $itens_por_pagina = 10;
+            $itens_por_pagina = 20;
             $numero_da_pagina = ceil($total_resultados / $itens_por_pagina);
             $inicio = ($itens_por_pagina * $pagina) - $itens_por_pagina;
             $stmt = $conn->prepare("SELECT * FROM militar WHERE nome LIKE '%$pesquisar%' AND status = 'ATIVO' /*AND posto_grad_mil != 'CEL BM'*/  ORDER BY antiguidade LIMIT " . $inicio . "," . $itens_por_pagina . "");
@@ -108,7 +108,7 @@ if (!isset($_GET['pesquisar'])) {
                             }
 
                             echo '<tr>'
-                                . '<td align="center"><form action="../Views/teste_fad.php" method="POST"><button class="btn btn-info" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-copy" title="Cadastrar FAD."></em></button></form></td>'
+                                . '<td align="center"><form action="../Views/view_fad.php" method="POST"><button class="btn btn-info" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-copy" title="Cadastrar FAD."></em></button></form></td>'
                                 . '<td align="center"><form action="../Views/pasta_promocional_home.php" method="POST"><button class="btn btn-danger" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-folder-open" title="Cadastrar Documentos."></em></button></form></td>'
                                 . '<td align="center"><form action="../Views/visualizar_dados.php" method="POST"><button class="btn btn-success" type="submit" name="militar_id" value="' . $aux_id . '"><em class="glyphicon glyphicon-pencil" title="Editar dados"></em></button></form></td>'
                                 . '<td align="center">' . $aux_posto_grad . '</td>'

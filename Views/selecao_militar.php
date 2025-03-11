@@ -67,7 +67,7 @@ if (!is_null($pesquisar)) {
                             $aux_posto_grad = $resultados['posto_grad_mil'];
 
                             echo '<tr>'
-                                . '<td align="center"><input type="radio" class="btn-radio" name="militar_id" value="' . $aux_id . '" id="radio"></td>'
+                                . '<td align="center"><input type="radio" class="btn-radio" name="militar_id" value="' . $aux_id . '" id="radio '.$aux_id.'"></td>'
                                 . '<td align="center">' . $aux_posto_grad . '</td>'
                                 . '<td align="center">' . $aux_nome . '</td>';
                         }

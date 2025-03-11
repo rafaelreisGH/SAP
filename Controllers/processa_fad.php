@@ -5,7 +5,7 @@ require_once '../ConexaoDB/conexao.php';
 $id_militar = $_POST['id'];
 $semestre = $_POST['semestre'];
 $ano = $_POST['ano'];
-$postoGradNoPerioAvaliado = filter_input(INPUT_POST, 'postoGradNoPerioAvaliado', FILTER_SANITIZE_STRING);
+$postoGradNoPerioAvaliado = filter_input(INPUT_POST, 'postoGradNoPerioAvaliado', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $pontuacao = filter_input(INPUT_POST, 'pontuacao', FILTER_VALIDATE_FLOAT);
 
 $consulta = $conn->query("SELECT id, semestre, ano FROM fad WHERE militar_id = '" . $id_militar . "'"
@@ -29,7 +29,7 @@ if (!empty($resultado)) {
         //     ':nota' => $pontuacao,
         //     ':militar_id' => $id_militar,
         // ));
-        header('Location:../Views/insere_fad.php?militar_id=' . $id_militar . '&erro=1');
+        header('Location:../Views/view_fad.php?militar_id=' . $id_militar . '&erro=1');
     }
 } else {
     $stmt = $conn->prepare("INSERT INTO fad (ano, semestre, nota, militar_id, grau_hierarquico_na_epoca) VALUES (?,?,?,?,?)");
@@ -40,6 +40,6 @@ if (!empty($resultado)) {
     $stmt->bindParam(5, $postoGradNoPerioAvaliado);
     $stmt->execute();
     if ($stmt) {
-        header('Location:../Views/insere_fad.php?nota=' . $pontuacao . '&militar_id=' . $id_militar . '&semestre=' . $semestre . '&id=' . $semestre . '&ano=' . $ano . '');
+        header('Location:../Views/view_fad.php?nota=' . $pontuacao . '&militar_id=' . $id_militar . '&semestre=' . $semestre . '&id=' . $semestre . '&ano=' . $ano . '');
     }
 }

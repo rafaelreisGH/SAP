@@ -108,7 +108,7 @@ include_once './header2.php';
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="card">
                     <h5 class="card-header">Cadastro de FAD</h5>
                     <div class="card-body">
@@ -117,7 +117,7 @@ include_once './header2.php';
                         <a href="selecao_militar_fad.php" class="btn btn-primary">Selecionar</a>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
 

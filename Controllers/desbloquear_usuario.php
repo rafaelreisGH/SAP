@@ -17,13 +17,15 @@ if ($stmt) {
 }
 
 // //chama o PHP para enviar email com a senha
-include_once '../Email/envia_email_senha.php';
+include_once './envia_email_senha.php';
 if ($mail->send()) {
     $stmt = $conn->query("UPDATE usuarios SET status = 1, senha = '" . $primeira_senha . "', nivel_de_acesso = '" . $nivel_de_acesso . "', posto_grad_usuario = '" . $posto_grad . "' WHERE id = '" . $usuario_a_desbloquear . "'");
     header('Location:../Views/pagina_admin.php');
 } else {
     echo "Não foi possível encaminhar a senha.";
 }
+
+
 
 
 /*EXEMPLO DE SELECT COM PDO

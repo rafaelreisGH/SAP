@@ -98,7 +98,7 @@ if (isset($ultima_promocao)) {
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-pills">
-            <li class="nav-item"><a class="nav-link active" aria-current="page" href="javascript:javascript:history.go(-1)">Voltar</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="../Views/listar_militares.php">Voltar</a></li>
         </ul>
         <hr>
     </div>
