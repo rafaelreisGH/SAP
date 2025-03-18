@@ -1,6 +1,6 @@
 <?php
 require_once '../Controllers/nivel_gestor.php';
-include_once '../Views/header2.php';
+include_once '../Views/header3.php';
 require_once '../ConexaoDB/conexao.php';
 
 if (isset($_GET['militar_id'])) {

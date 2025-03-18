@@ -87,7 +87,7 @@ include_once './header2.php';
         </div>
         <div class="clearfix"></br></div>
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-4">
                 <div class="card">
                     <h5 class="card-header">Cadastro de TAF</h5>
@@ -108,7 +108,7 @@ include_once './header2.php';
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-md-4">
+            <div class="col-md-4">
                 <div class="card">
                     <h5 class="card-header">Cadastro de FAD</h5>
                     <div class="card-body">

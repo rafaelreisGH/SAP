@@ -36,6 +36,9 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                 <thead>
                     <tr>
                         <th>
+                            <p align="center">Ordem</p>
+                        </th>
+                        <th>
                             <p align="center">Última promoção</p>
                         </th>
                         <th>
@@ -55,6 +58,7 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                     require_once '../Controllers/alias_posto_grad.php';
                     require_once '../Controllers/alias_ultima_promocao.php';
 
+                    $ordem = 1;
                     if (isset($alteracoes_realizadas)) {
                         foreach ($alteracoes_realizadas as $item) {
                             $auxiliar = explode(",", $item);
@@ -62,10 +66,12 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                             //$auxiliar[0] = alias_ultima_promocao($auxiliar[0]);
                             /*****************/
                             echo '<tr>'
+                                . '<td align="center">' . $ordem . '</td>'
                                 . '<td align="center">' . alias_ultima_promocao($auxiliar[0]) . '</td>'
                                 . '<td align="center">' . alias_posto_grad($auxiliar[1]) . '</td>'
                                 . '<td align="center">' . $auxiliar[2] . '</td>'
                                 . '<td align="center">' . $auxiliar[3] . '</td>';
+                                $ordem++;
                         }
                     }
                     ?>

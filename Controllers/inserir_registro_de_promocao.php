@@ -50,6 +50,13 @@ if (isset($_POST['atualizar'])) {
                     ':modalidade' => $modalidade,
                     ':promocao_posto_grad' => $promocao_posto_grad,
                 ));
+                
+                //atualiza a tabela militar
+                $stmt = $conn->prepare("UPDATE militar SET ultima_promocao = :data_promocao  WHERE id = :id");
+                $stmt->execute(array(
+                    ':id' => $item,
+                    ':data_promocao' => $data_promocao,
+                ));
 
                 $alteracoes_realizadas[] = $item;
             } else {
