@@ -45,8 +45,12 @@ $modalidade;
 
 if (isset($_POST['militar_id'])) {
     $id = $_POST['militar_id'];
+
+    include_once '../Controllers/atualizar_tempo_arregimentado.php';
+    calcularTempoArregimentado($id, $inter, $tempo_arregimentado_minimo, $conn);
+
     //pegar no BD dados do militar selecionado
-    $stmt = $conn->query("SELECT militar.nome, militar.posto_grad_mil, militar.id, militar.media, militar.quadro, militar.antiguidade FROM militar WHERE militar.id = '" . $id . "'");
+    $stmt = $conn->query("SELECT militar.nome, militar.posto_grad_mil, militar.id, militar.media, militar.quadro, militar.antiguidade, militar.tempo_arregimentado FROM militar WHERE militar.id = '" . $id . "'");
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
     if (isset($resultado['nome'])) {
         $militar_id = $resultado['id'];
@@ -55,6 +59,7 @@ if (isset($_POST['militar_id'])) {
         $quadro = $resultado['quadro'];
         $media = $resultado['media'];
         $antiguidade = $resultado['antiguidade'];
+        $arregimentado = $resultado['tempo_arregimentado'];
     }
     $stmt = $conn->query("SELECT id, a_contar_de, modalidade FROM registro_de_promocoes WHERE militar_id = '" . $id . "'");
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -64,8 +69,12 @@ if (isset($_POST['militar_id'])) {
     }
 } else if (isset($_GET['militar_id'])) {
     $id = $_GET['militar_id'];
+
+    include_once '../Controllers/atualizar_tempo_arregimentado.php';
+    calcularTempoArregimentado($id, $inter, $tempo_arregimentado_minimo, $conn);
+
     //pegar no BD dados do militar selecionado
-    $stmt = $conn->query("SELECT militar.nome, militar.posto_grad_mil, militar.id, militar.media, militar.quadro, militar.antiguidade FROM militar WHERE militar.id = '" . $id . "'");
+    $stmt = $conn->query("SELECT militar.nome, militar.posto_grad_mil, militar.id, militar.media, militar.quadro, militar.antiguidade, militar.tempo_arregimentado FROM militar WHERE militar.id = '" . $id . "'");
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
     if (isset($resultado['nome'])) {
         $militar_id = $resultado['id'];
@@ -74,6 +83,7 @@ if (isset($_POST['militar_id'])) {
         $quadro = $resultado['quadro'];
         $media = $resultado['media'];
         $antiguidade = $resultado['antiguidade'];
+        $arregimentado = $resultado['tempo_arregimentado'];
     }
     $stmt = $conn->query("SELECT id, a_contar_de, modalidade FROM registro_de_promocoes WHERE militar_id = '" . $id . "'");
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -91,7 +101,12 @@ if (isset($ultima_promocao)) {
     require_once '../Controllers/alias_ultima_promocao.php';
     $alias_ultima_promocao = alias_ultima_promocao($ultima_promocao);
 }
+// if (isset($arregimentado)) {
+//     require_once '../Controllers/atualizar_tempo_arregimentado.php';
+//     calcularTempoArregimentado($militar_id, $inter, $tempo_arregimentado_minimo, $conn);
+// }
 
+$_SESSION['militar_id'] = $id ?? null;
 ?>
 
 <!-- BOTÃO VOLTA PARA A PÁGINA DE PESQUISA JOGANDO NA URL O NOME DO MILITAR EM QUESTÃO-->
@@ -103,8 +118,15 @@ if (isset($ultima_promocao)) {
         <hr>
     </div>
     <!-- BOTÃO VOLTA PARA A PÁGINA DE PESQUISA JOGANDO NA URL O NOME DO MILITAR EM QUESTÃO-->
+
     <div class="row justify-content-center">
-        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <label class="form-label">Ação Opcional</label>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="formulario_tempo_nao_arregimentado.php">Inserir tempo não arregimentado</a></li>
+            </ul>
+        </div>
+
         <div class="col-md-6">
 
             <form action="../Controllers/atualiza_dados_militar.php" method="POST">
@@ -165,6 +187,17 @@ if (isset($ultima_promocao)) {
                     <span class="input-group-text" id="mediaMilitar">Média</span>
                     <input type="text" class="form-control" aria-describedby="mediaMilitar" value="<?php $media = (isset($media)) ? $media : 'Não disponível.';
                                                                                                     echo ($media); ?>" disabled>
+                    <span class="input-group-text" id="TempoArregimentado">Tempo Arregimentado</span>
+                    <input type="text" class="form-control" aria-describedby="TempoArregimentado" value="<?php $arregimentado = (isset($arregimentado)) ? $arregimentado : 'Não disponível';
+                                                                                                            switch ($arregimentado) {
+                                                                                                                case 0:
+                                                                                                                    $arregimentado = "Incompleto";
+                                                                                                                    break;
+                                                                                                                case 1:
+                                                                                                                    $arregimentado = "Completo";
+                                                                                                                    break;
+                                                                                                            }
+                                                                                                            echo ($arregimentado); ?>" disabled>
                 </div>
 
                 <div class="input-group mb-3">
@@ -185,7 +218,7 @@ if (isset($ultima_promocao)) {
                 }
                 ?>
                 <hr>
-                <button class="btn btn-outline-success active" type="submit">Cadastrar</button>
+                <button class="btn btn-outline-success active" type="submit">Atualizar</button>
             </form>
         </div>
         <div class="col-md-3">

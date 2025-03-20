@@ -15,8 +15,8 @@ unset($lq_dia_mes); //destrói a variável
 //interstício teste
 //salvar em variaveis os intersticios
 //$intersticio = 3;
-$consulta =  $conn->query("SELECT * FROM intersticio");
-$intersticio_bd = $consulta->fetch(PDO::FETCH_ASSOC);
+//$consulta =  $conn->query("SELECT * FROM intersticio");
+//$intersticio_bd = $consulta->fetch(PDO::FETCH_ASSOC);
 
 //variável para montar a string do header Location
 $location = "Location:../Views/listar_resultado_LQ.php?data={$lq_ano}&";
@@ -43,7 +43,7 @@ if (!empty($consulta)) {
 
         //funçao pega_intersticio
         require_once 'pega_intersticio.php';
-        $intersticio = pega_instersticio($aux_posto_grad_atual, $intersticio_bd);
+        $intersticio = pega_instersticio($aux_posto_grad_atual, $conn);
 
         //o interstício deve ser igual ou maior E o posto/grad atual tem de ser igual ao do registro
         if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
