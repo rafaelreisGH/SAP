@@ -3,6 +3,7 @@
 require_once '../ConexaoDB/conexao.php';
 //cálculo do intervalo de tempo entre as datas
 require_once 'date_difference.php';
+require_once 'funcoes_intersticio.php';
 
 //preparação de variáveis
 $lq_ano = isset($_POST['criterio_ano_promocao_futura']) ? $_POST['criterio_ano_promocao_futura'] : null;
@@ -27,27 +28,40 @@ $location = "Location:../Views/listar_resultado_LQ.php?data={$lq_ano}&";
 //os CEL também por estarem no último posto
 //e
 //porque ST só sai oficial se passar no QCO, ou se for por requerimento
-$consulta = $conn->query("SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, militar.quadro, militar.antiguidade FROM registro_de_promocoes CROSS JOIN militar WHERE registro_de_promocoes.militar_id = militar.id AND militar.posto_grad_mil != 'TC BM' AND militar.posto_grad_mil != 'ST BM' AND militar.posto_grad_mil != 'CEL BM' ORDER BY militar.antiguidade")->fetchAll();
+$consulta = $conn->query("SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, militar.quadro, militar.antiguidade, militar.data_cumprimento_intersticio FROM registro_de_promocoes CROSS JOIN militar WHERE registro_de_promocoes.militar_id = militar.id AND militar.posto_grad_mil != 'TC BM' AND militar.posto_grad_mil != 'ST BM' AND militar.posto_grad_mil != 'CEL BM' ORDER BY militar.antiguidade")->fetchAll();
 
 if (!empty($consulta)) {
+    require_once 'pega_intersticio.php';
     foreach ($consulta as $resultado) {
         $aux_a_contar_de = $resultado['a_contar_de'];
         $aux_posto_grad = $resultado['grau_hierarquico'];
         $aux_nome = $resultado['nome'];
         $aux_posto_grad_atual = $resultado['posto_grad_mil'];
         $aux_quadro = $resultado['quadro'];
+        $aux_cumprimento_intersticio = $resultado['data_cumprimento_intersticio'];
 
         //verificacao do insterstício
+
+        //CASO 01 - MILITAR NÃO TEM AFASTAMENTO POR LTIP NO POSTO/GRAD
         //calcula a diferença entre a data informada e a última promoção
-        $intervalo = dateDifference($lq_ano, $aux_a_contar_de);
+        if (is_null($aux_cumprimento_intersticio)) {
 
-        //funçao pega_intersticio
-        require_once 'pega_intersticio.php';
-        $intersticio = pega_instersticio($aux_posto_grad_atual, $conn);
+            $intervalo = dateDifference($lq_ano, $aux_a_contar_de);
 
-        //o interstício deve ser igual ou maior E o posto/grad atual tem de ser igual ao do registro
-        if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
-            $alteracoes_realizadas[] = "{$aux_a_contar_de},{$aux_posto_grad},{$aux_nome},{$aux_quadro}";
+            //funçao pega_intersticio
+            $intersticio = pega_intersticio($aux_posto_grad_atual, $conn);
+
+            //o interstício deve ser igual ou maior E o posto/grad atual tem de ser igual ao do registro
+            if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
+                $alteracoes_realizadas[] = "{$aux_a_contar_de},{$aux_posto_grad},{$aux_nome},{$aux_quadro}";
+            }
+        } else {
+            //CASO 02 - MILITAR TEM AFASTAMENTO POR LTIP NO POSTO/GRAD
+            //calcula a diferença entre a data informada e a última promoção
+            //o interstício deve ser igual ou maior E o posto/grad atual tem de ser igual ao do registro
+            if ((tem_intersticio($lq_ano,$aux_cumprimento_intersticio)) && ($aux_posto_grad == $aux_posto_grad_atual)) {
+                $alteracoes_realizadas[] = "{$aux_cumprimento_intersticio},{$aux_posto_grad},{$aux_nome},{$aux_quadro}";
+            }
         }
     }
     if (empty($alteracoes_realizadas)) {
@@ -56,3 +70,5 @@ if (!empty($consulta)) {
 } else {
     header("Location:../Views/nenhum_resultado.php");
 }
+
+

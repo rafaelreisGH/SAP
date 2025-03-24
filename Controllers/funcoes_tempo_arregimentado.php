@@ -1,11 +1,34 @@
 <?php
-// require_once '../ConexaoDB/conexao.php';
-require_once '../Controllers/pega_intersticio.php';
-require_once '../Controllers/pega_tempo_minimo_arregimentado.php';
+require_once '../Controllers/funcoes_intersticio.php';
 
-$aux_posto_grad = pega_posto_grad($id, $conn);
-$inter = pega_intersticio($aux_posto_grad, $conn);
-$tempo_arregimentado_minimo = pega_tempo_minimo_arregimentado($aux_posto_grad, $conn);
+function pega_tempo_minimo_arregimentado($posto_grad, $conn)
+{
+    $consulta =  $conn->query("SELECT * FROM promocao.tempo_arregimentado")->fetch(PDO::FETCH_ASSOC); 
+    switch ($posto_grad) {
+        case 'TC BM':
+            return $consulta['tempo_tc'];
+        case 'MAJ BM':
+            return $consulta['tempo_maj'];
+        case 'CAP BM':
+            return $consulta['tempo_cap'];
+        case '1º TEN BM':
+            return $consulta['tempo_1ten'];
+        case '2º TEN BM':
+            return $consulta['tempo_2ten'];
+        case 'ST BM':
+            return $consulta['tempo_st'];
+        case '1º SGT BM':
+            return $consulta['tempo_1sgt'];
+        case '2º SGT BM':
+            return $consulta['tempo_2sgt'];
+        case '3º SGT BM':
+            return $consulta['tempo_3sgt'];
+        case 'CB BM':
+            return $consulta['tempo_cb'];
+        case 'SD BM':
+            return $consulta['tempo_sd'];
+    }
+}
 
 // Buscar o posto/graduação do militar
 function pega_posto_grad($militar_id, $conn)
@@ -22,17 +45,16 @@ function pega_posto_grad($militar_id, $conn)
     }
 }
 
-
 function calcularTempoArregimentado($militar_id, $intersticio, $tempo_arregimentado_minimo, $conn)
 {
     $tempo_arregimentado_minimo *= 30;
-
+    
     // Buscar a última data de promoção
     $stmt = $conn->prepare("SELECT ultima_promocao FROM militar WHERE id = :id");
     $stmt->bindParam(':id', $militar_id, PDO::PARAM_INT);
     $stmt->execute();
     $data_promocao = $stmt->fetchColumn();
-
+    
     if (!$data_promocao) {
         return false; // Se não houver promoção registrada
     }
@@ -42,7 +64,7 @@ function calcularTempoArregimentado($militar_id, $intersticio, $tempo_arregiment
     $data_atual->add(new DateInterval('P' . $intersticio . 'Y')); // Adiciona os anos de interstício
     $intervalo = $data_inicio->diff($data_atual);
     $dias_totais = $intervalo->days;
-
+    
     // Buscar o total de dias afastados
     $stmt = $conn->prepare("SELECT SUM(qtde_de_dias) FROM tempo_nao_arregimentado WHERE militar_id = :id");
     $stmt->bindParam(':id', $militar_id, PDO::PARAM_INT);

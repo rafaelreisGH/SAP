@@ -2,6 +2,8 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
+include_once '../Controllers/funcoes_tempo_arregimentado.php';
+include_once '../Controllers/funcoes_intersticio.php';
 
 /*
 erro[0] é referente a $erroNome
@@ -46,7 +48,9 @@ $modalidade;
 if (isset($_POST['militar_id'])) {
     $id = $_POST['militar_id'];
 
-    include_once '../Controllers/atualizar_tempo_arregimentado.php';
+    $aux_posto_grad = pega_posto_grad($id, $conn);
+    $inter = pega_intersticio($aux_posto_grad, $conn);
+    $tempo_arregimentado_minimo = pega_tempo_minimo_arregimentado($aux_posto_grad, $conn);
     calcularTempoArregimentado($id, $inter, $tempo_arregimentado_minimo, $conn);
 
     //pegar no BD dados do militar selecionado
@@ -70,7 +74,9 @@ if (isset($_POST['militar_id'])) {
 } else if (isset($_GET['militar_id'])) {
     $id = $_GET['militar_id'];
 
-    include_once '../Controllers/atualizar_tempo_arregimentado.php';
+    $aux_posto_grad = pega_posto_grad($id, $conn);
+    $inter = pega_intersticio($aux_posto_grad, $conn);
+    $tempo_arregimentado_minimo = pega_tempo_minimo_arregimentado($aux_posto_grad, $conn);
     calcularTempoArregimentado($id, $inter, $tempo_arregimentado_minimo, $conn);
 
     //pegar no BD dados do militar selecionado

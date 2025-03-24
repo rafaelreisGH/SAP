@@ -1,5 +1,4 @@
-<?php 
-//-------------------------------------------------------//
+<?php
 function pega_intersticio($posto_grad, $conn)
 {
     $consulta =  $conn->query("SELECT * FROM intersticio")->fetch(PDO::FETCH_ASSOC); 
@@ -28,5 +27,18 @@ function pega_intersticio($posto_grad, $conn)
             return $consulta['cb_3sgt'];
         case 'SD BM':
             return $consulta['sd_cb'];
+    }
+}
+
+function tem_intersticio($lq_ano, $aux_cumprimento_intersticio)
+{
+    // Converte as strings para objetos DateTime
+    $lq_ano = new DateTime($lq_ano);
+    $aux_cumprimento_intersticio = new DateTime($aux_cumprimento_intersticio);
+
+    if ($aux_cumprimento_intersticio <= $lq_ano) {
+        return true;
+    } else {
+        return false;
     }
 }

@@ -2,7 +2,6 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
-// require_once '../Controllers/inserir_tempo_nao_arregimentado.php';
 
 //Pegar o id do militar em questão e consultar BD
 
@@ -35,6 +34,7 @@ if (isset($_POST["excluir_documento"])) {
 
     // Executa a query
     if ($stmt->execute()) {
+        include_once '../Controllers/verificar_intersticio_descontado_LTIP.php';
         $mensagem = "Registro excluído com sucesso!";
     } else {
         $mensagem = "Erro ao excluir o registro.";
@@ -94,6 +94,8 @@ if (isset($_POST["excluir_documento"])) {
 
     //verificação se o período é válido
     $periodo_valido = validar_periodo($data_inicio, $data_fim, $categoria);
+
+    //SE FOR VÁLIDO, INSERE NO BANCO DE DADOS
     if ($periodo_valido) {
 
         //pega a diferença em dias entre o início e o fim do afastamento
@@ -101,11 +103,12 @@ if (isset($_POST["excluir_documento"])) {
 
         try {
             //Busca se há algum registro com o mesmo período para o mesmo militar
-            $stmt = $conn->prepare("SELECT * FROM promocao.tempo_nao_arregimentado WHERE militar_id = :id AND tna_inicio = :inicio AND tna_fim = :fim AND categoria = :categoria");
+            $stmt = $conn->prepare("SELECT * FROM promocao.tempo_nao_arregimentado WHERE militar_id = :id AND tna_inicio = :inicio AND tna_fim = :fim AND categoria = :categoria AND posto_grad_na_epoca = :posto_grad");
             $stmt->bindParam(':id', $militar_id, PDO::PARAM_INT);
             $stmt->bindParam(':inicio', $data_inicio, PDO::PARAM_STR);
             $stmt->bindParam(':fim', $data_fim, PDO::PARAM_STR);
             $stmt->bindParam(':categoria', $categoria, PDO::PARAM_STR);
+            $stmt->bindParam(':posto_grad', $posto_grad, PDO::PARAM_STR);
             $stmt->execute();
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC); // Obtém os dados
         } catch (PDOException $ex) {
@@ -119,12 +122,13 @@ if (isset($_POST["excluir_documento"])) {
             //echo "Nenhum resultado obtido.";
             // Afastamento não existe, então insere um novo registro
             try {
-                $stmt = $conn->prepare('INSERT INTO promocao.tempo_nao_arregimentado (categoria, tna_inicio, tna_fim, qtde_de_dias, militar_id) VALUES (:categoria, :inicio, :fim, :dias, :militar_id)');
+                $stmt = $conn->prepare('INSERT INTO promocao.tempo_nao_arregimentado (categoria, tna_inicio, tna_fim, qtde_de_dias, militar_id, posto_grad_na_epoca) VALUES (:categoria, :inicio, :fim, :dias, :militar_id, :posto_grad)');
                 $stmt->bindParam(':categoria', $categoria, PDO::PARAM_STR);
                 $stmt->bindParam(':inicio', $data_inicio, PDO::PARAM_STR);
                 $stmt->bindParam(':fim', $data_fim, PDO::PARAM_STR);
                 $stmt->bindParam(':dias', $dias, PDO::PARAM_INT);
                 $stmt->bindParam(':militar_id', $militar_id, PDO::PARAM_INT);
+                $stmt->bindParam(':posto_grad', $posto_grad, PDO::PARAM_STR);
                 $stmt->execute();
             } catch (PDOException $ex) {
                 die("Erro no banco de dados: " . $ex->getMessage());
@@ -135,9 +139,13 @@ if (isset($_POST["excluir_documento"])) {
             } else {
                 $mensagem = '<font style="color:#FF0000">Falha na inserção do evento.</font></br>';
             }
+            if ($categoria == "inciso2") {
+                include_once '../Controllers/verificar_intersticio_descontado_LTIP.php';
+            }
         }
-    } else {
     }
+
+
     /*----------------------------------------------------*/
 
     //consultar no banco se já há um lançamento para o mesmo evento
