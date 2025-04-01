@@ -16,7 +16,7 @@ if (isset($_GET['id_da_pasta'])) {
 
         //array com os nomes dos documentos necessários
         try {
-            $documentos_nomes = array('cert_tjmt_1_criminal', 'cert_tjmt_2_criminal', 'cert_trf1_1_criminal', 'cert_trf1_2_criminal', 'cert_trf_sç_jud_mt', 'nada_consta_correg', 'conceito_moral', 'cursos_e_estagios', 'militar_tem_taf_id', 'ais_id', 'media_das_avaliacoes');
+            $documentos_nomes = array('cert_1JE', 'cert_2JE', 'cert_1JF', 'cert_2JF', 'cert_trf_sç_jud_mt', 'nada_consta_correg', 'conceito_moral', 'cursos_e_estagios', 'militar_tem_taf_id', 'ais_id', 'media_das_avaliacoes');
             $documentos = [];
 
             $stmt = $conn->prepare('SELECT doc_promo_nome, doc_promo_validado FROM documento_promocao WHERE pasta_promocional_id = :auxiliar');

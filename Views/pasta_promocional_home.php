@@ -30,7 +30,7 @@ if (isset($_POST['militar_id'])) {
     <div class="col-md-12">
         <ul class="nav nav-pills" style="list-style: none; display: flex; gap: 10px; padding: 0;">
             <li class="active"><a class="nav-link active" aria-current="page" href="../Views/pagina_gestor.php">Voltar</a></li>
-            <li class="active"><a class="nav-link active" aria-current="page" href="../Views/cadastro_de_pasta.php?militar_id=<?= $militar_id ?>">Criar Pasta Promocional</a></li>
+            <!-- <li class="active"><a class="nav-link active" aria-current="page" href="../Views/cadastro_de_pasta.php?militar_id=<?= $militar_id ?>">Criar Pasta Promocional</a></li> -->
         </ul>
         <hr>
     </div>
@@ -101,7 +101,7 @@ if (isset($_POST['militar_id'])) {
                             . '<ul class="nav nav-pills" style="list-style: none; display: flex; gap: 10px; padding: 0;">'
                             .'<li role="presentation"><form action="edicao_documentos_pasta_promo.php" method="POST" style="display: inline;"><input type="hidden" name="id_da_pasta" value="' . $id_da_pasta . '"><button type="submit" class="btn btn-outline-success"><i class="bi bi-pencil-square">&nbsp</i>Editar</button></form></li>'
                             . '<li role="presentation"><a class="btn btn-outline-primary" href="pasta_promocional_resumo.php?id_da_pasta=' . $id_da_pasta . '" role="button" target="_blank"><i class="bi bi-list-check"></i>&nbspResumo</a></li>'
-                            .'<li role="presentation"><form action="../Controllers/exclui_pasta_v2.php" method="POST" style="display: inline;" onsubmit="return confirmarExclusao();"><input type="hidden" name="id_da_pasta" value="' . $id_da_pasta . '"><input type="hidden" name="militar_id" value="' . $militar_id . '"><button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash3"></i>&nbsp;Excluir</button></form></li>'
+                            //.'<li role="presentation"><form action="../Controllers/exclui_pasta_v2.php" method="POST" style="display: inline;" onsubmit="return confirmarExclusao();"><input type="hidden" name="id_da_pasta" value="' . $id_da_pasta . '"><input type="hidden" name="militar_id" value="' . $militar_id . '"><button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash3"></i>&nbsp;Excluir</button></form></li>'
                             . '</ul><br>';
                     }
                 } catch (PDOException $ex) {

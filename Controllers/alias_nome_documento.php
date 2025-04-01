@@ -6,45 +6,32 @@ de modo que o VARCHAR do BD apareça no HTML mais amigavelmente
 function alias_nome_documento($nome_documento)
 {
     switch ($nome_documento) {
-        case 'cert_tjmt_1_criminal':
-            return 'Certidão TJ-MT - 1ª instância - criminal';
+        case 'cert_1JE':
+            return '1º J.E. - Cert. Neg. Crim. - 1º grau - TJ/MT';
             break;
-        case 'cert_tjmt_2_criminal':
-            return 'Certidão TJ-MT - 2ª instância - criminal';
+        case 'cert_2JE':
+            return '2º J.E. - Cert. Neg. Crim. - 2º grau - TJ/MT';
             break;
-        case 'cert_trf1_1_criminal':
-            return 'Certidão TRF-1 - 1ª instância - criminal';
+        case 'cert_1JF':
+            return '1º J.F. - Cert. Neg. Crim. - TRF-1 - Sç. Jud. MT';
             break;
-        case 'cert_trf1_2_criminal':
-            return 'Certidão TRF-1 - 2ª instância - criminal';
+        case 'cert_2JF':
+            return '2º J.F. - Cert. Neg. Crim. - TRF-1';
             break;
-        case 'cert_trf_sç_jud_mt':
-            return 'Certidão TRF-1 - Seção Judiciária/MT';
+        case 'cert_tse':
+            return 'C.E. - Cert. Neg. Crim. - Justiça Eleitoral';
             break;
-        case '2º TEN BM':
-            return '2º Tenente';
+        case 'fad':
+            return 'F.A.D. - Ficha de Avaliação de Desempenho';
             break;
-        case 'ASP OF BM':
-            return 'Aspirante-a-oficial';
+        case 'rta':
+            return 'R.T.A. - Relatório de Tempo Arregimentado';
             break;
-        case 'ST BM':
-            return 'Subtenente';
+        case 'ais':
+            return 'A.I.S. - Ata de Inspeção de Saúde';
             break;
-        case '1º SGT BM':
-            return '1º Sargento ';
+        case 'fp':
+            return 'F.P. - Ficha Profissional';
             break;
-        case '2º SGT BM':
-            return '2º Sargento';
-            break;
-        case '3º SGT BM':
-            return '3º Sargento';
-            break;
-        case 'CB BM':
-            return 'Cabo';
-            break;
-        case 'SD BM':
-            return 'Soldado';
-            break;
-
     }
 }

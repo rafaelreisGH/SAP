@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST)) {
     $militar_id = filter_input(INPUT_POST, "militar_id", FILTER_SANITIZE_NUMBER_INT);
     $nome_documento = filter_input(INPUT_POST, "nome_do_documento", FILTER_SANITIZE_SPECIAL_CHARS);
     $caminho_do_arquivo = filter_input(INPUT_POST, "caminho_do_arquivo", FILTER_SANITIZE_URL);
-    $documento_validado = filter_input(INPUT_POST, "documento_validado", FILTER_SANITIZE_NUMBER_INT);
+    $status_documento = filter_input(INPUT_POST, "status_documento", FILTER_SANITIZE_NUMBER_INT);
 
     //Definição de array para armazenar os erros
     $erros = array();
@@ -39,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST)) {
     if (!filter_var($caminho_do_arquivo, FILTER_VALIDATE_URL)) {
         $erros[] = "URL inválida.";
     }
-    if (filter_var($documento_validado, FILTER_VALIDATE_INT) === false) {
-        $erros[] = "O documento deve ser válido ou não.";
+    if (filter_var($status_documento, FILTER_VALIDATE_INT) === false) {
+        $erros[] = "O documento deve ter 1 dos 3 status disponíveis.";
     }
 
     //verificação se houve erros ou não
@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST)) {
                 '<A class="btn btn-primary" HREF="../Views/edicao_documentos_pasta_promo.php?' . $id_da_pasta_promo . '">Voltar</A>' .
                 '</div></div>';
     } else {
-        if (isset($id_da_pasta_promo, $militar_id, $nome_documento, $caminho_do_arquivo, $documento_validado)) {
-            $resultado = salvaNoBancoDocPromo($id_da_pasta_promo, $militar_id, $nome_documento, $caminho_do_arquivo, $documento_validado);
+        if (isset($id_da_pasta_promo, $militar_id, $nome_documento, $caminho_do_arquivo, $status_documento)) {
+            $resultado = salvaNoBancoDocPromo($id_da_pasta_promo, $militar_id, $nome_documento, $caminho_do_arquivo, $status_documento);
             if ($resultado) {
                 header('Location:../Views/edicao_documentos_pasta_promo.php?id_da_pasta=' . $id_da_pasta_promo . '');
                 exit;
@@ -83,7 +83,7 @@ function salvaNoBancoDocPromo($id, $militar_id, $nome, $caminho, $validado)
 
         if (empty($resultado1)) {
             // Documento não existe, então insere um novo registro
-            $stmt = $conn->prepare('INSERT INTO documento_promocao (doc_promo_nome, doc_promo_url, doc_promo_validado, pasta_promocional_id, militar_id) VALUES (:nome, :doc_url, :validado, :id, :militar_id)');
+            $stmt = $conn->prepare('INSERT INTO documento_promocao (doc_promo_nome, doc_promo_url, doc_status_id, pasta_promocional_id, militar_id) VALUES (:nome, :doc_url, :validado, :id, :militar_id)');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
             $stmt->bindParam(':doc_url', $caminho, PDO::PARAM_STR);
@@ -100,7 +100,7 @@ function salvaNoBancoDocPromo($id, $militar_id, $nome, $caminho, $validado)
             $id = reset($resultado1);
 
             // Atualiza o caminho do arquivo e outros dados
-            $stmt = $conn->prepare('UPDATE documento_promocao SET doc_promo_url = :b, doc_promo_validado = :c WHERE id_doc_promo = :id');
+            $stmt = $conn->prepare('UPDATE documento_promocao SET doc_promo_url = :b, doc_status_id = :c WHERE id_doc_promo = :id');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':b', $caminho, PDO::PARAM_STR);
             $stmt->bindParam(':c', $validado, PDO::PARAM_INT);
@@ -131,10 +131,15 @@ function ExcluiDoBancoDocPromo($id)
             // Documento não existe, retorna false
             return false;
         } else {
-            //documento existe, será excluído
-            $stmt = $conn->prepare('DELETE FROM documento_promocao WHERE id_doc_promo = :id');
+            // Atualiza o documento: define doc_promo_url como NULL e doc_status_id como 3
+            $stmt = $conn->prepare('
+                            UPDATE documento_promocao 
+                            SET doc_promo_url = NULL, doc_status_id = 2 
+                            WHERE id_doc_promo = :id
+                            ');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
+
             // Verifica se alguma linha foi afetada
             if ($stmt->rowCount() > 0) {
                 return true;

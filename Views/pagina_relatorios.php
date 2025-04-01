@@ -28,12 +28,20 @@ include_once './header2.php';
             </div>
 
             <div class="col-md-4">
+                <div class="card">
+                    <h4 class="card-header">Documentos entregues</h4>
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <p class="card-text">Relatório de documentação entregue à Secretaria das Comissões de Promoção (SCP)</strong>.</p>
+                        <a href="selecao_criterios_de_pesquisa_LQ.php?relatorio=1" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
             </div>
 
         </div>
-        
+
         <div class="clearfix"></br></div>
 
         <div class="row">

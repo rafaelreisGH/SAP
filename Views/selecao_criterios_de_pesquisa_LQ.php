@@ -2,6 +2,14 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
+
+if (isset($_GET['relatorio']) && ($_GET['relatorio'] == 1)){
+    $action = "listar_resultado_LQ_documentos.php";
+    $relatorio = "Relatório de documentação entregue à Secretaria das Comissões de Promoção (SCP)";
+} else {
+    $action = "listar_resultado_LQ.php";
+    $relatorio = "Seleção de critérios para Limite de Quantitativo por Antiguidade";
+}
 ?>
 
 <div class="container">
@@ -13,8 +21,11 @@ require_once '../ConexaoDB/conexao.php';
         </ul>
         <hr>
     </div>
-    <form action="listar_resultado_LQ.php" method="POST" name="formLQ" onsubmit="return validateForm()">
-        <h3><strong>Seleção de critérios para Limite de Quantitativo por Antiguidade</strong></h3>
+    <!-- 
+    $action varia conforme a necessidade. Se for para gerar o LQ vai para um arquvo, se for para obter relatório de documentos vai para outro arquivo.
+    -->
+    <form action="<?=$action?>" method="POST" name="formLQ" onsubmit="return validateForm()">
+        <h3><strong><?=$relatorio?></strong></h3>
         <hr>
         <div class="form-row">
             <div class="form-group col-md-3">

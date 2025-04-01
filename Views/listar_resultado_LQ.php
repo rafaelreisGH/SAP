@@ -1,7 +1,32 @@
 <?php
 require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
-include_once '../Controllers/processa_LQ.php';
+include_once '../Controllers/funcoes_LQ.php';
+
+//preparação de variáveis
+$lq_ano = isset($_POST['criterio_ano_promocao_futura']) ? $_POST['criterio_ano_promocao_futura'] : null;
+$lq_dia_mes = isset($_POST['criterio_dia_mes_promocao_futura']) ? $_POST['criterio_dia_mes_promocao_futura'] : null;
+
+//se não chegar nada no POST, então não tem como continuar o processamento
+if (is_null($lq_ano)) {
+    header("Location:../Views/nenhum_resultado.php");
+    exit;
+}
+$lq_ano .= '-' . $lq_dia_mes; //concatena as variáveis numa string apenas
+unset($lq_dia_mes); //destrói a variável
+
+/*-------------------------------------------------------------------*/
+//função para verificar quem pode ser promovido no respectivo processo promocional
+$alteracoes_realizadas = processa_lista_de_candidatos($conn, $lq_ano);
+
+//função para criar em lote as pastas promocionais dos militares
+if (!is_null($alteracoes_realizadas)) {
+    $pastas_criadas = criarPastaPromocionalEmLote($alteracoes_realizadas, $lq_ano, $conn);
+    if (!is_null($pastas_criadas)) {
+        $aux = criaDocumentosVazios($pastas_criadas, $conn);
+    }
+}
+/*-------------------------------------------------------------------*/
 
 $parametro_data = (isset($_GET['data'])) ? $_GET['data'] : null;
 
@@ -23,7 +48,20 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
         <p>Data considerada:&nbsp
             <?= $lq_ano; ?></p>
         <p><em>São relacionados os candidatos que completarão o interstício mínimo previsto para cada posto ou graduação até a data considerada, bem como aqueles que já haviam completado.</em></p>
+        <p>
+            <font style="color:#FF0000">
+                <?php
+                if ($pastas_criadas) {
+                    echo "Pastas promocionais criadas com sucesso!</br>";
+                }
+                if($aux){
+                    echo "Documentos promocionais criados com sucesso!";
+                }
+                ?>
+            </font>
+        </p>
         <hr>
+
         <?php
         require_once '../Controllers/alias_ultima_promocao.php';
         if (!is_null($parametro_data)) {

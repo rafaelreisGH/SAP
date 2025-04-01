@@ -20,7 +20,7 @@ unset($lq_dia_mes); //destrói a variável
 //$intersticio_bd = $consulta->fetch(PDO::FETCH_ASSOC);
 
 //variável para montar a string do header Location
-$location = "Location:../Views/listar_resultado_LQ.php?data={$lq_ano}&";
+// $location = "Location:../Views/listar_resultado_LQ.php?data={$lq_ano}&";
 
 //CONSULTA
 //aqui os TEN CEL e ST são excluídos
@@ -31,7 +31,7 @@ $location = "Location:../Views/listar_resultado_LQ.php?data={$lq_ano}&";
 $consulta = $conn->query("SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, militar.quadro, militar.antiguidade, militar.data_cumprimento_intersticio FROM registro_de_promocoes CROSS JOIN militar WHERE registro_de_promocoes.militar_id = militar.id AND militar.posto_grad_mil != 'TC BM' AND militar.posto_grad_mil != 'ST BM' AND militar.posto_grad_mil != 'CEL BM' ORDER BY militar.antiguidade")->fetchAll();
 
 if (!empty($consulta)) {
-    require_once 'pega_intersticio.php';
+    require_once 'funcoes_intersticio.php';
     foreach ($consulta as $resultado) {
         $aux_a_contar_de = $resultado['a_contar_de'];
         $aux_posto_grad = $resultado['grau_hierarquico'];
