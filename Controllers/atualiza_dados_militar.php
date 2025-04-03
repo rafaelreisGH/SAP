@@ -3,15 +3,15 @@ require_once '../ConexaoDB/conexao.php';
 
 //inicialização de variáveis
 $militar_id = $_POST['id'];
-$nome_atualizado = filter_input(INPUT_POST, 'nome_atualizado', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$nome_atualizado =  $_POST['nome_atualizado'];
 $posto_grad_atualizado = $_POST['posto_grad_atualizado'];
 $quadro_atualizado = $_POST['quadro_atualizado'];
 $data_atualizada =  isset($_POST['data_atualizada']) ? $_POST['data_atualizada'] : null;
 
-$erroNome ='';
-$erroData ='';
-$erroPostoGrad ='';
-$erroQuadro ='';
+$erroNome = '';
+$erroData = '';
+$erroPostoGrad = '';
+$erroQuadro = '';
 
 /*CÓDIGOS DOS ERROS
 1 = ERRO DE INSERÇÃO DE NOME
@@ -38,10 +38,10 @@ try {
             //verifica se nome_anterior e nome_atualizado são iguais
             if ($nome_anterior != $nome_atualizado) {
                 $stmt = $conn->prepare('UPDATE militar SET nome = :nome WHERE id = :id');
-                $stmt->execute(array(
-                    ':id' => $militar_id,
-                    ':nome' => $nome_atualizado
-                ));
+                $stmt->bindParam(':id', $militar_id, PDO::PARAM_INT);
+                $stmt->bindParam(':nome', $nome_atualizado, PDO::PARAM_STR);
+                $stmt->execute();
+
                 if (!$stmt) {
                     $erroNome = 1;
                 } else {
@@ -100,7 +100,7 @@ try {
                     $erroQuadro = 3;
                 } else {
                     $erroQuadro = 0;
-                    $location .= 'quadro=' . $quadro_atualizado.'&';
+                    $location .= 'quadro=' . $quadro_atualizado . '&';
                 }
             }
         }

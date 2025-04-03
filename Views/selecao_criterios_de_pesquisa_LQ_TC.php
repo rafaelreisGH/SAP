@@ -2,6 +2,14 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
+
+if (isset($_GET['relatorio']) && ($_GET['relatorio'] == 1)){
+    $action = "listar_resultado_LQ_TC_documentos.php";
+    $relatorio = "Relatório de documentação entregue à Secretaria das Comissões de Promoção (SCP)";
+} else {
+    $action = "listar_resultado_LQ_TC.php";
+    $relatorio = "Seleção de critérios para Limite de Quantitativo por Antiguidade";
+}
 ?>
 
 <div class="container">
@@ -13,7 +21,7 @@ require_once '../ConexaoDB/conexao.php';
         </ul>
         <hr>
     </div>
-    <form action="../Views/listar_resultado_LQ_TC.php" method="POST" name="formLQ" onsubmit="return validateForm()">
+    <form action="<?=$action?>" method="POST" name="formLQ" onsubmit="return validateForm()">
 
         <h3><strong>Seleção de critérios de pesquisa TCs com interstício</strong></h3>
         <hr>
@@ -34,10 +42,10 @@ require_once '../ConexaoDB/conexao.php';
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="dia_mes_promocao_futura">Dia/mês</span>
                         <select class="form-select" name="criterio_dia_mes_promocao_futura">
-                            <option value="" selected disabled>Selecione o dia e o mês</option>
-                            <option value="07-02">02 de julho</option>
-                            <option value="12-02">02 de dezembro</option>
-                            <option value="12-21">21 de dezembro</option>
+                            <!-- <option value="" selected disabled>Selecione o dia e o mês</option> -->
+                            <!-- <option value="07-02">02 de julho</option> -->
+                            <option value="12-02" selected>02 de dezembro</option>
+                            <!-- <option value="12-21">21 de dezembro</option> -->
                         </select>
                     </div>
                     <div class="input-group mb-3">

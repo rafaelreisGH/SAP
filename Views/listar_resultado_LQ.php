@@ -20,11 +20,12 @@ unset($lq_dia_mes); //destrói a variável
 $alteracoes_realizadas = processa_lista_de_candidatos($conn, $lq_ano);
 
 //função para criar em lote as pastas promocionais dos militares
-if (!is_null($alteracoes_realizadas)) {
+if (!empty($alteracoes_realizadas)) {
     $pastas_criadas = criarPastaPromocionalEmLote($alteracoes_realizadas, $lq_ano, $conn);
-    if (!is_null($pastas_criadas)) {
+    
+    if (!empty($pastas_criadas)) {
         $aux = criaDocumentosVazios($pastas_criadas, $conn);
-    }
+    } else $aux = false;
 }
 /*-------------------------------------------------------------------*/
 
@@ -51,10 +52,10 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
         <p>
             <font style="color:#FF0000">
                 <?php
-                if ($pastas_criadas) {
+                if (!empty($pastas_criadas)) {
                     echo "Pastas promocionais criadas com sucesso!</br>";
                 }
-                if($aux){
+                if ($aux) {
                     echo "Documentos promocionais criados com sucesso!";
                 }
                 ?>

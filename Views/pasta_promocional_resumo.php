@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once '../Views/header3.php';
 require_once '../ConexaoDB/conexao.php';
+require_once '../Controllers/funcoes_LQ.php';
 
 if (isset($_GET['id_da_pasta'])) {
 
@@ -15,52 +16,43 @@ if (isset($_GET['id_da_pasta'])) {
     } else {
 
         //array com os nomes dos documentos necessários
-        try {
-            $documentos_nomes = array('cert_1JE', 'cert_2JE', 'cert_1JF', 'cert_2JF', 'cert_trf_sç_jud_mt', 'nada_consta_correg', 'conceito_moral', 'cursos_e_estagios', 'militar_tem_taf_id', 'ais_id', 'media_das_avaliacoes');
-            $documentos = [];
 
-            $stmt = $conn->prepare('SELECT doc_promo_nome, doc_promo_validado FROM documento_promocao WHERE pasta_promocional_id = :auxiliar');
-            $stmt->bindParam(':auxiliar', $aux_id_da_pasta, PDO::PARAM_INT);
-            $stmt->execute();
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $ex) {
-            return $ex->getMessage();
-        }
+        $documentos_nomes = array('cert_1JE', 'cert_2JE', 'cert_1JF', 'cert_2JF', 'cert_tse', 'fad', 'rta', 'ais', 'fp');
 
-        //se não haver resultados, para a execução do código.
-        if (empty($resultado)) {
+        //???????????????
+        $documentos = [];
+
+        $resultado = consultaDocumentosPelaPasta($aux_id_da_pasta, $conn);
+        if ($resultado == false) {
             echo "A pasta não tem nenhum documento registrado.";
             exit();
         } else {
+            // echo "<pre>";
+            // print_r($resultado);
+            // echo "</pre>";
+        }
 
-            //transforma o 0 e 1 em Inválido e Válido
-            foreach($resultado as &$res){
-                if ($res["doc_promo_validado"] === 1){
-                    $res["doc_promo_validado"] = "Validado";
-                } else {
-                    $res["doc_promo_validado"] = "<strong>Inválido</strong>";
-                }
+        // Criar um array apenas com os nomes dos documentos da consulta
+        $documentos_encontrados = array_column($resultado, "doc_promo_nome");
+
+        //aqui o objetivo é buscar os dados do militar (nome e posto) sabendo apenas o id da pasta promocional
+        try {
+            $stmt = $conn->prepare('SELECT nome, posto_grad_mil, pasta_promocional.ano_processo_promocional, pasta_promocional.semestre_processo_promocional FROM militar JOIN pasta_promocional ON militar_id = militar.id WHERE pasta_promocional.id = :id');
+            $stmt->bindParam(':id', $aux_id_da_pasta, PDO::PARAM_INT);
+            $stmt->execute();
+            $consulta = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!empty($consulta)) {
+                $nome = $consulta['nome'];
+                $posto_grad = $consulta['posto_grad_mil'];
+                $aux_ano_promocional = $consulta['ano_processo_promocional'];
+                $aux_semestre_promocional = $consulta['semestre_processo_promocional'];
             }
-
-            // Criar um array apenas com os nomes dos documentos da consulta
-            $documentos_encontrados = array_column($resultado, "doc_promo_nome");
-
-            //aqui o objetivo é buscar os dados do militar (nome e posto) sabendo apenas o id da pasta promocional
-            try {
-                $stmt = $conn->prepare('SELECT nome, posto_grad_mil FROM militar JOIN pasta_promocional ON militar_id = militar.id WHERE pasta_promocional.id = :id');
-                $stmt->bindParam(':id', $aux_id_da_pasta, PDO::PARAM_INT);
-                $stmt->execute();
-                $consulta = $stmt->fetch(PDO::FETCH_ASSOC);
-                if (!empty($consulta)) {
-                    $nome = $consulta['nome'];
-                    $posto_grad = $consulta['posto_grad_mil'];
-                }
-            } catch (PDOException $ex) {
-                return $ex->getMessage();
-            }
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
         }
     }
 }
+
 ?>
 
 <div class="container">
@@ -77,18 +69,6 @@ if (isset($_GET['id_da_pasta'])) {
         <h4><strong>Documentos constantes na pasta promocional</strong></h4>
         <p><Strong>Referência:&nbsp</Strong>
             <?php
-            try {
-                $stmt = $conn->prepare('SELECT ano_processo_promocional, semestre_processo_promocional FROM pasta_promocional WHERE pasta_promocional.id = :id');
-                $stmt->bindParam(':id', $aux_id_da_pasta, PDO::PARAM_INT);
-                $stmt->execute();
-                $consulta = $stmt->fetch(PDO::FETCH_ASSOC);
-                if (!empty($consulta)) {
-                    $aux_ano_promocional = $consulta['ano_processo_promocional'];
-                    $aux_semestre_promocional = $consulta['semestre_processo_promocional'];
-                }
-            } catch (PDOException $ex) {
-                return $ex->getMessage();
-            }
             echo $aux_semestre_promocional . 'º semestre de ';
             echo $aux_ano_promocional;
             ?>
@@ -113,7 +93,7 @@ if (isset($_GET['id_da_pasta'])) {
                                         <p align="center">Registro</p>
                                     </th>
                                     <th>
-                                        <p align="center">Validação</p>
+                                        <p align="center">Link</p>
                                     </th>
                                 </tr>
                             </thead>
@@ -122,14 +102,15 @@ if (isset($_GET['id_da_pasta'])) {
                                 <?php
 
                                 $ordem = 1;
-                                $itens = 0;
-                                foreach ($documentos_nomes as $documento) {
-                                    if (in_array($documento, $documentos_encontrados)) {
-                                        echo '<tr><td align="center">' . $ordem . '</td><td align="center">' . $documento . '</td><td align="center">Presente</td><td align="center">' . $resultado[$itens]["doc_promo_validado"] . '</td></tr>';
-                                        $itens++;
-                                    } else {
-                                        echo '<tr><td align="center">' . $ordem . '</td><td align="center">' . $documento . '</td><td align="center"><i>Ausente</i></td><td align="center"> - </td></tr>';
-                                    }
+
+                                foreach ($resultado as $item) {
+                                    include_once '../Controllers/alias_nome_documento.php';
+
+                                    echo '<tr><td align="center">' . $ordem . '</td>'
+                                        . '<td align="center">' . alias_nome_documento($item["doc_promo_nome"]) . '</td>'
+                                        . '<td align="center">' . traduzStatusDocumento($item["doc_status_id"]) . '</td>';
+                                    if ($item["doc_promo_url"] == "") echo '<td align="center">N/C</td>';
+                                    else echo '<td align="center"><a target="_blank" href="' . $item['doc_promo_url'] . '"><button class="btn btn-success" type="button"><i class="bi bi-eye-fill"></i></button></a>&nbsp</td>';
                                     $ordem++;
                                 }
                                 ?>

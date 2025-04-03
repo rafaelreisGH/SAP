@@ -16,7 +16,7 @@ $lq_ano .= '-' . $lq_dia_mes; //concatena as variáveis numa string apenas
 unset($lq_dia_mes); //destrói a variável
 
 //função para verificar quem pode ser promovido no respectivo processo promocional
-$lista = processa_lista_de_candidatos($conn, $lq_ano);
+$lista = processa_lista_de_candidatos_TC($conn, $lq_ano);
 
 /*--------------------------------------------------------------------------*/
 
@@ -29,7 +29,7 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
 $resultado = obterAnoESemestre($lq_ano); //verifica o semestre de acordo com a data de promoção
 
 //consulta a documentação entregue pelos militares
-$documentacao_entregue = processa_documentos_de_candidatos($conn, $resultado['semestre'], $resultado['ano'], $lista);
+$documentacao_entregue = processa_documentos_de_candidatos_TC($conn, $resultado['semestre'], $resultado['ano'], $lista);
 
 //flag para auxiliar a exibição e checagem
 $flag = false;
@@ -65,7 +65,7 @@ if ($documentacao_entregue != false) {
         <?php
         if($flag == false){
             echo '<div class="alert alert-danger" role="alert"><p><strong>Erro no processamento:</strong></p>'
-            .'<p>O Limite de Quantitativo para a data selecionada ainda não foi gerado.</p>'
+            .'<p>Não foi executada a função para listar os TC com insterstício para promoção, considerando a data selecionada.</p>'
             .'<p>Consequentemente não há pasta promocional, nem documentos cadastrados.</p>'
             .'</div>';
             exit;
@@ -109,6 +109,9 @@ if ($documentacao_entregue != false) {
                         <th>
                             <p align="center">A.I.S.</p>
                         </th>
+                        <th>
+                            <p align="center">F.P.</p>
+                        </th>
                     </tr>
                 </thead>
 
@@ -118,7 +121,7 @@ if ($documentacao_entregue != false) {
 
                     if (isset($teste)) {
                         foreach ($teste as $linha) {
-                            list($id, $posto, $nome, $quadro, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8) = $linha;
+                            list($id, $posto, $nome, $quadro, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9) = $linha;
                             echo '<tr>'
                                 . '<td align="center">' . alias_posto_grad($posto) . '</td>'
                                 . '<td align="center">' . $nome . '</td>'
@@ -130,7 +133,8 @@ if ($documentacao_entregue != false) {
                                 . '<td align="center">' . $d5 . '</td>'
                                 . '<td align="center">' . $d6 . '</td>'
                                 . '<td align="center">' . $d7 . '</td>'
-                                . '<td align="center">' . $d8 . '</td>';
+                                . '<td align="center">' . $d8 . '</td>'
+                                . '<td align="center">' . $d9 . '</td>';
                         }
                     }
                     ?>

@@ -118,6 +118,127 @@ function processa_documentos_de_candidatos($conn, $semestre, $ano, $lista)
     return $resultados;
 }
 
+/*--------------------------------------------------------------------------*/
+/*
+- Funções específicas para os TC
+*/
+
+function processa_documentos_de_candidatos_TC($conn, $semestre, $ano, $lista)
+{
+    $lista = isola_id_candidatos($lista);
+    $id_dos_militares = array_map('intval', $lista);
+
+    foreach ($id_dos_militares as $item) {
+        $id_dos_militares[$item] = $item;
+    }
+
+    $resultados = []; // Array para armazenar os resultados
+    foreach ($id_dos_militares as $item) {
+        $stmt = $conn->prepare("SELECT DISTINCT
+            militar.id,
+            militar.posto_grad_mil, 
+            militar.nome,
+            militar.antiguidade,
+            militar.quadro,
+            documento_promocao.doc_promo_nome,
+            documento_promocao.doc_status_id
+        FROM militar
+            INNER JOIN pasta_promocional 
+                ON pasta_promocional.militar_id = militar.id
+            LEFT JOIN documento_promocao 
+                ON documento_promocao.pasta_promocional_id = pasta_promocional.id
+        WHERE
+            pasta_promocional.ano_processo_promocional = :ano 
+            AND pasta_promocional.semestre_processo_promocional = :semestre
+            AND militar.id = :militar_id
+            AND militar.posto_grad_mil = 'TC BM'
+        ORDER BY militar.antiguidade;");
+
+        $stmt->bindValue(':ano', $ano, PDO::PARAM_INT);
+        $stmt->bindValue(':semestre', $semestre, PDO::PARAM_INT);
+        $stmt->bindValue(':militar_id', $item, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $consulta = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!empty($consulta)) {
+            $resultados[$item] = $consulta; // Armazena os resultados para cada militar
+        } else {
+            return false; // Retorna falso se não houver resultados
+        }
+    }
+
+    foreach ($resultados as $militar_id => &$dados) { // Passagem por referência (&) para modificar os valores diretamente
+        foreach ($dados as &$dado) {
+            switch ($dado['doc_status_id']) {
+                case 1:
+                    $dado['doc_status_id'] = 'O.K.';
+                    break;
+                case 2:
+                    $dado['doc_status_id'] = 'N.E.';
+                    break;
+                case 3:
+                    $dado['doc_status_id'] = 'E.R.';
+                    break;
+            }
+        }
+        unset($dados); // Evita problemas de referência ao modificar outras variáveis depois
+    }
+    return $resultados;
+}
+
+function processa_lista_de_candidatos_TC($conn, $lq_ano)
+{
+    $consulta = $conn->query(
+        "SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, militar.quadro, militar.antiguidade, militar.data_cumprimento_intersticio, militar.id 
+    FROM registro_de_promocoes
+    CROSS JOIN militar
+            WHERE registro_de_promocoes.militar_id = militar.id
+            AND militar.posto_grad_mil = 'TC BM'
+            ORDER BY militar.antiguidade"
+    )->fetchAll();
+
+    if (empty($consulta)) {
+        header("Location:../Views/nenhum_resultado.php");
+        exit();
+    }
+
+    require_once 'funcoes_intersticio.php';
+    $alteracoes_realizadas = [];
+
+    foreach ($consulta as $resultado) {
+        $aux_a_contar_de = $resultado['a_contar_de'];
+        $aux_posto_grad = $resultado['grau_hierarquico'];
+        $aux_nome = $resultado['nome'];
+        $aux_posto_grad_atual = $resultado['posto_grad_mil'];
+        $aux_quadro = $resultado['quadro'];
+        $aux_cumprimento_intersticio = $resultado['data_cumprimento_intersticio'];
+        $aux_id = $resultado['id'];
+
+        if (is_null($aux_cumprimento_intersticio)) {
+            $intervalo = dateDifference($lq_ano, $aux_a_contar_de);
+            $intersticio = pega_intersticio($aux_posto_grad_atual, $conn);
+
+            if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
+                $alteracoes_realizadas[] = "$aux_a_contar_de,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
+            }
+        } else {
+            if ((tem_intersticio($lq_ano, $aux_cumprimento_intersticio)) && ($aux_posto_grad == $aux_posto_grad_atual)) {
+                $alteracoes_realizadas[] = "$aux_cumprimento_intersticio,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
+            }
+        }
+    }
+    if (empty($alteracoes_realizadas)) {
+        header("Location:../Views/nenhum_resultado.php");
+        exit();
+    }
+
+    return $alteracoes_realizadas;
+}
+
+
+/*--------------------------------------------------------------------------*/
+
 function obterAnoESemestre($data)
 {
     // Verifica se já está no formato Y-m-d
@@ -199,27 +320,52 @@ function criarPastaPromocionalEmLote($lista, $lq_ano, $conn)
             }
         }
     }
-    return $sucesso; // Retorna verdadeiro se pelo menos um registro foi inserido
+    return $sucesso;
 }
 
 function criaDocumentosVazios($pastas_id, $conn)
 {
-    $sucesso = false; // Flag para verificar se ao menos um registro foi inserido
+    $sucesso = []; // Alterado de false para []
+
+    $query = "INSERT INTO documento_promocao (militar_id, pasta_promocional_id, doc_promo_nome, doc_status_id) VALUES (:militar_id, :pasta, 'cert_1JE', 2), (:militar_id, :pasta, 'cert_2JE', 2), (:militar_id, :pasta, 'cert_1JF', 2), (:militar_id, :pasta, 'cert_2JF', 2), (:militar_id, :pasta, 'cert_tse', 2), (:militar_id, :pasta, 'fad', 2), (:militar_id, :pasta, 'rta', 2), (:militar_id, :pasta, 'ais', 2)";
+    $complemento = "";
+
+    try {
+        $stmt = $conn->prepare("SELECT posto_grad_mil FROM militar WHERE id = :militar_id");
+        $stmt->bindValue(':militar_id', $pastas_id[0]["id_militar"], PDO::PARAM_INT);
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($resultado && $resultado["posto_grad_mil"] == "TC BM") {
+            $complemento = ", (:militar_id, :pasta, 'fp', 2)";
+        }
+    } catch (PDOException $e) {
+        echo "Erro ao consultar: " . $e->getMessage();
+    }
+
+    $query .= $complemento;
+    unset($stmt);
 
     foreach ($pastas_id as $item) {
-        $stmt = $conn->prepare("INSERT INTO documento_promocao (militar_id, pasta_promocional_id, doc_promo_nome, doc_status_id)
-        VALUES (:militar_id, :pasta, 'cert_1JE', 2),(:militar_id, :pasta, 'cert_2JE', 2),(:militar_id, :pasta, 'cert_1JF', 2),(:militar_id, :pasta, 'cert_2JF', 2),(:militar_id, :pasta, 'cert_tse', 2),(:militar_id, :pasta, 'fad', 2),(:militar_id, :pasta, 'rta', 2),(:militar_id, :pasta, 'ais', 2)");
+        try {
+            $stmt = $conn->prepare($query);
 
-        $stmt->bindValue(':militar_id', $item["id_militar"], PDO::PARAM_INT);
-        $stmt->bindValue(':pasta', $item["id_pasta"], PDO::PARAM_INT);
-        $stmt->execute();
+            $stmt->bindValue(':militar_id', $item["id_militar"], PDO::PARAM_INT);
+            $stmt->bindValue(':pasta', $item["id_pasta"], PDO::PARAM_INT);
+            $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            $sucesso = true; // Indica que pelo menos uma inserção foi feita
+            if ($stmt->rowCount() > 0) {
+                $id = $conn->lastInsertId();
+                $sucesso[] = ['id_militar' => (int)$item["id_militar"], 'id_pasta' => (int)$id];
+            }
+        } catch (PDOException $e) {
+            echo "Erro ao inserir: " . $e->getMessage();
         }
     }
-    return $sucesso; // Retorna verdadeiro se pelo menos um registro foi inserido
+
+    return $sucesso; // Retorna um array, mesmo que esteja vazio
 }
+
 
 function extrairDadosRecursivo($documentacao, &$resultado = [])
 {
@@ -235,4 +381,36 @@ function extrairStatus($item, $index)
         return []; // Base da recursão: retorna um array vazio se o índice não existir
     }
     return array_merge([$item[$index]["doc_status_id"]], extrairStatus($item, $index + 1));
+}
+
+function consultaDocumentosPelaPasta($id_da_pasta, $conn)
+{
+    $stmt = $conn->prepare("SELECT * FROM documento_promocao WHERE pasta_promocional_id = :pasta_id");
+    $stmt->bindParam(':pasta_id', $id_da_pasta, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //se não haver resultados, para a execução do código.
+    if (!empty($resultado)) {
+        return $resultado; // Retorna falso se não houver resultados
+    } else {
+        return false; // Retorna falso se não houver resultados
+    }
+}
+
+function traduzStatusDocumento($doc_status_id)
+{
+    switch ($doc_status_id) {
+        case 1:
+            $dado = 'O.K.';
+            break;
+        case 2:
+            $dado = 'N.E.';
+            break;
+        case 3:
+            $dado = 'E.R.';
+            break;
+    }
+    return $dado;
 }
