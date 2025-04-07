@@ -3,7 +3,7 @@ require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
 
-if (isset($_GET['relatorio']) && ($_GET['relatorio'] == 1)){
+if (isset($_GET['relatorio']) && ($_GET['relatorio'] == 1)) {
     $action = "listar_resultado_LQ_TC_documentos.php";
     $relatorio = "Relatório de documentação entregue à Secretaria das Comissões de Promoção (SCP)";
 } else {
@@ -21,7 +21,7 @@ if (isset($_GET['relatorio']) && ($_GET['relatorio'] == 1)){
         </ul>
         <hr>
     </div>
-    <form action="<?=$action?>" method="POST" name="formLQ" onsubmit="return validateForm()">
+    <form action="<?= $action ?>" method="POST" name="formLQ" onsubmit="return validateForm()">
 
         <h3><strong>Seleção de critérios de pesquisa TCs com interstício</strong></h3>
         <hr>
@@ -50,15 +50,22 @@ if (isset($_GET['relatorio']) && ($_GET['relatorio'] == 1)){
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="quadroMilitar">Quadro</span>
-                        <select class="form-select" name="criterio_quadro" disabled>
-                            <option value="" selected disabled>Selecione o quadro</option>
-                            <option value="COMBATENTE">COMBATENTE</option>
-                            <option value="COMPLEMENTAR">COMPLEMENTAR</option>
-                            <option value="SAÚDE">SAÚDE</option>
+                        <select class="form-select" name="criterio_quadro">
+                            <!-- <option value="" selected disabled>Selecione o quadro</option> -->
+                            <option value="COMBATENTE" selected>COMBATENTE</option>
+                            <!-- <option value="COMPLEMENTAR">COMPLEMENTAR</option> -->
+                            <!-- <option value="SAÚDE">SAÚDE</option> -->
                         </select>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="criar_pasta" value="1" id="flexCheckPasta">
+                        <label class="form-check-label" for="flexCheckPasta">
+                            Criar pastas promocionais?
+                        </label>
                     </div>
                 </div>
             </div>
+            </br>
             <button class="btn btn-outline-primary active" type="submit" name="buscar">Buscar</button>
         </div>
 </div>
@@ -80,6 +87,20 @@ if (isset($_GET['relatorio']) && ($_GET['relatorio'] == 1)){
             return false;
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const checkbox = document.querySelector('#flexCheckPasta');
+
+        form.addEventListener('submit', function(e) {
+            if (checkbox.checked) {
+                const confirmar = confirm("Você tem certeza que deseja criar as pastas promocionais?");
+                if (!confirmar) {
+                    e.preventDefault(); // Cancela o envio do form
+                }
+            }
+        });
+    });
 </script>
 
 <?php

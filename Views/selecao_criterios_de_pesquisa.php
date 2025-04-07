@@ -50,6 +50,7 @@ $promover = isset($_GET['promover']) ? $_GET['promover'] : null;
                             <option value="3º SGT BM">3º Sargento</option>
                             <option value="CB BM">Cabo</option>
                             <option value="SD BM">Soldado</option>
+                            <option value="AL SD BM">Aluno Soldado</option>
                         </select>
                     </div>
                     <div class="input-group mb-3">

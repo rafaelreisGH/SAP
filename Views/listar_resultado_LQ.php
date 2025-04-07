@@ -20,12 +20,17 @@ unset($lq_dia_mes); //destrói a variável
 $alteracoes_realizadas = processa_lista_de_candidatos($conn, $lq_ano);
 
 //função para criar em lote as pastas promocionais dos militares
-if (!empty($alteracoes_realizadas)) {
-    $pastas_criadas = criarPastaPromocionalEmLote($alteracoes_realizadas, $lq_ano, $conn);
-    
-    if (!empty($pastas_criadas)) {
-        $aux = criaDocumentosVazios($pastas_criadas, $conn);
-    } else $aux = false;
+//só cria a pasta se o checkbox estiver marcado e se houver militares a serem promovidos
+if(isset($_POST['criar_pasta']) && $_POST['criar_pasta'] == 1) {
+    if (!empty($alteracoes_realizadas)) {
+        $pastas_criadas = criarPastaPromocionalEmLote($alteracoes_realizadas, $lq_ano, $conn);
+        
+        if (!empty($pastas_criadas)) {
+            $aux = criaDocumentosVazios($pastas_criadas, $conn);
+        } else $aux = false;
+    }
+} else {
+    $aux = false;
 }
 /*-------------------------------------------------------------------*/
 
@@ -55,7 +60,7 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                 if (!empty($pastas_criadas)) {
                     echo "Pastas promocionais criadas com sucesso!</br>";
                 }
-                if ($aux) {
+                if (isset($aux) && $aux == true) {
                     echo "Documentos promocionais criados com sucesso!";
                 }
                 ?>
@@ -76,6 +81,9 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                 <thead>
                     <tr>
                         <th>
+                            <p align="center">Ordem</p>
+                        </th>
+                        <th>
                             <p align="center">Última promoção</p>
                         </th>
                         <th>
@@ -95,6 +103,7 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                     require_once '../Controllers/alias_posto_grad.php';
                     require_once '../Controllers/alias_ultima_promocao.php';
 
+                    $ordem = 1;
                     if (isset($alteracoes_realizadas)) {
                         foreach ($alteracoes_realizadas as $item) {
                             $auxiliar = explode(",", $item);
@@ -102,10 +111,12 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                             //$auxiliar[0] = alias_ultima_promocao($auxiliar[0]);
                             /*****************/
                             echo '<tr>'
+                                . '<td align="center">' . $ordem . '</td>'
                                 . '<td align="center">' . alias_ultima_promocao($auxiliar[0]) . '</td>'
                                 . '<td align="center">' . alias_posto_grad($auxiliar[1]) . '</td>'
                                 . '<td align="center">' . $auxiliar[2] . '</td>'
                                 . '<td align="center">' . $auxiliar[3] . '</td>';
+                                $ordem++;
                         }
                     }
                     ?>

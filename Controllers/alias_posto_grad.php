@@ -45,6 +45,8 @@ function alias_posto_grad($posto_grad)
         case 'SD BM':
             return 'Soldado';
             break;
-
+        case 'AL SD BM':
+            return 'Aluno Soldado';
+            break;
     }
 }

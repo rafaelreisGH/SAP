@@ -20,11 +20,17 @@ unset($lq_dia_mes); //destrói a variável
 $alteracoes_realizadas = processa_lista_de_candidatos_TC($conn, $lq_ano);
 
 //função para criar em lote as pastas promocionais dos militares
-if (!empty($alteracoes_realizadas)) {
-    $pastas_criadas = criarPastaPromocionalEmLote($alteracoes_realizadas, $lq_ano, $conn);
-    if (!empty($pastas_criadas)) {
-        $aux = criaDocumentosVazios($pastas_criadas, $conn);
+//só cria a pasta se o checkbox estiver marcado e se houver militares a serem promovidos
+if(isset($_POST['criar_pasta']) && $_POST['criar_pasta'] == 1) {
+    if (!empty($alteracoes_realizadas)) {
+        $pastas_criadas = criarPastaPromocionalEmLote($alteracoes_realizadas, $lq_ano, $conn);
+        
+        if (!empty($pastas_criadas)) {
+            $aux = criaDocumentosVazios($pastas_criadas, $conn);
+        } else $aux = false;
     }
+} else {
+    $aux = false;
 }
 /*-------------------------------------------------------------------*/
 

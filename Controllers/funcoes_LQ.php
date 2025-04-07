@@ -12,7 +12,7 @@ function processa_lista_de_candidatos($conn, $lq_ano)
             "FROM registro_de_promocoes " .
             "CROSS JOIN militar " .
             "WHERE registro_de_promocoes.militar_id = militar.id " .
-            "AND militar.posto_grad_mil NOT IN ('TC BM', 'ST BM', 'CEL BM') " .
+            "AND militar.posto_grad_mil NOT IN ('TC BM', 'ST BM', 'CEL BM', 'AL SD BM', 'AL OF BM') " .
             "ORDER BY militar.antiguidade"
     )->fetchAll();
 
@@ -33,16 +33,20 @@ function processa_lista_de_candidatos($conn, $lq_ano)
         $aux_cumprimento_intersticio = $resultado['data_cumprimento_intersticio'];
         $aux_id = $resultado['id'];
 
-        if (is_null($aux_cumprimento_intersticio)) {
-            $intervalo = dateDifference($lq_ano, $aux_a_contar_de);
-            $intersticio = pega_intersticio($aux_posto_grad_atual, $conn);
-
-            if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
-                $alteracoes_realizadas[] = "$aux_a_contar_de,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
-            }
+        if ($aux_a_contar_de == null) {
+            continue;
         } else {
-            if ((tem_intersticio($lq_ano, $aux_cumprimento_intersticio)) && ($aux_posto_grad == $aux_posto_grad_atual)) {
-                $alteracoes_realizadas[] = "$aux_cumprimento_intersticio,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
+            if (is_null($aux_cumprimento_intersticio)) {
+                $intervalo = dateDifference($lq_ano, $aux_a_contar_de);
+                $intersticio = pega_intersticio($aux_posto_grad_atual, $conn);
+
+                if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
+                    $alteracoes_realizadas[] = "$aux_a_contar_de,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
+                }
+            } else {
+                if ((tem_intersticio($lq_ano, $aux_cumprimento_intersticio)) && ($aux_posto_grad == $aux_posto_grad_atual)) {
+                    $alteracoes_realizadas[] = "$aux_cumprimento_intersticio,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
+                }
             }
         }
     }
@@ -82,7 +86,7 @@ function processa_documentos_de_candidatos($conn, $semestre, $ano, $lista)
             pasta_promocional.ano_processo_promocional = :ano 
             AND pasta_promocional.semestre_processo_promocional = :semestre
             AND militar.id = :militar_id
-            AND militar.posto_grad_mil NOT IN ('TC BM', 'ST BM', 'CEL BM')
+            AND militar.posto_grad_mil NOT IN ('TC BM', 'ST BM', 'CEL BM', 'AL SD BM', 'AL OF BM')
         ORDER BY militar.antiguidade;");
 
         $stmt->bindValue(':ano', $ano, PDO::PARAM_INT);
@@ -215,16 +219,20 @@ function processa_lista_de_candidatos_TC($conn, $lq_ano)
         $aux_cumprimento_intersticio = $resultado['data_cumprimento_intersticio'];
         $aux_id = $resultado['id'];
 
-        if (is_null($aux_cumprimento_intersticio)) {
-            $intervalo = dateDifference($lq_ano, $aux_a_contar_de);
-            $intersticio = pega_intersticio($aux_posto_grad_atual, $conn);
-
-            if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
-                $alteracoes_realizadas[] = "$aux_a_contar_de,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
-            }
+        if ($aux_a_contar_de == null) {
+            continue;
         } else {
-            if ((tem_intersticio($lq_ano, $aux_cumprimento_intersticio)) && ($aux_posto_grad == $aux_posto_grad_atual)) {
-                $alteracoes_realizadas[] = "$aux_cumprimento_intersticio,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
+            if (is_null($aux_cumprimento_intersticio)) {
+                $intervalo = dateDifference($lq_ano, $aux_a_contar_de);
+                $intersticio = pega_intersticio($aux_posto_grad_atual, $conn);
+
+                if (($intervalo >= $intersticio) && ($aux_posto_grad == $aux_posto_grad_atual)) {
+                    $alteracoes_realizadas[] = "$aux_a_contar_de,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
+                }
+            } else {
+                if ((tem_intersticio($lq_ano, $aux_cumprimento_intersticio)) && ($aux_posto_grad == $aux_posto_grad_atual)) {
+                    $alteracoes_realizadas[] = "$aux_cumprimento_intersticio,$aux_posto_grad,$aux_nome,$aux_quadro,$aux_id";
+                }
             }
         }
     }
