@@ -1,6 +1,15 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
 
+//verifica a página de onde veio a requisição
+//para poder mudar o header location
+if(isset($_SESSION['pagina_anterior']) and $_SESSION['pagina_anterior'] == '/Views/listar_militares_promocao_em_lote_v2.php'){
+    $altera_header = '_v2';
+} else {
+    $altera_header = '';
+}
+//---------------------------//
+
 if (isset($_POST['data_promocao'])) {
     $data_promocao = $_POST['data_promocao'];
 }
@@ -17,7 +26,7 @@ $criterio_quadro = $_POST['criterio_quadro'];
 if (isset($_POST['militar_id'])) {
     $militar_id = $_POST['militar_id'];
 } else { // se não for selecionado nenhum militar
-    header('Location:../Views/listar_militares_promocao_em_lote.php?nada_alterado=1&criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '');
+    header('Location:../Views/listar_militares_promocao_em_lote'.$altera_header.'.php?nada_alterado=1&criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '');
 }
 //---------------------------//
 
@@ -170,7 +179,7 @@ if ($modalidade == 'POR REQUERIMENTO') {
 } else {
 
     //variável para montar a string do header Location
-    $location = 'Location:../Views/listar_militares_promocao_em_lote.php?criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '&';
+    $location = 'Location:../Views/listar_militares_promocao_em_lote'.$altera_header.'.php?criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '&';
     if (sizeof($alteracoes)) {
         $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
     }
