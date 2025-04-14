@@ -16,18 +16,9 @@ include_once './header2.php';
 
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-4">
-
-                <div class="card">
-                    <h5 class="card-header">Registro de promoções passadas</h5>
-                    <div class="card-body">
-                        <h6 class="card-title">Atualização em lote</h6>
-                        <p class="card-text">Selecione os militares e atualize em lote os <strong>registros passados</strong> de promoção. Esta opção <strong> não interfere na antiguidade, nem altera posto/graduação</strong>.</p>
-                        <a href="selecao_criterios_de_pesquisa.php" class="btn btn-primary">Selecionar</a>
-                    </div>
-                </div>
-            </div>
-
+            <h4>
+                Listagem de candidatos à promoção
+            </h4>
             <div class="col-md-4">
                 <div class="card">
                     <h5 class="card-header">Limite Quantitativo</h5>
@@ -48,32 +39,15 @@ include_once './header2.php';
                     </div>
                 </div>
             </div>
-
         </div>
+        <hr>
 
         <div class="clearfix"></br></div>
 
         <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <h5 class="card-header">Cadastro de militar</h5>
-                    <div class="card-body">
-                        <h6 class="card-title">Registro de informações básicas</h6>
-                        <p class="card-text">Informe os dados necessários e cadastre os militares no banco de dados.</p>
-                        <a href="cadastrar_militar.php" class="btn btn-primary">Selecionar</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <h5 class="card-header">Atualização de antiguidade</h5>
-                    <div class="card-body">
-                        <h6 class="card-title">Atualização individual</h6>
-                        <p class="card-text">Informe a posição que o militar deve ocupar na escala hieráquica. <strong>Não altera posto/graduação.</strong><br></p>
-                        <a href="selecao_criterios_de_pesquisa.php?alteracao_antiguidade=1" class="btn btn-primary">Selecionar</a>
-                    </div>
-                </div>
-            </div>
+            <h4>
+                Processamento de promoção
+            </h4>
             <div class="col-md-4">
                 <div class="card">
                     <h5 class="card-header">Processar Promoção (1)</h5>
@@ -84,10 +58,6 @@ include_once './header2.php';
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="clearfix"></br></div>
-
-        <div class="row">
             <div class="col-md-4">
                 <div class="card">
                     <h5 class="card-header">Processar Promoção (2)</h5>
@@ -118,6 +88,46 @@ include_once './header2.php';
                     </div>
                 </div>
             </div> -->
+
+        </div>
+        <hr>
+
+        <div class="clearfix"></br></div>
+
+        <div class="row">
+            <h4>
+                Opções gerais de alteração de cadastro
+            </h4>
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Cadastro de militar</h5>
+                    <div class="card-body">
+                        <h6 class="card-title">Registro de informações básicas</h6>
+                        <p class="card-text">Informe os dados necessários e cadastre os militares no banco de dados.</p>
+                        <a href="cadastrar_militar.php" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Atualização de antiguidade</h5>
+                    <div class="card-body">
+                        <h6 class="card-title">Atualização individual</h6>
+                        <p class="card-text">Informe a posição que o militar deve ocupar na escala hieráquica. <strong>Não altera posto/graduação.</strong><br></p>
+                        <a href="selecao_criterios_de_pesquisa.php?alteracao_antiguidade=1" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Registro de promoções passadas</h5>
+                    <div class="card-body">
+                        <h6 class="card-title">Atualização em lote</h6>
+                        <p class="card-text">Selecione os militares e atualize em lote os <strong>registros passados</strong> de promoção. Esta opção <strong> não interfere na antiguidade, nem altera posto/graduação</strong>.</p>
+                        <a href="selecao_criterios_de_pesquisa.php" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div>
+            </div>
 
         </div>
 

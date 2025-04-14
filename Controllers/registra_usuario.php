@@ -1,89 +1,90 @@
 <?php
 
 require_once '../ConexaoDB/conexao.php';
-$retorno_get = '';
 
-$nome = filter_input(INPUT_POST, 'nome', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
+// Função de validação de senha
+function validarSenha($senha) {
+    if (strlen($senha) < 8) {
+        return "A senha deve ter pelo menos 8 caracteres.";
+    }
+    if (!preg_match('/[A-Z]/', $senha)) {
+        return "A senha deve conter pelo menos uma letra maiúscula.";
+    }
+    if (!preg_match('/[a-z]/', $senha)) {
+        return "A senha deve conter pelo menos uma letra minúscula.";
+    }
+    if (!preg_match('/[0-9]/', $senha)) {
+        return "A senha deve conter pelo menos um número.";
+    }
+    if (!preg_match('/[\W]/', $senha)) {
+        return "A senha deve conter pelo menos um caractere especial.";
+    }
+
+    return true;
+}
+
+// Captura dos dados
+$nome  = filter_input(INPUT_POST, 'nome', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-//$senha = md5(filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_STRING));
+$senha_original = filter_input(INPUT_POST, 'senha', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 
-//verificar se o usuário já consta no Banco de Dados
-//$retorno_get;
-$nome_existe = false;
-$email_existe = false;
-$email_invalido = false;
+// Inicialização de erros
+$erros = [];
 
-//verifica se o nome já existe no BD
-$consulta1 = $conn->query("SELECT * FROM usuarios WHERE nome = '" . $nome . "' ");
-$resultado = $consulta1->fetch(PDO::FETCH_ASSOC);
-if (isset($resultado['nome'])) {
-    $nome_existe = true;
-}
-//verifica se o email já existe no BD
-$consulta2 = $conn->query("SELECT * FROM usuarios WHERE email = '" . $email . "' ");
-$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
-if (isset($resultado2['email'])) {
-    $email_existe = true;
+// Validação da senha
+$senha_valida = validarSenha($senha_original);
+if ($senha_valida !== true) {
+    $erros['erro_senha'] = $senha_valida;
 }
 
-//verifica se email é inválido
+// Validação do e-mail
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $email_invalido = true;
+    $erros['email_invalido'] = 1;
 }
-//
 
-if ($nome_existe || $email_existe || $email_invalido) {
-    //$retorno_get = '';
-    if ($nome_existe) {
-        $retorno_get .= "erro_nome=1&";
-    }
-    if ($email_existe) {
-        $retorno_get .= "erro_email=1&";
-    }
-    if ($email_invalido) {
-        $retorno_get .= "email_invalido=1&";
-    }
+// Verifica se o nome já existe
+$stmt_nome = $conn->prepare("SELECT 1 FROM usuarios WHERE nome = :nome LIMIT 1");
+$stmt_nome->bindParam(':nome', $nome);
+$stmt_nome->execute();
+if ($stmt_nome->fetch()) {
+    $erros['erro_nome'] = 1;
+}
 
-    header('Location:../Views/inscrevase.php?' . $retorno_get);
+// Verifica se o e-mail já existe
+$stmt_email = $conn->prepare("SELECT 1 FROM usuarios WHERE email = :email LIMIT 1");
+$stmt_email->bindParam(':email', $email);
+$stmt_email->execute();
+if ($stmt_email->fetch()) {
+    $erros['erro_email'] = 1;
+}
 
+// Redireciona com os erros, se houver
+if (!empty($erros)) {
+    $query_string = http_build_query($erros);
+    header("Location:../Views/inscrevase.php?$query_string");
+    exit;
+}
+
+// Se chegou aqui, está tudo certo — cadastrar usuário
+
+// Gera hash seguro da senha
+$senha_hash = password_hash($senha_original, PASSWORD_DEFAULT);
+
+// Insere no banco
+$stmt = $conn->prepare("
+    INSERT INTO usuarios (nome, email, senha_reset, senha) 
+    VALUES (:nome, :email, :reset, :senha)
+");
+$stmt->bindValue(':nome', $nome);
+$stmt->bindValue(':email', $email);
+$stmt->bindValue(':reset', 1);
+$stmt->bindValue(':senha', $senha_hash);
+
+if ($stmt->execute()) {
+    header('Location:../Views/recem_cadastrado.php');
+    exit;
 } else {
-
-    //SQL Antigo. De antes de retirar o campo senha do FORM de LOGIN
-    //$stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (?,?,?)");
-    $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha_reset) VALUES (:a,:b,:c)");
-    $stmt->execute(array(
-        ':a' => $nome,
-        ':b' => $email,
-        ':c' => 0
-    ));
-
-    if ($stmt) {
-        header('Location:../Views/recem_cadastrado.php');
-    }
+    // Caso haja erro inesperado no insert (opcionalmente logar isso)
+    header('Location:../Views/inscrevase.php?erro_interno=1');
+    exit;
 }
-
-
-/*
-  $stmt = $link->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (?,?,?);
-  //PDO::PARAM_STR - PDO::PARAM_INT - PDO::PARAM_BOOL
-  //Informam o tipo de dados que está sendo inserido. Para não tratar tudo como string
-  $stmt->bindParam(1, $nome, PDO::PARAM_STR);
-  $stmt->bindParam(2, $email, PDO::PARAM_STR);
-  $stmt->bindParam(3, $senha, PDO::PARAM_STR);
-
-  $stmt->execute();
-  if($stmt->execute()){
-  echo "Usuário registrado com sucesso.";
-  } else {
-  echo "Erro ao registrar o usuário!";
-  }
- */
-
-/* outra maneira de exibir dados
-  if ($stmt->rowCount()>0){
-  $linha = $stmt->fetch(PDO::FETCH_ASSOC);
-  echo 'Nome: ' . $linha['nome'];
-  }
- */
-//$conexao = new ClassConexao();
-//$link = $conexao->conectaDB();

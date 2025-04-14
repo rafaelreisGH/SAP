@@ -95,6 +95,9 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                         <th>
                             <p align="center">Quadro</p>
                         </th>
+                        <th>
+                            <p align="center">Opções</p>
+                        </th>
                     </tr>
                 </thead>
 
@@ -115,7 +118,8 @@ $lq_ano = $dia . '/' . $mes . '/' . $ano;
                                 . '<td align="center">' . alias_ultima_promocao($auxiliar[0]) . '</td>'
                                 . '<td align="center">' . alias_posto_grad($auxiliar[1]) . '</td>'
                                 . '<td align="center">' . $auxiliar[2] . '</td>'
-                                . '<td align="center">' . $auxiliar[3] . '</td>';
+                                . '<td align="center">' . $auxiliar[3] . '</td>'
+                                . '<td align="center"><a href="listar_militares.php?pesquisar=' . $auxiliar[2] . '" target="_blank">Acessar</a></td>';
                                 $ordem++;
                         }
                     }
