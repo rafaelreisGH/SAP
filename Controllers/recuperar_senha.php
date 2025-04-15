@@ -1,47 +1,43 @@
 <?php
 session_start();
 require_once '../ConexaoDB/conexao.php';
-require_once '../Controllers/validar_senha.php';
 
-$senhaNova = filter_input(INPUT_POST, 'senhaNova', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
-$user_email = $_SESSION['email'];
-
-// Valida a senha
-$validacao = validarSenha($senhaNova);
-if ($validacao !== true) {
-    // Redireciona com erro se a senha for inválida
-    header("Location: ../Views/redefinir_senha.php?erro_senha=" . urlencode($validacao));
-    exit;
-}
+$user_email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 
 try {
-    // Gera o hash da nova senha
-    $senhaHash = password_hash($senhaNova, PASSWORD_DEFAULT);
+    // Verifica se o e-mail existe
+    $verifica = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
+    $verifica->bindParam(1, $user_email, PDO::PARAM_STR);
+    $verifica->execute();
 
-    // Atualiza no banco
-    $stmt = $conn->prepare("UPDATE usuarios SET senha = ?, senha_reset = 0 WHERE email = ?");
+    if ($verifica->rowCount() === 0) {
+        // E-mail não encontrado
+        $_SESSION['mensagem_erro'] = "E-mail não encontrado no sistema.";
+        header("Location: ../Views/esqueci_senha.php");
+        exit;
+    }
+
+    // Define a senha padrão e gera o hash
+    $senhaPadrao = "sap@CBMMT";
+    $senhaHash = password_hash($senhaPadrao, PASSWORD_DEFAULT);
+
+    // Atualiza a senha e marca como senha provisória
+    $stmt = $conn->prepare("UPDATE usuarios SET senha = ?, senha_reset = 0, usuarios.status = 0 WHERE email = ?");
     $stmt->bindParam(1, $senhaHash, PDO::PARAM_STR);
     $stmt->bindParam(2, $user_email, PDO::PARAM_STR);
     $stmt->execute();
 
     if ($stmt->rowCount()) {
-        // Redireciona conforme o nível de acesso
-        switch ($_SESSION['nivel_de_acesso']) {
-            case '2':
-                header('Location: ../Views/pagina_admin.php');
-                break;
-            case '1':
-                header('Location: ../Views/pagina_gestor.php');
-                break;
-            default:
-                header('Location: ../Views/pagina_usuario.php');
-                break;
-        }
+        $_SESSION['mensagem_sucesso'] = "Senha redefinida com sucesso! Solicite o desbloqueio junto ao admin e depois faça o login com a senha informada pelo Admin.";
+        header("Location: ../index.php");
+        exit;
     } else {
-        header('Location: ../Views/erro.php?msg=Senha não atualizada');
+        $_SESSION['mensagem_erro'] = "Falha ao redefinir a senha.";
+        header("Location: ../Views/esqueci_senha.php");
+        exit;
     }
 } catch (PDOException $ex) {
-    echo "Erro ao atualizar a senha: " . $ex->getMessage();
+    echo "Erro ao redefinir a senha: " . $ex->getMessage();
 }
-?>
+
 

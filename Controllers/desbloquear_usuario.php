@@ -18,18 +18,18 @@ try {
     }
 
     if ($usuario['senha_reset'] == 0) {
-        // Usuário esqueceu a senha – aplicar senha padrão e forçar troca
-        $senhaPadrao = password_hash("Sap@1234", PASSWORD_DEFAULT);
+        // Usuário esqueceu a senha – aplicar senha padrão, forçar troca e NÃO alterar o nível de acesso
+        $senhaPadrao = password_hash("sap@CBMMT", PASSWORD_DEFAULT);
 
-        $stmt_update = $conn->prepare("UPDATE usuarios SET status = 1, senha = :senha, senha_reset = 0, nivel_de_acesso = :nivel, posto_grad_usuario = :posto WHERE id = :id");
+        $stmt_update = $conn->prepare("UPDATE usuarios SET status = 1, senha = :senha, senha_reset = 1, posto_grad_usuario = :posto WHERE id = :id");
         $stmt_update->bindParam(':senha', $senhaPadrao, PDO::PARAM_STR);
     } else {
-        // Usuário apenas aguardava desbloqueio
+        // Usuário apenas aguardava desbloqueio – alterar tudo normalmente
         $stmt_update = $conn->prepare("UPDATE usuarios SET status = 1, nivel_de_acesso = :nivel, posto_grad_usuario = :posto WHERE id = :id");
+        $stmt_update->bindParam(':nivel', $nivel_de_acesso, PDO::PARAM_STR);
     }
 
     // Parâmetros comuns
-    $stmt_update->bindParam(':nivel', $nivel_de_acesso, PDO::PARAM_STR);
     $stmt_update->bindParam(':posto', $posto_grad, PDO::PARAM_STR);
     $stmt_update->bindParam(':id', $usuario_a_desbloquear, PDO::PARAM_INT);
 

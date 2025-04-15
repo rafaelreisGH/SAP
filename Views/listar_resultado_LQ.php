@@ -4,6 +4,7 @@ include_once './header2.php';
 include_once '../Controllers/funcoes_LQ.php';
 
 //preparação de variáveis
+$quadro = isset($_POST['criterio_quadro']) ? $_POST['criterio_quadro'] : null;
 $lq_ano = isset($_POST['criterio_ano_promocao_futura']) ? $_POST['criterio_ano_promocao_futura'] : null;
 $lq_dia_mes = isset($_POST['criterio_dia_mes_promocao_futura']) ? $_POST['criterio_dia_mes_promocao_futura'] : null;
 
@@ -17,7 +18,7 @@ unset($lq_dia_mes); //destrói a variável
 
 /*-------------------------------------------------------------------*/
 //função para verificar quem pode ser promovido no respectivo processo promocional
-$alteracoes_realizadas = processa_lista_de_candidatos($conn, $lq_ano);
+$alteracoes_realizadas = processa_lista_de_candidatos($conn, $lq_ano, $quadro);
 
 //função para criar em lote as pastas promocionais dos militares
 //só cria a pasta se o checkbox estiver marcado e se houver militares a serem promovidos

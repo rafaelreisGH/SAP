@@ -1,34 +1,42 @@
 <?php
 session_start();
 require_once '../ConexaoDB/conexao.php';
+require_once '../Controllers/validar_senha.php';
 
-$senhaNova = md5(filter_input(INPUT_POST, 'senhaNova', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW));
+$senhaNova = filter_input(INPUT_POST, 'senhaNova', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 
+// Valida a senha
+$erroValidacao = validarsenha($senhaNova);
+if ($erroValidacao !== true) {
+    $_SESSION['mensagem_erro'] = $erroValidacao;
+    header('Location: ../Views/pagina_muda_senha.php');
+    exit;
+}
+
+$senhaHash = password_hash($senhaNova, PASSWORD_DEFAULT);
 $user_email = $_SESSION['email'];
 
 try {
     $stmt = $conn->prepare("UPDATE usuarios SET senha = ?, senha_reset = true WHERE email = ?");
-        
-    $stmt->bindParam(1, $senhaNova, PDO::PARAM_STR);
+    $stmt->bindParam(1, $senhaHash, PDO::PARAM_STR);
     $stmt->bindParam(2, $user_email, PDO::PARAM_STR);
     $stmt->execute();
 
+    // Se a atualização for bem-sucedida
     if ($stmt) {
+        // Destrói a sessão atual para forçar novo login
+        session_unset();
+        session_destroy();
 
-        switch ($_SESSION['nivel_de_acesso']) {
-            case '2':
-                header('Location: ../Views/pagina_admin.php');
-                break;
-            case '1':
-                header('Location: ../Views/pagina_gestor.php');
-                break;
-            default:
-                header('Location: ../Views/pagina_usuario.php');
-                break;
-        }
+        // Cria uma nova sessão só para exibir a mensagem de sucesso na página de login
+        session_start();
+        $_SESSION['mensagem_sucesso'] = "Senha alterada com sucesso. Faça login com a nova senha.";
+
+        header('Location: ../index.php'); // index.php é a tela de login
+        exit;
     }
 } catch (PDOException $ex) {
-    return $ex->getMessage();
+    echo "Erro ao alterar senha: " . $ex->getMessage();
 }
-?>
+
 

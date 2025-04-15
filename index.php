@@ -1,5 +1,11 @@
 <?php
+session_start(); // Adicione esta linha no topo do arquivo
 $erro = isset($_GET['erro']) ? $_GET['erro'] : 0;
+
+if (isset($_SESSION['mensagem_sucesso'])) {
+    echo '<div class="alert alert-success" role="alert">' . $_SESSION['mensagem_sucesso'] . '</div>';
+    unset($_SESSION['mensagem_sucesso']);
+}
 ?>
 
 <!DOCTYPE HTML>

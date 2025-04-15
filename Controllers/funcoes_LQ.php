@@ -3,17 +3,19 @@ require_once '../ConexaoDB/conexao.php';
 require_once '../Controllers/date_difference.php';
 require_once '../Controllers/funcoes_intersticio.php';
 
-function processa_lista_de_candidatos($conn, $lq_ano)
+function processa_lista_de_candidatos($conn, $lq_ano, $quadro)
 {
     $consulta = $conn->query(
-        "SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, " .
-            "registro_de_promocoes.militar_id, militar.id, militar.nome, militar.posto_grad_mil, " .
-            "militar.quadro, militar.antiguidade, militar.data_cumprimento_intersticio, militar.id " .
-            "FROM registro_de_promocoes " .
-            "CROSS JOIN militar " .
-            "WHERE registro_de_promocoes.militar_id = militar.id " .
-            "AND militar.posto_grad_mil NOT IN ('TC BM', 'ST BM', 'CEL BM', 'AL SD BM', 'AL OF BM') " .
-            "ORDER BY militar.antiguidade"
+        "SELECT registro_de_promocoes.a_contar_de, registro_de_promocoes.grau_hierarquico, 
+                registro_de_promocoes.militar_id, 
+                militar.id, militar.nome, militar.posto_grad_mil, 
+                militar.quadro, militar.antiguidade, militar.data_cumprimento_intersticio
+         FROM registro_de_promocoes 
+         CROSS JOIN militar 
+         WHERE registro_de_promocoes.militar_id = militar.id 
+           AND militar.posto_grad_mil NOT IN ('TC BM', 'ST BM', 'CEL BM', 'AL SD BM', 'AL OF BM') 
+           AND militar.quadro = '$quadro'
+         ORDER BY militar.antiguidade"
     )->fetchAll();
 
     if (empty($consulta)) {

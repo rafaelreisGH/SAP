@@ -1,5 +1,7 @@
 <?php
 
+session_start(); // ADICIONAR ISTO
+
 // Mensagens personalizadas
 $mensagens = [];
 
@@ -17,6 +19,12 @@ if (isset($_GET['erro_senha'])) {
 }
 if (isset($_GET['erro_interno'])) {
     $mensagens[] = "Ocorreu um erro inesperado ao salvar os dados. Tente novamente mais tarde.";
+}
+
+// Mensagem de erro via sessão (ex: "email não encontrado")
+if (isset($_SESSION['mensagem_erro'])) {
+    $mensagens[] = $_SESSION['mensagem_erro'];
+    unset($_SESSION['mensagem_erro']);
 }
 ?>
 
@@ -92,11 +100,17 @@ if (isset($_GET['erro_interno'])) {
                         echo '</div>';
                     }
 
-                    // Exibe mensagem de sucesso, se houver
+                    // Exibe mensagem de sucesso via GET
                     if (isset($_GET['sucesso']) && $_GET['sucesso'] == 1) {
                         echo '<div class="alert alert-success" style="margin-top: 15px;">';
                         echo 'Solicitação registrada. Seu acesso foi temporariamente bloqueado. Um administrador irá gerar uma nova senha e reativar seu acesso.';
                         echo '</div>';
+                    }
+
+                    // ✅ Adicione aqui a mensagem via SESSION:
+                    if (isset($_SESSION['mensagem_sucesso'])) {
+                        echo '<div class="alert alert-success" style="margin-top: 15px;">' . $_SESSION['mensagem_sucesso'] . '</div>';
+                        unset($_SESSION['mensagem_sucesso']);
                     }
                     ?>
                 </div>
