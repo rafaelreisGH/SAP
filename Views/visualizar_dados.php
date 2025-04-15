@@ -112,7 +112,7 @@ if (isset($ultima_promocao)) {
 //     calcularTempoArregimentado($militar_id, $inter, $tempo_arregimentado_minimo, $conn);
 // }
 
-$_SESSION['militar_id'] = $id ?? null;
+//$_SESSION['militar_id'] = $id ?? null;
 ?>
 
 <!-- BOTÃO VOLTA PARA A PÁGINA DE PESQUISA JOGANDO NA URL O NOME DO MILITAR EM QUESTÃO-->

@@ -33,6 +33,7 @@ include_once '../Controllers/verifica_permissoes.php'; //verifica o perfil do us
 
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="../Views/painel_do_usuario.php">Painel do usuário</a></li>
                     <li><a href="../sair.php">Sair</a></li>
                 </ul>
             </div><!--/.nav-collapse -->

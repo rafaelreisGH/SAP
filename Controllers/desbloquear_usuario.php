@@ -2,37 +2,45 @@
 
 require_once '../ConexaoDB/conexao.php';
 
-$nivel_de_acesso = (isset($_POST['perfil'])) ? $_POST['perfil'] : null;
-$posto_grad = (isset($_POST['posto_grad'])) ? $_POST['posto_grad'] : null;
-
+$nivel_de_acesso = isset($_POST['perfil']) ? $_POST['perfil'] : null;
+$posto_grad = isset($_POST['posto_grad']) ? $_POST['posto_grad'] : null;
 $usuario_a_desbloquear = isset($_POST['desbloquear']) ? filter_input(INPUT_POST, 'desbloquear', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW) : 0;
-include_once './gera_senha.php';
-$aux = geraSenha(15, true, true, true);
-$primeira_senha = md5($aux);
 
-$stmt = $conn->query("SELECT nome, email FROM usuarios WHERE id = '" . $usuario_a_desbloquear . "'")->fetch();
-if ($stmt) {
-    $aux_nome = $stmt['nome'];
-    $aux_email = $stmt['email'];
-}
+try {
+    // Consulta o usuário para verificar o valor atual de senha_reset
+    $stmt_check = $conn->prepare("SELECT email, senha_reset FROM usuarios WHERE id = :id");
+    $stmt_check->bindParam(':id', $usuario_a_desbloquear, PDO::PARAM_INT);
+    $stmt_check->execute();
+    $usuario = $stmt_check->fetch(PDO::FETCH_ASSOC);
 
-// //chama o PHP para enviar email com a senha
-include_once './envia_email_senha.php';
-if ($mail->send()) {
-    $stmt = $conn->query("UPDATE usuarios SET status = 1, senha = '" . $primeira_senha . "', nivel_de_acesso = '" . $nivel_de_acesso . "', posto_grad_usuario = '" . $posto_grad . "' WHERE id = '" . $usuario_a_desbloquear . "'");
+    if (!$usuario) {
+        throw new Exception("Usuário não encontrado.");
+    }
+
+    if ($usuario['senha_reset'] == 0) {
+        // Usuário esqueceu a senha – aplicar senha padrão e forçar troca
+        $senhaPadrao = password_hash("Sap@1234", PASSWORD_DEFAULT);
+
+        $stmt_update = $conn->prepare("UPDATE usuarios SET status = 1, senha = :senha, senha_reset = 0, nivel_de_acesso = :nivel, posto_grad_usuario = :posto WHERE id = :id");
+        $stmt_update->bindParam(':senha', $senhaPadrao, PDO::PARAM_STR);
+    } else {
+        // Usuário apenas aguardava desbloqueio
+        $stmt_update = $conn->prepare("UPDATE usuarios SET status = 1, nivel_de_acesso = :nivel, posto_grad_usuario = :posto WHERE id = :id");
+    }
+
+    // Parâmetros comuns
+    $stmt_update->bindParam(':nivel', $nivel_de_acesso, PDO::PARAM_STR);
+    $stmt_update->bindParam(':posto', $posto_grad, PDO::PARAM_STR);
+    $stmt_update->bindParam(':id', $usuario_a_desbloquear, PDO::PARAM_INT);
+
+    $stmt_update->execute();
+
+    // Redirecionamento após atualização
     header('Location:../Views/pagina_admin.php');
-} else {
-    echo "Não foi possível encaminhar a senha.";
+    exit;
+
+} catch (PDOException $e) {
+    echo "Erro ao atualizar usuário: " . $e->getMessage();
+} catch (Exception $e) {
+    echo "Erro: " . $e->getMessage();
 }
-
-
-
-
-/*EXEMPLO DE SELECT COM PDO
-$stmt2 = $conn->query("SELECT * FRO WHERE id = '".$usuario_a_desbloquear."'");
-while ($resultado = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-    $aux_id = $resultado['id'];
-    $aux_nome = $resultado['nome'];
-    $aux_email = $resultado['email'];
-    echo $aux_id."<br>".$aux_nome."<br>".$aux_email;
-}*/

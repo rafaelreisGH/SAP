@@ -5,6 +5,13 @@ include_once './header.php';
 
 <div class="container">
 
+    <?php
+    // Verifica se há mensagem de sucesso na sessão
+    if (isset($_SESSION['mensagem_sucesso'])) {
+        echo '<div class="alert alert-success" style="margin-top: 15px;">' . $_SESSION['mensagem_sucesso'] . '</div>';
+        unset($_SESSION['mensagem_sucesso']); // Apaga após exibir
+    }
+    ?>
     <br /><br />
     <div class="col-md-3">
         <h3>Página de Admin</h3>
@@ -86,18 +93,6 @@ include_once './header.php';
 
         </div>
     </div>
-
-
-</div>
-
-<div class="col-md-12">
-    <h2>Lorem Ipsum</h2>
-    <p style="text-align: justify">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, nibh sit amet gravida rhoncus, quam nisl bibendum ipsum, vitae vestibulum erat eros eget massa. Integer id velit vitae diam semper tempor. Donec sollicitudin mollis dolor ut mollis. Etiam quis lacinia ex, ut imperdiet nibh. Vivamus congue arcu tellus, non bibendum justo viverra id. Ut sollicitudin accumsan est, eget iaculis massa. Sed malesuada efficitur faucibus. Integer ut semper nulla. Nam dictum congue aliquam. Proin a nunc semper, ultrices magna a, ultricies justo. Sed ornare enim vel dapibus tincidunt. Aliquam egestas magna a diam consequat dictum. Vestibulum tincidunt ipsum non sodales congue. Aenean non suscipit sem. Maecenas a posuere mauris, quis interdum lorem. Donec egestas sem ligula, quis porta eros tincidunt non.
-    </p>
-</div>
-
-</div>
 
 
 </div>

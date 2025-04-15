@@ -1,30 +1,28 @@
 <?php
-
 session_start();
-
 require_once '../ConexaoDB/conexao.php';
 
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-$senha = md5(filter_input(INPUT_POST, 'senha', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW));
+$senha_digitada = filter_input(INPUT_POST, 'senha', FILTER_UNSAFE_RAW);
 
-try {
-    //$stmt = $conn->query("SELECT * FROM usuarios WHERE email = '".$email."' AND senha = '".$senha."'");
-    $stmt = $conn->query("SELECT nome, email, nivel_de_acesso, senha_reset, posto_grad_usuario FROM usuarios WHERE email = '" . $email . "' AND senha = '" . $senha . "'");
+// Consulta o usuário pelo e-mail
+$stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = :email");
+$stmt->bindParam(':email', $email);
+$stmt->execute();
 
-    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-    //   echo $resultado['email'] . '<br />';
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (isset($resultado['email'])) {
-        //recuperar dados do usuário e colocá-los na sessão
-        $_SESSION['nome'] = $resultado['nome'];
-        $_SESSION['email'] = $resultado['email'];
-        $_SESSION['nivel_de_acesso'] = $resultado['nivel_de_acesso'];
-        $_SESSION['senha_reset'] = $resultado['senha_reset'];
-        $_SESSION['posto_grad_usuario'] = $resultado['posto_grad_usuario'];
-        $_SESSION['logado'] = true;
-    } else {
-        header('Location: ../index.php?erro=1');
-    }
+if ($usuario && password_verify($senha_digitada, $usuario['senha'])) {
+    // Login válido - configura sessão
+    $_SESSION['id'] = $usuario['id'];
+    $_SESSION['nome'] = $usuario['nome'];
+    $_SESSION['email'] = $usuario['email'];
+    $_SESSION['nivel_de_acesso'] = $usuario['nivel_de_acesso'];
+    $_SESSION['senha_reset'] = $usuario['senha_reset'];
+    $_SESSION['posto_grad_usuario'] = $usuario['posto_grad_usuario'];
+    $_SESSION['logado'] = true;
+
+    // Redirecionamento conforme situação
     if ($_SESSION['senha_reset'] == 0) {
         header('Location: ../Views/pagina_muda_senha.php');
     } else {
@@ -40,7 +38,10 @@ try {
                 break;
         }
     }
-} catch (PDOException $ex) {
-    return $ex->getMessage();
+    exit;
 }
+
+// Login falhou
+header('Location: ../index.php?erro=1');
+exit;
 ?>

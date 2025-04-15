@@ -1,30 +1,11 @@
 <?php
 
 require_once '../ConexaoDB/conexao.php';
-
 // Função de validação de senha
-function validarSenha($senha) {
-    if (strlen($senha) < 8) {
-        return "A senha deve ter pelo menos 8 caracteres.";
-    }
-    if (!preg_match('/[A-Z]/', $senha)) {
-        return "A senha deve conter pelo menos uma letra maiúscula.";
-    }
-    if (!preg_match('/[a-z]/', $senha)) {
-        return "A senha deve conter pelo menos uma letra minúscula.";
-    }
-    if (!preg_match('/[0-9]/', $senha)) {
-        return "A senha deve conter pelo menos um número.";
-    }
-    if (!preg_match('/[\W]/', $senha)) {
-        return "A senha deve conter pelo menos um caractere especial.";
-    }
-
-    return true;
-}
+require_once '../Controllers/validar_senha.php';
 
 // Captura dos dados
-$nome  = filter_input(INPUT_POST, 'nome', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
+$nome  = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 $senha_original = filter_input(INPUT_POST, 'senha', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 
@@ -70,15 +51,16 @@ if (!empty($erros)) {
 // Gera hash seguro da senha
 $senha_hash = password_hash($senha_original, PASSWORD_DEFAULT);
 
-// Insere no banco
+// Insere no banco explicitando status como 0 (bloqueado) e senha_reset como 1
 $stmt = $conn->prepare("
-    INSERT INTO usuarios (nome, email, senha_reset, senha) 
-    VALUES (:nome, :email, :reset, :senha)
+    INSERT INTO usuarios (nome, email, senha, senha_reset, status) 
+    VALUES (:nome, :email, :senha, :reset, :status)
 ");
 $stmt->bindValue(':nome', $nome);
 $stmt->bindValue(':email', $email);
-$stmt->bindValue(':reset', 1);
 $stmt->bindValue(':senha', $senha_hash);
+$stmt->bindValue(':reset', 1);   // senha já definida
+$stmt->bindValue(':status', 0);  // bloqueado até aprovação do admin
 
 if ($stmt->execute()) {
     header('Location:../Views/recem_cadastrado.php');
