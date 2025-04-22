@@ -294,6 +294,36 @@ function isola_id_candidatos($lista)
     return $id_dos_militares;
 }
 
+function filtrar_sd($lista)
+{
+    $resultado = [];
+    $contador_sd = 0;
+
+    if (isset($lista)) {
+        foreach ($lista as $item) {
+            $dados = explode(",", $item);
+
+            if (!isset($dados[1])) {
+                continue; // ignora se não houver posto/graduação
+            }
+
+            $posto_grad = trim($dados[1]);
+
+            if ($posto_grad === 'SD BM') {
+                if ($contador_sd >= 100) {
+                    continue; // ignora SD BM excedentes
+                }
+                $contador_sd++;
+            }
+
+            // Adiciona o item completo ao resultado
+            $resultado[] = $item;
+        }
+    }
+
+    return $resultado;
+}
+
 function criarPastaPromocionalEmLote($lista, $lq_ano, $conn)
 {
     $id = isola_id_candidatos($lista);

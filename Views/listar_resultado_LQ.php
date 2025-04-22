@@ -20,6 +20,9 @@ unset($lq_dia_mes); //destrói a variável
 //função para verificar quem pode ser promovido no respectivo processo promocional
 $alteracoes_realizadas = processa_lista_de_candidatos($conn, $lq_ano, $quadro);
 
+ //acréscimo da função para limitar o número de soldados que são exibidos
+ $alteracoes_realizadas = filtrar_sd($alteracoes_realizadas);
+
 //função para criar em lote as pastas promocionais dos militares
 //só cria a pasta se o checkbox estiver marcado e se houver militares a serem promovidos
 if(isset($_POST['criar_pasta']) && $_POST['criar_pasta'] == 1) {

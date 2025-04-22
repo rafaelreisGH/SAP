@@ -39,6 +39,16 @@ include_once './header2.php';
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <!-- <div class="card">
+                    <h5 class="card-header">Teste cômputo de vagas</h5>
+                    <div class="card-body">
+                        <h6 class="card-title">#</h6>
+                        <p class="card-text">#</p>
+                        <a href="teste_vagas.php" class="btn btn-primary">Selecionar</a>
+                    </div>
+                </div> -->
+            </div>
         </div>
         <hr>
 
