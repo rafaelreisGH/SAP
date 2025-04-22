@@ -1,6 +1,7 @@
 <?php
 
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 $id_militar = $_POST['id'];
 $semestre = $_POST['semestre'];

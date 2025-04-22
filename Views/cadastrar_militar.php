@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 //VERIFICAR INSERÇÃO
 $sucesso_cadastro = (isset($_GET['sucesso'])) ? $_GET['sucesso'] : null;

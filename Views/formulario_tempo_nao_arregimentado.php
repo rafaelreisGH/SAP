@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once '../Views/header2.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 //Pegar o id do militar em questão e consultar BD
 

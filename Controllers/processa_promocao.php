@@ -1,5 +1,6 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 //verifica a página de onde veio a requisição
 //para poder mudar o header location

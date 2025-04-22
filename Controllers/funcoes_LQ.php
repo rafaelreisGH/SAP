@@ -1,5 +1,6 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 require_once '../Controllers/date_difference.php';
 require_once '../Controllers/funcoes_intersticio.php';
 

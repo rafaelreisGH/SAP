@@ -5,6 +5,7 @@ require_once '../ConexaoDB/conexao.php';
 include_once '../Controllers/funcoes_tempo_arregimentado.php';
 include_once '../Controllers/funcoes_intersticio.php';
 
+$conn = Conexao::getConexao();
 /*
 erro[0] é referente a $erroNome
 erro[1] é referente a $erroPostoGrad

@@ -1,6 +1,7 @@
 <?php
 
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 //verificação se foram settados os critérios de pesquisa
 /*if (isset($_POST['data_promocao'])) {

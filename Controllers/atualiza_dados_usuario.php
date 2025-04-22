@@ -1,5 +1,6 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 require_once '../Controllers/validar_senha.php';
 
 //inicialização de variáveis

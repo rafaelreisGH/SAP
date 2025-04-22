@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once './header.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
 if (!isset($_GET['pesquisar'])) {

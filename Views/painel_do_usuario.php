@@ -1,6 +1,7 @@
 <?php
 include_once './header3.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 // Verificação de alterações recebidas por GET
 $nome_alterado = $_GET['nome'] ?? null;

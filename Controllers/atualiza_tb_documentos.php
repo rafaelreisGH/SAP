@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST)) {
 function salvaNoBancoDocPromo($id, $militar_id, $nome, $caminho, $validado)
 {
     require_once '../ConexaoDB/conexao.php';
+    $conn = Conexao::getConexao();
 
     try {
         //aqui se encontra o id do documento em específico
@@ -119,6 +120,7 @@ function salvaNoBancoDocPromo($id, $militar_id, $nome, $caminho, $validado)
 function ExcluiDoBancoDocPromo($id)
 {
     require_once '../ConexaoDB/conexao.php';
+    $conn = Conexao::getConexao();
 
     try {
         //aqui se encontra o id do documento em específico

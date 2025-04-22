@@ -1,5 +1,6 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 /*
 Obter o ano atual e o semestre atual para poder definir qual LQ estamos tratando.

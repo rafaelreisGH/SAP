@@ -1,5 +1,6 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 //cálculo do intervalo de tempo entre as datas
 require_once 'date_difference.php';
 require_once '../Controllers/funcoes_intersticio.php';

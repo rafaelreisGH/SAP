@@ -1,6 +1,7 @@
 <?php
 
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 $nivel_de_acesso = isset($_POST['perfil']) ? $_POST['perfil'] : null;
 $posto_grad = isset($_POST['posto_grad']) ? $_POST['posto_grad'] : null;

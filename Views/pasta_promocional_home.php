@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once '../Views/header3.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 if (isset($_GET['militar_id'])) {
     $militar_id = $_GET['militar_id'];

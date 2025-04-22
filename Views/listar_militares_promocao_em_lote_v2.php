@@ -4,6 +4,7 @@ include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
 include_once '../Controllers/verifica_permissoes.php';
 require_once '../Controllers/select_LQ.php';
+$conn = Conexao::getConexao();
 
 //GET para verificar se nada foi alterado
 //ou seja, se o usuário não selecionou nenhum militar

@@ -2,6 +2,8 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once '../Views/header.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
+
 //^^^^APAGAR DAQUI PARA CIMA DEPOIS
 
 if (isset($_POST['militar_id'])) {

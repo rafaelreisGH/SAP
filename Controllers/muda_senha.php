@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 require_once '../Controllers/validar_senha.php';
 
 $senhaNova = filter_input(INPUT_POST, 'senhaNova', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);

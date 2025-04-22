@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 $user_email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 

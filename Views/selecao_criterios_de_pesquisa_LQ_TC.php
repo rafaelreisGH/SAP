@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 if (isset($_GET['relatorio']) && ($_GET['relatorio'] == 1)) {
     $action = "listar_resultado_LQ_TC_documentos.php";

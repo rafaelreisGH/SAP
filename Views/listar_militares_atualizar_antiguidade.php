@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 //verificar de houve alterações
 $alteracoes_realizadas = isset($_GET['sucesso']) ? $_GET['sucesso'] : 0;

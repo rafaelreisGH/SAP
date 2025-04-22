@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 $pesquisar = isset($_POST['pesquisar']) ? filter_input(INPUT_POST, 'pesquisar', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW) : null;
 

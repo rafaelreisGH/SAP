@@ -3,6 +3,7 @@ require_once '../Controllers/nivel_gestor.php';
 include_once '../Views/header3.php';
 require_once '../ConexaoDB/conexao.php';
 require_once '../Controllers/funcoes_LQ.php';
+$conn = Conexao::getConexao();
 
 if (isset($_GET['id_da_pasta'])) {
 

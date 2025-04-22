@@ -1,5 +1,6 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao(); // Obtém a conexão ativa
 
 //inicialização de variáveis
 $militar_id = $_POST['id'];

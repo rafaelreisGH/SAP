@@ -2,6 +2,7 @@
 require_once '../Controllers/nivel_gestor.php';
 include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 // --------------------------- //
 if (isset($_POST['id_da_pasta'])) {

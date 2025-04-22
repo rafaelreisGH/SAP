@@ -1,6 +1,7 @@
 <?php
 
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 $registro_id = isset($_POST['registro_id']) ? $_POST['registro_id'] : null;
 $militar_id = isset($_POST['militar_id']) ? $_POST['militar_id'] : null;

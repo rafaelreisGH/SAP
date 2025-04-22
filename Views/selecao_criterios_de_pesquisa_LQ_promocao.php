@@ -4,6 +4,7 @@ include_once './header2.php';
 require_once '../ConexaoDB/conexao.php';
 require_once '../Controllers/select_LQ.php';
 
+$conn = Conexao::getConexao();
 ?>
 
 <div class="container">

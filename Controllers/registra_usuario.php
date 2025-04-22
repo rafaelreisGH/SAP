@@ -1,6 +1,7 @@
 <?php
 
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 // Função de validação de senha
 require_once '../Controllers/validar_senha.php';
 

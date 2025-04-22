@@ -1,5 +1,6 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao(); // Obtém a conexão ativa
 
 $criterio_posto_grad = $_POST['criterio_posto_grad'];
 $criterio_quadro = $_POST['criterio_quadro'];

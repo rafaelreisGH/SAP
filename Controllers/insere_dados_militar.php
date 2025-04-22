@@ -1,5 +1,6 @@
 <?php
 require_once '../ConexaoDB/conexao.php';
+$conn = Conexao::getConexao();
 
 //inicialização de variáveis
 //$nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
