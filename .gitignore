@@ -24,3 +24,5 @@ logs/
 Thumbs.db
 
 ConexaoDB/conexao.php
+
+Controllers/envia_email_senha.php
