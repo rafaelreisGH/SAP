@@ -26,3 +26,4 @@ Thumbs.db
 ConexaoDB/conexao.php
 
 Controllers/envia_email_senha.php
+Controllers/recuperar_senha.php
