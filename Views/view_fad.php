@@ -158,16 +158,12 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
             <hr>
             <div class="form-group col-md-12">
                 <h3><strong>Arquivo digital da FAD</strong></h3></br>
-                <?php
-                if (isset($_GET['erro']) && ($_GET['erro']) == 2) {
-                    echo '<p><font style="color:#0000ff"><i class="bi bi-exclamation-circle" fill="currentColor"></i><strong>&nbspÉ preciso informar a situação da FAD e/ou enviar o arquivo digital.</strong></font></p>';
-                }
-                ?>
             </div>
+
 
             <div class="col-md-12">
 
-                <form action="upload_url_fad.php" method="post">
+                <form action="../Controllers/upload_fad_url.php" method="post">
 
                     <div class="form-group col-md-12">
                         <label for="FormControlSelectDocumento">Especifique a FAD</label>
@@ -254,7 +250,7 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
                                     echo "Ainda não há notas suficientes para calcular a média.";
                                 }
                                 ?>
-                            <p>
+                            </p>
 
                         </td>
                     </tr>
@@ -262,15 +258,53 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
             </table>
 
             <?php
+            if (isset($_GET['sucesso']) && $_GET['sucesso'] == 'upload') {
+                echo '<div class="alert alert-success">Link da FAD registrada com sucesso!</div>';
+            }
             if (isset($_GET['erro'])) {
-                $erro = $_GET['erro'];
-                if ($erro == 1) {
-                    echo '<br><font style="color:#ff0000"><i>*Já havia registro de FAD no período informado.<br>'
-                        . 'Portanto o registro foi <strong>atualizado</strong>.</i></font>';
+                switch ($_GET['erro']) {
+                    case 'invalido':
+                        echo '<div class="alert alert-danger">Dados inválidos enviados. Verifique e tente novamente.</div>';
+                        break;
+                    case 'bd':
+                        echo '<div class="alert alert-danger">Erro ao salvar no banco de dados.</div>';
+                        break;
+                    case 'excecao':
+                        echo '<div class="alert alert-danger">Erro inesperado. Tente novamente mais tarde.</div>';
+                        break;
                 }
             }
             ?>
-            </p>
+
+            <?php if (isset($_GET['msg'])): ?>
+                <div class="alert alert-success" role="alert">
+                    <?php
+                    switch ($_GET['msg']) {
+                        case 'fad_inserida':
+                            echo 'FAD inserida com sucesso!';
+                            break;
+                        case 'fad_excluida':
+                            echo 'FAD excluída com sucesso!';
+                            break;
+                        case 'erro_ao_excluir':
+                            echo 'Erro ao tentar excluir a FAD.';
+                            break;
+                        case 'erro_dados_invalidos':
+                            echo 'Dados inválidos fornecidos.';
+                            break;
+                        case 'erro_bd':
+                            echo 'Erro no banco de dados.';
+                            break;
+                        case 'fad_existente':
+                            echo 'Já havia registro de FAD no período informado. Portanto nada foi alterado.';
+                            break;
+                        default:
+                            echo 'Ação concluída.';
+                    }
+                    ?>
+                </div>
+            <?php endif; ?>
+
             <table class="table table-striped">
                 <caption>Registros de Ficha de Avaliação</caption>
                 <thead>
@@ -320,6 +354,24 @@ $ano_url = isset($_GET['ano']) ? $_GET['ano'] : 0;
 </div>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[action="upload_url_fad.php"]');
+        const selectDocumento = form.querySelector('select[name="documento_id"]');
+        const inputUrl = form.querySelector('input[name="documento_url"]');
+
+        form.addEventListener('submit', function(event) {
+            const urlValida = inputUrl.checkValidity();
+            const documentoSelecionado = selectDocumento.value !== '';
+
+            if (!documentoSelecionado || !urlValida) {
+                event.preventDefault(); // Impede o envio do formulário
+                alert('Por favor, selecione uma FAD e insira uma URL válida.');
+            }
+        });
+    });
+</script>
 
 <?php
 include_once '../Views/footer.php';

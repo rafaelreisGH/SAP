@@ -14,7 +14,7 @@ if (isset($_GET['id'])) {
     while ($resultado = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $antiguidade = $resultado['antiguidade'];
     }
-} 
+}
 
 //caso dados venham do arquivo visualizar_dados.php
 if (isset($_POST['antiguidade'])) {
@@ -63,5 +63,17 @@ foreach ($vetor as $id => $antiguidade) {
     ));
 }
 if ($stmt) {
+
+    // Log de inativação de militar
+    require_once __DIR__ . '/../Logger/LoggerFactory.php';
+    $logger = LoggerFactory::createLogger();
+    $logger->info('Usuário inativou militar', [
+        'id' => $_SESSION['id'],
+        'usuario' => $_SESSION['nome'],
+        'email' => $_SESSION['email'],
+        'perfil' => $_SESSION['nivel_de_acesso'],
+        'sujeito' => $antiguidade
+    ]);
+
     header('Location:../Views/listar_militares.php?pesquisar=');
 }

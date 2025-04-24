@@ -1,4 +1,5 @@
 <?php
+include_once '../Controllers/controle_de_sessao.php';
 
 require_once '../ConexaoDB/conexao.php';
 $conn = Conexao::getConexao();
@@ -30,7 +31,9 @@ if (!empty($resultado)) {
         //     ':nota' => $pontuacao,
         //     ':militar_id' => $id_militar,
         // ));
-        header('Location:../Views/view_fad.php?militar_id=' . $id_militar . '&erro=1');
+
+        header('Location:../Views/view_fad.php?militar_id=' . $id_militar . '&msg=fad_existente');
+        exit();
     }
 } else {
     $stmt = $conn->prepare("INSERT INTO fad (ano, semestre, nota, militar_id, grau_hierarquico_na_epoca) VALUES (?,?,?,?,?)");
@@ -41,6 +44,19 @@ if (!empty($resultado)) {
     $stmt->bindParam(5, $postoGradNoPerioAvaliado);
     $stmt->execute();
     if ($stmt) {
-        header('Location:../Views/view_fad.php?nota=' . $pontuacao . '&militar_id=' . $id_militar . '&semestre=' . $semestre . '&id=' . $semestre . '&ano=' . $ano . '');
+        
+        // Log de inserção de FAD
+        require_once __DIR__ . '/../Logger/LoggerFactory.php';
+        $logger = LoggerFactory::createLogger();
+        $logger->info('Usuário inseriu FAD', [
+            'id' => $_SESSION['id'],
+            'usuario' => $_SESSION['nome'],
+            'email' => $_SESSION['email'],
+            'perfil' => $_SESSION['nivel_de_acesso'],
+            'sujeito' => $id_militar
+        ]);
+        
+        header('Location:../Views/view_fad.php?&militar_id=' . $id_militar . '&msg=fad_inserida');
+        exit();
     }
 }

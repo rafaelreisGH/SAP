@@ -66,7 +66,7 @@ $stmt->execute();
                         <label for="basic-addon3" class="form-label">Inserir a antiguidade correta do militar selecionado</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon3">Posição a ser ocupada</span>
-                            <input type="number" class="form-control" name="antiguidade_informada" required>
+                            <input type="number" class="form-control" name="antiguidade_informada" min="1" required oninput="validarAntiguidade(this)">
                         </div>
                         <!-- Este parágrafo será chamado pelo script js no final da página -->
                         <p id="alertaErroAntiguidadeIgual" style="color:#FF0000"></p>
@@ -153,11 +153,19 @@ $stmt->execute();
         if (antiguidade_informada == antiguidade_atual) {
             document.getElementById('alertaErroAntiguidadeIgual').innerHTML = '* A antiguidade atual e a informada devem ser obrigatoriamente diferentes.'
             return false;
-        } else if(antiguidade_informada == 0){
+        } else if (antiguidade_informada == 0) {
             document.getElementById('alertaErroAntiguidadeIgual').innerHTML = '* A antiguidade informada não pode ser igual a 0 (zero).'
             return false;
-        }else {
+        } else {
             document.getElementById('alertaErroAntiguidadeIgual').innerHTML = ''
+        }
+    }
+
+    function validarAntiguidade(input) {
+        if (input.value <= 0) {
+            input.setCustomValidity("A antiguidade deve ser maior que 0.");
+        } else {
+            input.setCustomValidity("");
         }
     }
 </script>

@@ -1,4 +1,5 @@
 <?php
+include_once '../Controllers/controle_de_sessao.php';
 
 require_once '../ConexaoDB/conexao.php';
 $conn = Conexao::getConexao();
@@ -60,6 +61,7 @@ if (isset($_POST['atualizar'])) {
                 ));
 
                 $alteracoes_realizadas[] = $item;
+
             } else {
                 //se não encontrar nada, faz o insert na tabela registro_de_promocoes
                 //FAZER INSERT NO BD
@@ -80,8 +82,19 @@ if (isset($_POST['atualizar'])) {
                     ':data_promocao' => $data_promocao,
                 ));
 
-                $alteracoes_realizadas[] = $item;
             }
+            $alteracoes_realizadas[] = $item;
+            
+            // Log de registro de promoção passada
+            require_once __DIR__ . '/../Logger/LoggerFactory.php';
+            $logger = LoggerFactory::createLogger();
+            $logger->info('Usuário registrou promoção passada', [
+                'id' => $_SESSION['id'],
+                'usuario' => $_SESSION['nome'],
+                'email' => $_SESSION['email'],
+                'perfil' => $_SESSION['nivel_de_acesso'],
+                'sujeito' => $item
+            ]);
         }
     } else {
         header('Location:../Views/listar_militares_data_em_lote.php?nada_alterado=1');

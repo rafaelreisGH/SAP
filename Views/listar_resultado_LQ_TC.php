@@ -6,6 +6,7 @@ include_once '../Controllers/funcoes_LQ.php';
 //preparação de variáveis
 $lq_ano = isset($_POST['criterio_ano_promocao_futura']) ? $_POST['criterio_ano_promocao_futura'] : null;
 $lq_dia_mes = isset($_POST['criterio_dia_mes_promocao_futura']) ? $_POST['criterio_dia_mes_promocao_futura'] : null;
+$quadro = isset($_POST['criterio_quadro']) ? $_POST['criterio_quadro'] : null;
 
 //se não chegar nada no POST, então não tem como continuar o processamento
 if (is_null($lq_ano)) {
@@ -21,10 +22,23 @@ $alteracoes_realizadas = processa_lista_de_candidatos_TC($conn, $lq_ano);
 
 //função para criar em lote as pastas promocionais dos militares
 //só cria a pasta se o checkbox estiver marcado e se houver militares a serem promovidos
-if(isset($_POST['criar_pasta']) && $_POST['criar_pasta'] == 1) {
+if (isset($_POST['criar_pasta']) && $_POST['criar_pasta'] == 1) {
     if (!empty($alteracoes_realizadas)) {
         $pastas_criadas = criarPastaPromocionalEmLote($alteracoes_realizadas, $lq_ano, $conn);
-        
+
+        foreach ($pastas_criadas as $item) {
+            // Log de criação de pasta promocional
+            require_once __DIR__ . '/../Logger/LoggerFactory.php';
+            $logger = LoggerFactory::createLogger();
+            $logger->info('Usuário criou pasta promocional', [
+                'id' => $_SESSION['id'],
+                'usuario' => $_SESSION['nome'],
+                'email' => $_SESSION['email'],
+                'perfil' => $_SESSION['nivel_de_acesso'],
+                'sujeito' => $item["id_militar"]
+            ]);
+        }
+
         if (!empty($pastas_criadas)) {
             $aux = criaDocumentosVazios($pastas_criadas, $conn);
         } else $aux = false;

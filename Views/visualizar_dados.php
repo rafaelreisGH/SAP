@@ -113,7 +113,7 @@ if (isset($ultima_promocao)) {
 //     calcularTempoArregimentado($militar_id, $inter, $tempo_arregimentado_minimo, $conn);
 // }
 
-//$_SESSION['militar_id'] = $id ?? null;
+$_SESSION['militar_id'] = $id ?? null;
 ?>
 
 <!-- BOTÃO VOLTA PARA A PÁGINA DE PESQUISA JOGANDO NA URL O NOME DO MILITAR EM QUESTÃO-->
@@ -196,15 +196,13 @@ if (isset($ultima_promocao)) {
                                                                                                     echo ($media); ?>" disabled>
                     <span class="input-group-text" id="TempoArregimentado">Tempo Arregimentado</span>
                     <input type="text" class="form-control" aria-describedby="TempoArregimentado" value="<?php $arregimentado = (isset($arregimentado)) ? $arregimentado : 'Não disponível';
-                                                                                                            switch ($arregimentado) {
-                                                                                                                case 0:
-                                                                                                                    $arregimentado = "Incompleto";
-                                                                                                                    break;
-                                                                                                                case 1:
-                                                                                                                    $arregimentado = "Completo";
-                                                                                                                    break;
-                                                                                                            }
-                                                                                                            echo ($arregimentado); ?>" disabled>
+                    switch ($arregimentado) {
+                        case 0:
+                            $arregimentado = "Incompleto"; break;
+                        case 1:
+                            $arregimentado = "Completo"; break;
+                        }
+                        echo ($arregimentado); ?>" disabled>
                 </div>
 
                 <div class="input-group mb-3">
@@ -215,12 +213,48 @@ if (isset($ultima_promocao)) {
                     echo '<font style="color:#ff0000">* O <strong>nome</strong> deve ser preenchido corretamente. Não são aceitos valores vazios ou numéricos. </font></br>';
                 }
                 if (isset($nome_alterado) && !is_null($nome_alterado)) {
+
+                    // Log de edição de dados de militar
+                    require_once __DIR__ . '/../Logger/LoggerFactory.php';
+                    $logger = LoggerFactory::createLogger();
+                    $logger->info('Usuário alterou nome de militar', [
+                        'id' => $_SESSION['id'],
+                        'usuario' => $_SESSION['nome'],
+                        'email' => $_SESSION['email'],
+                        'perfil' => $_SESSION['nivel_de_acesso'],
+                        'sujeito' => $militar_id
+                    ]);
+
                     echo '<font style="color:#FF0000">* <strong>Nome</strong> alterado para: <i>' . $nome_alterado . '</i>. </font></br>';
                 }
                 if (isset($posto_grad_alterado) && !is_null($posto_grad_alterado)) {
+
+                    // Log de edição de dados de militar
+                    require_once __DIR__ . '/../Logger/LoggerFactory.php';
+                    $logger = LoggerFactory::createLogger();
+                    $logger->info('Usuário alterou posto/grad de militar', [
+                        'id' => $_SESSION['id'],
+                        'usuario' => $_SESSION['nome'],
+                        'email' => $_SESSION['email'],
+                        'perfil' => $_SESSION['nivel_de_acesso'],
+                        'sujeito' => $militar_id
+                    ]);
+
                     echo '<font style="color:#FF0000">* Posto/graduação alterado para: <strong><i>' . alias_posto_grad($posto_grad_alterado) . ' BM</i></strong>. </font></br>';
                 }
                 if (isset($quadro_alterado) && !is_null($quadro_alterado)) {
+
+                    // Log de edição de dados de militar
+                    require_once __DIR__ . '/../Logger/LoggerFactory.php';
+                    $logger = LoggerFactory::createLogger();
+                    $logger->info('Usuário alterou quadro do militar', [
+                        'id' => $_SESSION['id'],
+                        'usuario' => $_SESSION['nome'],
+                        'email' => $_SESSION['email'],
+                        'perfil' => $_SESSION['nivel_de_acesso'],
+                        'sujeito' => $militar_id
+                    ]);
+
                     echo '<font style="color:#FF0000">* Quadro alterado para: <strong><i>' . ucfirst(strtolower($quadro_alterado)) . '</i></strong>. </font></br>';
                 }
                 ?>

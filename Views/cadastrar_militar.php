@@ -10,10 +10,26 @@ $sucesso_cadastro = (isset($_GET['sucesso'])) ? $_GET['sucesso'] : null;
 //
 //VERIFICAÇÃO SE VIERAM ERROS DO INSERE_DADOS_MILITAR.PHP
 $erro = isset($_GET['erro']) ? $_GET['erro'] : null;
-$erroNoBD = isset($_GET['erroNoBD']) ? $_GET['erro'] : null;
-if (!is_null($erroNoBD)) {
-    echo "Erro ao cadastrar no Banco de dados.";
+$erroNoBD = isset($_GET['erroNoBD']) ? $_GET['erroNoBD'] : null;
+
+if (!is_null($erro)) {
+    switch ($erro) {
+        case '1':
+            echo '<p class="text-danger"><i class="bi bi-exclamation-circle"></i> Militar já existe no banco de dados.</p>';
+            break;
+        case 'cpfInvalido':
+            echo '<p class="text-danger"><i class="bi bi-exclamation-circle"></i> CPF inválido. Certifique-se de digitar exatamente 11 números.</p>';
+            break;
+        case 'cpfDuplicado':
+            echo '<p class="text-danger"><i class="bi bi-exclamation-circle"></i> CPF já cadastrado no sistema.</p>';
+            break;
+    }
 }
+
+if (!is_null($erroNoBD)) {
+    echo '<p class="text-danger"><i class="bi bi-database-exclamation"></i> Erro ao cadastrar no banco de dados.</p>';
+}
+
 
 ?>
 
@@ -71,6 +87,12 @@ if (!is_null($erroNoBD)) {
                 </div>
                 <p id="alertaQuadroVazio" style="color:#FF0000"></p>
 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="cpfMilitar">CPF</span>
+                    <input type="text" class="form-control" placeholder="Somente números" aria-label="CPF" aria-describedby="cpfMilitar" name="cpf" id="cpf" maxlength="11" pattern="\d{11}" required>
+                </div>
+                <p id="alertaCpfVazio" style="color:#FF0000"></p>
+
                 <hr>
                 <button class="btn btn-outline-primary active" type="submit">Salvar</button>
             </form>
@@ -123,6 +145,14 @@ if (!is_null($erroNoBD)) {
         } else {
             document.getElementById('alertaQuadroVazio').innerHTML = ''
         }
+    }
+
+    let aux4 = document.forms["formCadastro"]["cpf"].value;
+    if (aux4 == "" || isNaN(aux4) || aux4.length !== 11) {
+        document.getElementById('alertaCpfVazio').innerHTML = '* CPF inválido. Use apenas números (11 dígitos).';
+        return false;
+    } else {
+        document.getElementById('alertaCpfVazio').innerHTML = ''
     }
 </script>
 

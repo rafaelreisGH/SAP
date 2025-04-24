@@ -23,6 +23,16 @@ if ($usuario && password_verify($senha_digitada, $usuario['senha'])) {
     $_SESSION['posto_grad_usuario'] = $usuario['posto_grad_usuario'];
     $_SESSION['logado'] = true;
 
+    // Log do login
+    require_once __DIR__ . '/../Logger/LoggerFactory.php';
+    $logger = LoggerFactory::createLogger();
+    $logger->info('Usuário acessou o sistema', [
+        'id' => $usuario['id'],
+        'usuario' => $usuario['nome'],
+        'email' => $usuario['email'],
+        'perfil' => $usuario['nivel_de_acesso']
+    ]);
+
     // Redirecionamento conforme situação
     if ($_SESSION['senha_reset'] == 0) {
         header('Location: ../Views/pagina_muda_senha.php');
@@ -45,4 +55,3 @@ if ($usuario && password_verify($senha_digitada, $usuario['senha'])) {
 // Login falhou
 header('Location: ../index.php?erro=1');
 exit;
-?>

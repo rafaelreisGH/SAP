@@ -1,10 +1,12 @@
 <?php
+include_once '../Controllers/controle_de_sessao.php';
+
 require_once '../ConexaoDB/conexao.php';
 $conn = Conexao::getConexao();
 
 //verifica a página de onde veio a requisição
 //para poder mudar o header location
-if(isset($_SESSION['pagina_anterior']) and $_SESSION['pagina_anterior'] == '/Views/listar_militares_promocao_em_lote_v2.php'){
+if (isset($_SESSION['pagina_anterior']) and $_SESSION['pagina_anterior'] == '/Views/listar_militares_promocao_em_lote_v2.php') {
     $altera_header = '_v2';
 } else {
     $altera_header = '';
@@ -27,7 +29,7 @@ $criterio_quadro = $_POST['criterio_quadro'];
 if (isset($_POST['militar_id'])) {
     $militar_id = $_POST['militar_id'];
 } else { // se não for selecionado nenhum militar
-    header('Location:../Views/listar_militares_promocao_em_lote'.$altera_header.'.php?nada_alterado=1&criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '');
+    header('Location:../Views/listar_militares_promocao_em_lote' . $altera_header . '.php?nada_alterado=1&criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '');
 }
 //---------------------------//
 
@@ -169,6 +171,16 @@ foreach ($aux as $item => $value) {
 
         $alteracoes[] = $item;
     }
+    // Log de registro de promoção
+    require_once __DIR__ . '/../Logger/LoggerFactory.php';
+    $logger = LoggerFactory::createLogger();
+    $logger->info('Usuário promoveu em lote', [
+        'id' => $_SESSION['id'],
+        'usuario' => $_SESSION['nome'],
+        'email' => $_SESSION['email'],
+        'perfil' => $_SESSION['nivel_de_acesso'],
+        'sujeito' => $item
+    ]);
 }
 //-------------------------------------------------------------------//
 
@@ -180,7 +192,7 @@ if ($modalidade == 'POR REQUERIMENTO') {
 } else {
 
     //variável para montar a string do header Location
-    $location = 'Location:../Views/listar_militares_promocao_em_lote'.$altera_header.'.php?criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '&';
+    $location = 'Location:../Views/listar_militares_promocao_em_lote' . $altera_header . '.php?criterio_posto_grad=' . $criterio_posto_grad . '&criterio_quadro=' . $criterio_quadro . '&';
     if (sizeof($alteracoes)) {
         $location .= "alteracoes_realizadas[]=" . implode("&alteracoes_realizadas[]=", $alteracoes);
     }

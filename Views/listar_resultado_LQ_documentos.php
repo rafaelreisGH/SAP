@@ -6,6 +6,7 @@ include_once '../Controllers/funcoes_LQ.php';
 //preparação de variáveis
 $lq_ano = isset($_POST['criterio_ano_promocao_futura']) ? $_POST['criterio_ano_promocao_futura'] : null;
 $lq_dia_mes = isset($_POST['criterio_dia_mes_promocao_futura']) ? $_POST['criterio_dia_mes_promocao_futura'] : null;
+$quadro = isset($_POST['criterio_quadro']) ? $_POST['criterio_quadro'] : null;
 
 //se não chegar nada no POST, então não tem como continuar o processamento
 if (is_null($lq_ano)) {
@@ -16,7 +17,7 @@ $lq_ano .= '-' . $lq_dia_mes; //concatena as variáveis numa string apenas
 unset($lq_dia_mes); //destrói a variável
 
 //função para verificar quem pode ser promovido no respectivo processo promocional
-$lista = processa_lista_de_candidatos($conn, $lq_ano);
+$lista = processa_lista_de_candidatos($conn, $lq_ano, $quadro);
 
 /*--------------------------------------------------------------------------*/
 

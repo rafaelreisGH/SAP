@@ -37,6 +37,17 @@ if (isset($_POST["excluir_documento"])) {
     if ($stmt->execute()) {
         include_once '../Controllers/verificar_intersticio_descontado_LTIP.php';
         $mensagem = "Registro excluído com sucesso!";
+
+        // Log de exclusão
+        require_once __DIR__ . '/../Logger/LoggerFactory.php';
+        $logger = LoggerFactory::createLogger();
+        $logger->info('Usuário excluiu tempo não arregimentado', [
+            'id' => $_SESSION['id'],
+            'usuario' => $_SESSION['nome'],
+            'email' => $_SESSION['email'],
+            'perfil' => $_SESSION['nivel_de_acesso'],
+            'sujeito' => $militar_id
+        ]);
     } else {
         $mensagem = "Erro ao excluir o registro.";
     }
@@ -136,6 +147,18 @@ if (isset($_POST["excluir_documento"])) {
             };
             // Verifica se alguma linha foi afetada
             if ($stmt->rowCount() > 0) {
+
+                // Log de registro
+                require_once __DIR__ . '/../Logger/LoggerFactory.php';
+                $logger = LoggerFactory::createLogger();
+                $logger->info('Usuário inseriu tempo não arregimentado', [
+                    'id' => $_SESSION['id'],
+                    'usuario' => $_SESSION['nome'],
+                    'email' => $_SESSION['email'],
+                    'perfil' => $_SESSION['nivel_de_acesso'],
+                    'sujeito' => $militar_id
+                ]);
+
                 $mensagem = '<font style="color:#FF0000">Informação inserida com sucesso.</font></br>';
             } else {
                 $mensagem = '<font style="color:#FF0000">Falha na inserção do evento.</font></br>';
@@ -165,7 +188,7 @@ if (isset($_POST["excluir_documento"])) {
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-pills" style="list-style: none; display: flex; gap: 10px; padding: 0;">
-            <li class="active"><a class="nav-link active" aria-current="page" href="../Views/pagina_gestor.php">Voltar</a></li>
+            <li class="active"><a class="nav-link active" aria-current="page" href="../Views/visualizar_dados.php?militar_id=<?= $militar_id ?>">Voltar</a></li>
         </ul>
         <hr>
     </div>
