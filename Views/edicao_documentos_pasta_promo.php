@@ -175,12 +175,11 @@ if (isset($resultado['militar_id'])) {
 
 </div>
 
-<?php
-include_once './footer.php';
-?>
-
 <script>
     function confirmarExclusao() {
         return confirm("Tem certeza que deseja excluir este documento? Esta ação não pode ser desfeita!");
     }
 </script>
+<?php
+include_once './footer.php';
+?>

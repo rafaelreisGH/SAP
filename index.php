@@ -131,7 +131,11 @@ if (isset($_SESSION['mensagem_sucesso'])) {
     </div>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
+    <script>
+    <?php if ($erro == 2): ?>
+        alert('Sua sessão expirou. Por favor, realize o login novamente.');
+    <?php endif; ?>
+</script>
 </body>
 
 </html>

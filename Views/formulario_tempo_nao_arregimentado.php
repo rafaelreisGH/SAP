@@ -330,9 +330,6 @@ if (isset($_POST["excluir_documento"])) {
 
 <div class="clearfix"></div>
 <br />
-<?php
-include_once '../Views/footer.php';
-?>
 
 <script>
     document.querySelector('form').addEventListener('input', function() {
@@ -377,3 +374,7 @@ include_once '../Views/footer.php';
         return confirm("Tem certeza que deseja excluir este documento? Esta ação não pode ser desfeita!");
     }
 </script>
+
+<?php
+include_once '../Views/footer.php';
+?>
